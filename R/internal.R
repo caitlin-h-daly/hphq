@@ -43,37 +43,69 @@ get_combo <- function (all_ranked_combo) {
   return(all_combo)
 }
 
-#' Compare posets with permutations
-#' @param df data frame of credible hierarchies
-#' @param target poset we are looking for
+#' Determine superset status of a (credible) partial hierarchy within (credible)
+#' permutations
+#'
+#' @description
+#' `is_phier_sup_of_perm()` determines whether a (credible) partial hierachy
+#' specified by `phier_target` is a superset of any of the (credible)
+#' permutations specified in `perm_df`.
+#'
+#' @param phier_target a vector of treatment names (without ">" characters) in
+#'   order of a (credible) partial hierarchy to assess the superset status of.
+#' @param perm_df a data frame of credible permutations, to assess the superset
+#'   status of `phier_target` against.
+#'
+#' @return `TRUE` if `phier_target` is a superset of any of the (credible)
+#'   partial hierarchies listed in `larger_phier_list`.
+#'
 #' @keywords internal
-compare_nonconsec<-function(df,target) {
-  for(j in 1:nrow(df)) { # checks through perms
-    new_string <-str_split_1(as.character(df[j,1]),",")
-    positions <- match(target,new_string) # finds position number of treatments in each tbl row
-    if (!anyNA(positions) && all(diff(positions) >= 0)) { # checks if its increasing
-      return (TRUE)
-    }
-  }
-  return (FALSE)
-}
+# is_phier_sup_of_perm <- function(perm_df, phier_target) {
+#   for(j in 1:nrow(perm_df)) {
+#     perm_string <- str_split_1(as.character(perm_df[j, 1]), ",")
+#     # finds position of treatments in phier_target within perm_string
+#     positions <- match(phier_target, perm_string)
+#     if (!anyNA(positions) && all(diff(positions) >= 0)) { # checks if position[j+1] >= position[j]
+#       return (TRUE)
+#     }
+#   }
+# }
 
-#' Finds supersets for posets
-#' @param non_consec data frame of credible hierarchies
-#' @param target poset we are looking for
+#' Determine superset status of a (credible) partial hierarchy within (credible)
+#' partial hierarchies
+#'
+#' @description
+#' `is_phier_sup_of_phier()` determines whether a (credible) partial hierachy
+#' specified by `phier_target` is a superset of any of the (credible) partial
+#' hierarchies specified in `phier_larger_list`.
+#'
+#' @param phier_target a single character vector of treatment names (without ">"
+#'   characters) in order of a (credible) partial hierarchy to assess the
+#'   superset status of.
+#' @param phier_larger_list list of data frames of larger (credible) partial
+#'   hierarchies by size, to assess the superset status of `phier_target`
+#'   against.
+#'
+#' @return `TRUE` if `phier_target` is a superset of any of the (credible)
+#'   partial hierarchies listed in `larger_phier_list`.
+#'
 #' @keywords internal
-terminal_nonconsec <- function(non_consec,target) {
-  for (i in seq(1:length(non_consec))) {
-    current_df <- non_consec[[i]]
-    for(j in seq(1:nrow(current_df))) {
-      new_string <-str_split_1(as.character(current_df[j,1])," > ")
-      positions <- match(target,new_string) # finds position number of treatments in new_string
-      if (!anyNA(positions) && all(diff(positions) >= 0)) { # checks if its increasing
-        return (TRUE)
+is_phier_sup_of_phier <- function(phier_target, larger_phier_list) {
+  # to find superset status faster, look at smaller larger_phier_list first
+  phier_sizes <- sort(unique(do.call(rbind, larger_phier_list)$phier_size))
+  for (i in sort(phier_sizes)) {
+    current_phier_df <- larger_phier_list[[as.character(i)]]
+    for(j in 1:nrow(current_phier_df)) {
+      # extract jth partial hierarchy in current_phier_df
+      phier_larger <- str_split_1(as.character(current_phier_df[j, 1]), " > ")
+      # finds position of treatments in phier_target within phier_larger
+      positions <- match(phier_target, phier_larger)
+      if (!anyNA(positions) && all(diff(positions) >= 0)) {  # checks if position[j+1] >= position[j]
+        return(TRUE)
+        break
       }
     }
   }
-  return (FALSE)
 }
 
 #' Finds supersets for ranked permutations
@@ -83,7 +115,7 @@ terminal_nonconsec <- function(non_consec,target) {
 #' @param i current index
 #' @param n.filtered number of rows
 #' @keywords internal
-calc_terminal_ranked <- function(ranked_perm,current_range,target,i,n.filtered) {
+find_rperm_superset_in_rperm <- function(ranked_perm, current_range, target, i, n.filtered) {
   l <- current_range[1]
   u <- current_range[2]
   for(j in 1:n.filtered) {
@@ -102,23 +134,24 @@ calc_terminal_ranked <- function(ranked_perm,current_range,target,i,n.filtered) 
   return(FALSE)
 }
 
-#' Finds supersets for permutations
-#' @param perm data frame of credible hierarchies
-#' @param target permutation we are looking for
-#' @param i current index
-#' @param n.filtered number of rows
-#' @keywords internal
-calc_terminal_unranked <- function(perm,target,i,n.filtered) {
-  for(j in 1:n.filtered) {
-    if (i != j) {
-      new_string <-as.character(perm[j,1])
-      if (str_detect(new_string,target)) {
-        return(TRUE)
-      }
-    }
-  }
-  return(FALSE)
-}
+#' #' Determine superset status of a credible permutation within credible
+#' #'   pemutation
+#' #' @param perm_df data frame of credible permutations
+#' #' @param perm_target credible permutation to assess superset status
+#' #' @param i index of perm_target in perm_df
+#' #' @param n.filtered number of rows
+#' #' @keywords internal
+#' find_perm_superset_in_perm <- function(perm_df, perm_target, i, n.filtered) {
+#'   for(j in 1:n.filtered) {
+#'     if (i != j) {
+#'       perm_string <- as.character(perm_df[j,1])
+#'       if (str_detect(perm_string, perm_target)) {
+#'         return(TRUE)
+#'       }
+#'     }
+#'   }
+#'   return(FALSE)
+#' }
 
 #' Creates permutations for poset function
 #' @param trts list of treatment names
