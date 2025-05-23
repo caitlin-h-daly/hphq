@@ -29,10 +29,11 @@ permutations, permutations, ranked combinations, combinations, partial
 hierarchies, individual ranking probabilities, and HPD intervals.
 }
 \description{
-`get_hierarchies` runs the inputs through `consecutive()`, `get_cred_phier()`,
-and `singular_treatment()` to produce a list of all hierarchies with relative
-frequencies greater than or equal to the threshold. These hierarchies are
-then run through `find_supersets()` to determine which of them are supersets.
+`get_hierarchies` runs the inputs through `get_arrangements()`,
+`get_cred_phier()`, and `singular_treatment()` to produce a list of all
+hierarchies with relative frequencies greater than or equal to the threshold.
+These hierarchies are then run through `find_supersets()` to determine which
+of them are supersets.
 }
 \examples{
 get_hierarchies(inputs, "Waitlist", TRUE, c(0.5,0.6,0.7), 10)
