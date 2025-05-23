@@ -25,7 +25,7 @@
 #' @export
 #'
 #' @examples
-#'get_hierarchies(inputs, "Waitlist", TRUE, c(0.5,0.6,0.7), 10)
+#'get_hierarchies(inputs, TRUE, c(0.5,0.6,0.7), 10)
 
 get_hierarchies <- function(inputs, largerBetter, thresholds, MID = 0, printPlot = FALSE) {
 
@@ -36,11 +36,11 @@ get_hierarchies <- function(inputs, largerBetter, thresholds, MID = 0, printPlot
   treatments <- colnames(inputs[[2]])
   n_trt <- length(treatments)
 
-  arrangements <- get_arrangements(inputs[[1]], thresholds[[1]])
-  phier <- get_cred_phier(inputs[[2]], MID, thresholds[[2]], largerBetter)
-  single <- get_cred_hier_single(inputs[[3]], thresholds[[3]], printPlot)
+  arrangements <- get_arrangements(inputs$hierarchy_matrix, thresholds[[1]])
+  phier <- get_cred_phier(inputs$effects_matrix, MID, thresholds[[2]], largerBetter)
+  single <- get_cred_hier_single(inputs$ranking_df, thresholds[[3]], printPlot)
 
-  first_outputs <- find_supersets(arrangements, phier, n_trt)
+  first_outputs <- find_supersets(arrangements, phier)
 
   all_outputs <- append(first_outputs, single)
   names(all_outputs) <- c("Ranked Permutations", "Permutations",

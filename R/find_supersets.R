@@ -87,7 +87,7 @@ find_supersets <- function(algo1, algo2, type = 1:8, trim = FALSE) {
       phier_list <- split(phier, phier$phier_size)
 
       # unique sizes of credible partial hierarchies
-      phier_sizes <- sort(unique(phier_size))
+      phier_sizes <- sort(unique(phier$phier_size))
 
       # check if credible partial hierarchies are supersets within
       if(length(phier_sizes) > 1) {

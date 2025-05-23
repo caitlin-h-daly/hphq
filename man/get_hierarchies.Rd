@@ -36,5 +36,5 @@ These hierarchies are then run through `find_supersets()` to determine which
 of them are supersets.
 }
 \examples{
-get_hierarchies(inputs, "Waitlist", TRUE, c(0.5,0.6,0.7), 10)
+get_hierarchies(inputs, TRUE, c(0.5,0.6,0.7), 10)
 }
