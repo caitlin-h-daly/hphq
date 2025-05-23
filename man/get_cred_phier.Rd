@@ -4,7 +4,7 @@
 \alias{get_cred_phier}
 \title{Get credible partial hierarchies}
 \usage{
-get_cred_phier(effects_matrix, MID, threshold, largerBetter)
+get_cred_phier(effects_matrix, MID = 0, threshold, largerBetter)
 }
 \arguments{
 \item{effects_matrix}{a matrix where the column headers are treatment names
@@ -12,7 +12,7 @@ and each row displays each treatment’s sampled relative effect for that
 iteration.}
 
 \item{MID}{a numeric value indicating the absolute minimally important
-difference.}
+difference. Default is 0.}
 
 \item{threshold}{a proportion between 0 and 1 for which a hierarchy must be
 observed in order to be credible.}

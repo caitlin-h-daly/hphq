@@ -17,6 +17,8 @@ A data frame containing
   * `Freq`: the proportion of samples for which the combination was observed.
 }
 \description{
-`get_combo()`
+`get_combo()`groups all ranked combinations by the combination string
+ (ignoring ranks), and sums the proportion of samples for which they were
+ observed.
 }
 \keyword{internal}

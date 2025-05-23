@@ -9,7 +9,7 @@
 #'   and each row displays each treatment’s sampled relative effect for that
 #'   iteration.
 #' @param MID a numeric value indicating the absolute minimally important
-#'   difference.
+#'   difference. Default is 0.
 #' @param threshold a proportion between 0 and 1 for which a hierarchy must be
 #'   observed in order to be credible.
 #' @param largerBetter a logical value indicating whether larger relative
@@ -21,7 +21,7 @@
 #'
 #' @examples
 #' get_cred_phier(effects_matrix, 10, 0.2, TRUE)
-get_cred_phier <- function(effects_matrix, MID, threshold, largerBetter) {
+get_cred_phier <- function(effects_matrix, MID = 0, threshold, largerBetter) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
@@ -32,7 +32,7 @@ get_cred_phier <- function(effects_matrix, MID, threshold, largerBetter) {
   output_list_index <- 1
   n_trt <- length(treatments)
   n_iter <- nrow(effects_matrix)
-  tolerance <- .Machine$double.eps^0.5
+  tolerance <- .Machine$double.eps ^ 0.5
   MID <- abs(MID)
   if (largerBetter) {
     MID_t <- MID - tolerance

@@ -5,7 +5,7 @@
 #' `get_hierarchies()`, or individually in `consecutive()`, `get_cred_hier()`,
 #' and `singular_treatment()`.
 #'
-#' @param effects_matrix a matrix where the column headers are treatment names
+#' @param effects_matrix a data frame where the column headers are treatment names
 #'   and each row displays each treatment’s sampled relative effect for that
 #'   iteration.
 #' @param reference a character string of the reference treatment's name.
@@ -23,13 +23,13 @@
 #'
 #' @examples
 #' prep_data(df, "waitlist", TRUE)
-prep_data <- function(df, reference, largerBetter) {
-  treatments < -colnames(df)
+prep_data <- function(effects_matrix, reference, largerBetter) {
+  treatments <- colnames(effects_matrix)
   if (reference %in% treatments) {
-    x <- df
+    x <- effects_matrix
   } else {
     warning("Relative effects for reference treatment not detected. A vector of 0's for the reference treatment has been added, assuming the input is an MCMC sample from a Bayesian framework. Ensure sampled relative effects are on the additive scale such that the null effect is 0.")
-    x <- data.frame(0,df)
+    x <- data.frame(0, effects_matrix)
     colnames(x)[1] <- reference
     treatments <- colnames(x)
   }

@@ -4,7 +4,7 @@
 \alias{get_hierarchies}
 \title{Get all credible hierarchies}
 \usage{
-get_hierarchies(inputs, largerBetter, thresholds, MID, printPlot = FALSE)
+get_hierarchies(inputs, largerBetter, thresholds, MID = 0, printPlot = FALSE)
 }
 \arguments{
 \item{inputs}{the output from `prep_data()`, which consists of a list of
@@ -18,7 +18,7 @@ effects are better (TRUE) or not (FALSE).}
 ranking probabilities would be credible.}
 
 \item{MID}{a numeric value indicating the absolute minimally important
-difference.}
+difference. Default is 0.}
 
 \item{printPlot}{a logical value indicating whether the rankograms should be
 printed (TRUE) or not (FALSE, the default).}

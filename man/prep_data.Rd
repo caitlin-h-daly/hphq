@@ -4,17 +4,17 @@
 \alias{prep_data}
 \title{Prepare data to determine credible hierarchies}
 \usage{
-prep_data(df, reference, largerBetter)
+prep_data(effects_matrix, reference, largerBetter)
 }
 \arguments{
+\item{effects_matrix}{a data frame where the column headers are treatment names
+and each row displays each treatment’s sampled relative effect for that
+iteration.}
+
 \item{reference}{a character string of the reference treatment's name.}
 
 \item{largerBetter}{a logical value indicating whether larger relative
 effects are better (TRUE) or not (FALSE).}
-
-\item{effects_matrix}{a matrix where the column headers are treatment names
-and each row displays each treatment’s sampled relative effect for that
-iteration.}
 }
 \value{
 \code{hierarchy.matrix} - A matrix where column headers are ranks and

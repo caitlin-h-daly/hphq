@@ -78,13 +78,15 @@ get_ranked_comb <- function(all_ranked_perm, trts) {
   # groups combinations by rank interval and calculates sum of the frequency
   all_ranked_combo <- aggregate(Freq ~ Combinations + Range, data = all_ranked_perm, sum)
   all_ranked_combo <- all_ranked_combo[, c("Range", "Combinations", "Freq")]
-  return(ranked_combo)
+  return(all_ranked_combo)
 }
 
 #' Get combinations
 #'
 #' @description
-#' `get_combo()`
+#' `get_combo()`groups all ranked combinations by the combination string
+#'  (ignoring ranks), and sums the proportion of samples for which they were
+#'  observed.
 #'
 #' @param all_ranked_combo a data frame consisting of the ranks (`Range`) of all
 #'   observed combinations (`Combinations`) and the corresponding proportion of

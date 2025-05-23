@@ -14,7 +14,7 @@
 #'   1 for which a combinatorial hierarchy, partial hierarchy, and individual
 #'   ranking probabilities would be credible.
 #' @param MID a numeric value indicating the absolute minimally important
-#'   difference.
+#'   difference. Default is 0.
 #' @param printPlot a logical value indicating whether the rankograms should be
 #' printed (TRUE) or not (FALSE, the default).
 #'
@@ -26,7 +26,7 @@
 #' @examples
 #'get_hierarchies(inputs, "Waitlist", TRUE, c(0.5,0.6,0.7), 10)
 
-get_hierarchies <- function(inputs, largerBetter, thresholds, MID, printPlot = FALSE) {
+get_hierarchies <- function(inputs, largerBetter, thresholds, MID = 0, printPlot = FALSE) {
 
   if(max(thresholds) > 1 || min(thresholds) < 0) {
     stop("Please ensure threshold values are between 0 and 1")
