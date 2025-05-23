@@ -138,65 +138,77 @@ is_phier_sup_of_phier <- function(phier_target, larger_phier_list) {
   }
 }
 
-#' Creates permutations for poset function
+#' Creates permutations for `get_cred_phier()` function
+#'
+#' @description
+#' `create_perm()`
+#'
 #' @param trts list of treatment names
 #' @param trt1 first treatment in the new pair
 #' @param new_trts potential new treatments to add
 #' @param perm_size size of the permutation
 #' @param credible list of credible size two permutations
+#'
 #' @keywords internal
-create_perm <- function (trts,trt1,new_trts,perm_size,credible) {
+create_perm <- function(trts, trt1, new_trts, perm_size, credible) {
   actual_new_trts <- c()
-  for (trt2 in new_trts) { # iterates through each potential new treatment to add
-    pair <- paste0(trt1,",",trt2) # the potential pair to add
-    if (any(pair %in% credible)) { # if the pair exists in the credible list, we can add it to the permutation
-      actual_new_trts<-c(actual_new_trts,trt2)
+  for(trt2 in new_trts) { # iterates through each potential new treatment to add
+    pair <- paste0(trt1, ",", trt2) # the potential pair to add
+    if(any(pair %in% credible)) { # if the pair exists in the credible list, we can add it to the permutation
+      actual_new_trts <- c(actual_new_trts, trt2)
     } # if the pair isn't credible, we do not need to add it to the permutation
   }
-  size<-length(actual_new_trts)
-  if(size == 0) { # no new treatments to add
+  size <- length(actual_new_trts)
+  if(size == 0){ # no new treatments to add
     return (FALSE)
   }
-  list_trts <- lapply(trts,function(x) { # create vectors where each treatment from trts is repeated size times
+  list_trts <- lapply(trts, function(x) { # create vectors where each treatment from trts is repeated size times
     rep(x,size)
   })
-  list_trts[[length(list_trts)+1]] <- actual_new_trts
+  list_trts[[length(list_trts) + 1]] <- actual_new_trts
   trt_df <- do.call(cbind, list_trts) # binds the new treatments to the permutations
   return(trt_df)
 }
 
 #' Finds HPD intervals
+#'
+#' @description
+#' `hpd()`
+#'
 #' @param ranks column of ranks and their frequency
 #' @param threshold cutoff for what is considered credible
 #' @param freq_sum value is always 1
+#'
 #' @keywords internal
-hpd <- function(ranks,threshold,freq_sum) {
-  if (threshold == 0){
-    hpd_ranks<-c()
-    ranks$Freq<-0
+hpd <- function(ranks, threshold, freq_sum) {
+  if(threshold == 0) {
+    hpd_ranks <- c()
+    ranks$Freq <- 0
   } else {
     ranks <- ranks[order(ranks$Freq), ] # sorts in increasing order
-    while (freq_sum > threshold && nrow(ranks) > 0) {
-      freq_sum <- freq_sum - ranks[1,2] # calculates freq_sum without smallest probability
+    while(freq_sum > threshold && nrow(ranks) > 0) {
+      freq_sum <- freq_sum - ranks[1, 2] # calculates freq_sum without smallest probability
 
-      if (freq_sum >= threshold) { # if >= threshold, we can drop the first row
-        ranks <- ranks[-1,]
+      if(freq_sum >= threshold) { # if >= threshold, we can drop the first row
+        ranks <- ranks[-1, ]
       }
     }
-    ranks <-ranks[order(ranks$Rank),] # re-orders it in terms of rank
+    ranks <- ranks[order(ranks$Rank), ] # re-orders it in terms of rank
     hpd_ranks <- ranks$Rank
   }
 
   # formatting
-  if (length(hpd_ranks) == 1) { # if there is just one element
+  if(length(hpd_ranks) == 1) { # if there is just one element
     concat_ranks <- hpd_ranks
-  } else if (length(hpd_ranks) == 0) {
+  } else if(length(hpd_ranks) == 0) {
     concat_ranks <- "N/A"
-  } else if (all(diff(as.numeric(as.character(hpd_ranks))) == 1)) { # hpd is an interval
+  } else if(all(diff(as.numeric(as.character(hpd_ranks))) == 1)) { # hpd is an interval
     concat_ranks <- paste(hpd_ranks[1], hpd_ranks[[length(hpd_ranks)]], sep = "-")  # formats the ranks into an interval
   } else { # hpd is not an interval
-    concat_ranks <- paste(hpd_ranks,collapse=',') # collapses the ranks into one string
+    concat_ranks <- paste(hpd_ranks, collapse=',') # collapses the ranks into one string
   }
-  hpd_vec <- list(concat_ranks,sum(ranks$Freq),hpd_ranks)
+
+  hpd_vec <- list(concat_ranks, sum(ranks$Freq), hpd_ranks)
+
   return(hpd_vec)
 }

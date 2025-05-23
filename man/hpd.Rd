@@ -14,6 +14,6 @@ hpd(ranks, threshold, freq_sum)
 \item{freq_sum}{value is always 1}
 }
 \description{
-Finds HPD intervals
+`hpd()`
 }
 \keyword{internal}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/internal.R
 \name{create_perm}
 \alias{create_perm}
-\title{Creates permutations for poset function}
+\title{Creates permutations for `get_cred_phier()` function}
 \usage{
 create_perm(trts, trt1, new_trts, perm_size, credible)
 }
@@ -18,6 +18,6 @@ create_perm(trts, trt1, new_trts, perm_size, credible)
 \item{credible}{list of credible size two permutations}
 }
 \description{
-Creates permutations for poset function
+`create_perm()`
 }
 \keyword{internal}
