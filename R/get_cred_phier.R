@@ -1,7 +1,7 @@
 #' Get credible partial hierarchies
 #'
 #' @description
-#' `get_cred_hier()` finds all partial hierarchies reflecting treatment
+#' `get_cred_phier()` finds all partial hierarchies reflecting treatment
 #' differences greater than or equal to `MID` and with relative frequencies
 #' greater than or equal to the threshold.
 #'
@@ -21,7 +21,7 @@
 #'
 #' @examples
 #' get_cred_phier(effects_matrix, 10, 0.2, TRUE)
-get_cred_hier <- function(effects_matrix, MID, threshold, largerBetter) {
+get_cred_phier <- function(effects_matrix, MID, threshold, largerBetter) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")

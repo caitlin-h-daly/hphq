@@ -1,8 +1,8 @@
 #' Get all credible hierarchies
 #'
 #' @description
-#' `get_hierarchies` runs the inputs through `consecutive()`, `get_hier()`, and
-#' `singular_treatment()` to produce a list of all hierarchies with relative
+#' `get_hierarchies` runs the inputs through `consecutive()`, `get_cred_phier()`,
+#' and `singular_treatment()` to produce a list of all hierarchies with relative
 #' frequencies greater than or equal to the threshold. These hierarchies are
 #' then run through `find_supersets()` to determine which of them are supersets.
 #'
@@ -18,7 +18,9 @@
 #' @param printPlot a logical value indicating whether the rankograms should be
 #' printed (TRUE) or not (FALSE, the default).
 #'
-#' @return A list of data frames containing the credible hierarchies for Ranked Permutations, Permutations, Ranked Combinations, Combinations, Posets, Individual Treatments, and HPD Intervals
+#' @return A list of data frames containing the credible hierarchies for ranked
+#' permutations, permutations, ranked combinations, combinations, partial
+#' hierarchies, individual ranking probabilities, and HPD intervals.
 #' @export
 #'
 #' @examples
@@ -34,8 +36,8 @@ get_hierarchies <- function(inputs, largerBetter, thresholds, MID, printPlot = F
   n_trt <- length(treatments)
 
   consec_outputs <- consecutive(inputs[[1]], thresholds[[1]])
-  phier <- get_cred_hier(inputs[[2]], MID, thresholds[[2]], largerBetter)
-  single <- singular_treatment(inputs[[3]], thresholds[[3]], printPlot)
+  phier <- get_cred_phier(inputs[[2]], MID, thresholds[[2]], largerBetter)
+  single <- get_cred_hier_single(inputs[[3]], thresholds[[3]], printPlot)
 
   first_outputs <- find_supersets(consec_outputs, phier, n_trt)
 

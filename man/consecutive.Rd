@@ -2,7 +2,7 @@
 % Please edit documentation in R/consecutive.R
 \name{consecutive}
 \alias{consecutive}
-\title{Retrieves credible hierarchies for consecutive (combinatorial) question types}
+\title{Get credible hierarchies for consecutive (combinatorial) question types}
 \usage{
 consecutive(hierarchy_matrix, threshold)
 }
@@ -19,7 +19,8 @@ permutations, permutations, ranked combinations, and combinations.
 }
 \description{
 Finds all ranked permutations, permutations, ranked combinations, and
-combinations with frequencies greater than or equal to a given threshold.
+combinations with relative frequencies greater than or equal to a given
+threshold.
 }
 \examples{
 consecutive(hierarchy_matrix, 0.5)

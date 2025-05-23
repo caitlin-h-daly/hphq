@@ -4,14 +4,14 @@
 #' `find_supersets` compares the outputs from `consecutive()` and `get_posets()`
 #' to identify redundant credible hierarchies (i.e., supersets).
 #'
-#' @param algo1 A list of data frames outputted from `consecutive()` containing
+#' @param algo1 a list of data frames outputted from `consecutive()` containing
 #'   the credible hierarchies for ranked permutations, permutations, ranked
 #'   combinations, and combinations.
-#' @param algo2 A data frame outputted from `get_posets()` containing credible
+#' @param algo2 a data frame outputted from `get_posets()` containing credible
 #'   partial hierarchies.
-#' @param type A numeric vector indicating what types of supersets should be
+#' @param type a numeric vector indicating what types of supersets should be
 #'   trimmed. See details for more information. Default is 1:8.
-#' @param trim A logical value indicating whether the output should trim the
+#' @param trim a logical value indicating whether the output should trim the
 #'   include the identified subsets (TRUE) or not (FALSE, the default).
 #'
 #' @details
@@ -95,7 +95,7 @@ find_supersets <- function(algo1, algo2, type = 1:8, trim = FALSE) {
         for(i in phier_sizes[-which.max(phier_sizes)]) {
           # extract credible partial hierarchies of size i
           current_phier_size <- phier_list[[as.character(i)]]
-          # list of larger hierachies to check against
+          # list of larger hierarchies to check against
           phier_larger_list <- phier_list[as.character(phier_sizes[which(phier_sizes > i)])]
           for(j in 1:nrow(current_phier_size)) {
             if(current_phier_size[j, "Superset"] == FALSE) {
@@ -121,7 +121,6 @@ find_supersets <- function(algo1, algo2, type = 1:8, trim = FALSE) {
       for (i in 1:nrow(phier)) {
         if(phier[i, "Superset"] == FALSE) {
           phier_target <- str_split_1(as.character(phier[i, 1]), " > ")
-          #phier[i, "Superset"] <- is_phier_sup_of_perm(perm, phier_target)
           for(j in 1:nrow(perm)) {
             perm_string_to_check <- str_split_1(as.character(perm[j, 1]), ",")
             # finds position of treatments in phier_target within perm_string_to_check

@@ -2,27 +2,35 @@
 % Please edit documentation in R/prep_data.R
 \name{prep_data}
 \alias{prep_data}
-\title{Data preparation}
+\title{Prepare data to determine credible hierarchies}
 \usage{
 prep_data(df, reference, largerBetter)
 }
 \arguments{
-\item{df}{A data frame where the column headers are treatment names and row headers are the iteration number. Each row displays each treatment’s sampled relative effect for that iteration}
+\item{reference}{a character string of the reference treatment's name.}
 
-\item{reference}{A string of the reference treatment's name}
+\item{largerBetter}{a logical value indicating whether larger relative
+effects are better (TRUE) or not (FALSE).}
 
-\item{largerBetter}{Boolean value where True indicates larger values are better, and False otherwise}
+\item{effects_matrix}{a matrix where the column headers are treatment names
+and each row displays each treatment’s sampled relative effect for that
+iteration.}
 }
 \value{
-\code{hierarchy.matrix} - A matrix where column headers are ranks and each row displays the treatments assigned to each rank for that iteration
+\code{hierarchy.matrix} - A matrix where column headers are ranks and
+each row displays the treatments assigned to each rank for that iteration.
 
-\code{effects.matrix} - A matrix where the column headers are treatment names and each row displays each treatment’s sampled relative effect for that iteration
+\code{effects.matrix} - A matrix where the column headers are
+treatment names and each row displays each treatment’s sampled relative
+effect for that iteration.
 
 \code{ranking.df} - A data frame of each treatment's ranks and associated frequencies
 }
 \description{
-Produces a list of inputs to be used altogether in get_hierarchies(), or individually in consecutive(), get_posets(), and singular_treatment()
+`prep_data()` produces a list of inputs to be used altogether in
+`get_hierarchies()`, or individually in `consecutive()`, `get_cred_hier()`,
+and `singular_treatment()`.
 }
 \examples{
-prep_data(df,"waitlist",TRUE)
+prep_data(df, "waitlist", TRUE)
 }

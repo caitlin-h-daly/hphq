@@ -1,8 +1,9 @@
-#' Retrieves credible hierarchies for consecutive (combinatorial) question types
+#' Get credible hierarchies for consecutive (combinatorial) question types
 #'
 #' @description
 #' Finds all ranked permutations, permutations, ranked combinations, and
-#' combinations with frequencies greater than or equal to a given threshold.
+#' combinations with relative frequencies greater than or equal to a given
+#' threshold.
 #'
 #' @param hierarchy_matrix a matrix where column headers are ranks and each row
 #'   displays the treatments assigned to each rank for that iteration.
