@@ -7,11 +7,11 @@
 find_supersets(algo1, algo2, type = 1:8, trim = FALSE)
 }
 \arguments{
-\item{algo1}{a list of data frames outputted from `consecutive()` containing
-the credible hierarchies for ranked permutations, permutations, ranked
-combinations, and combinations.}
+\item{algo1}{a list of data frames outputted from `get_arrangements()`
+containing the credible hierarchies for ranked permutations, permutations,
+ranked combinations, and combinations.}
 
-\item{algo2}{a data frame outputted from `get_posets()` containing credible
+\item{algo2}{a data frame outputted from `get_phier()` containing credible
 partial hierarchies.}
 
 \item{type}{a numeric vector indicating what types of supersets should be
@@ -26,8 +26,8 @@ combinations, combinations, and partial hierarchies along with their superset
 status.
 }
 \description{
-`find_supersets` compares the outputs from `consecutive()` and `get_posets()`
-to identify redundant credible hierarchies (i.e., supersets).
+`find_supersets` compares the outputs from `get_arrangements()` and
+`get_phier()` to identify redundant credible hierarchies (i.e., supersets).
 }
 \details{
 Superset types can be identified with numbers through 1 through 8 as follows:
@@ -50,5 +50,5 @@ We recommend these supersets are identified in increasing order (1 through
 8). Otherwise, a warning will be outputted.
 }
 \examples{
-find_supersets(consec_outputs, posets)
+find_supersets(algo1, algo2)
 }

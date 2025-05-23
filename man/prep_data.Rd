@@ -17,19 +17,20 @@ iteration.}
 effects are better (TRUE) or not (FALSE).}
 }
 \value{
-\code{hierarchy.matrix} - A matrix where column headers are ranks and
+\code{hierarchy_matrix} - A matrix where column headers are ranks and
 each row displays the treatments assigned to each rank for that iteration.
 
-\code{effects.matrix} - A matrix where the column headers are
+\code{effects_matrix} - A matrix where the column headers are
 treatment names and each row displays each treatment’s sampled relative
 effect for that iteration.
 
-\code{ranking.df} - A data frame of each treatment's ranks and associated frequencies
+\code{ranking_df} - A data frame of each treatment's ranks and
+associated frequencies.
 }
 \description{
 `prep_data()` produces a list of inputs to be used altogether in
-`get_hierarchies()`, or individually in `consecutive()`, `get_cred_hier()`,
-and `singular_treatment()`.
+`get_hierarchies()`, or individually in `get_arranagements()`,
+`get_cred_phier()`, and `singular_treatment()`.
 }
 \examples{
 prep_data(df, "waitlist", TRUE)

@@ -1,9 +1,9 @@
-#' Get credible hierarchies for consecutive (combinatorial) question types
+#' Get credible arrangement hierarchies
 #'
 #' @description
-#' Finds all ranked permutations, permutations, ranked combinations, and
-#' combinations with relative frequencies greater than or equal to a given
-#' threshold.
+#' `get_arrangements()` finds all ranked permutations, permutations, ranked
+#' combinations, and combinations with relative frequencies greater than or
+#' equal to a given threshold.
 #'
 #' @param hierarchy_matrix a matrix where column headers are ranks and each row
 #'   displays the treatments assigned to each rank for that iteration.
@@ -17,8 +17,8 @@
 #' @export
 #'
 #' @examples
-#' consecutive(hierarchy_matrix, 0.5)
-consecutive <- function(hierarchy_matrix, threshold) {
+#' get_arrangements(hierarchy_matrix, 0.5)
+get_arrangements <- function(hierarchy_matrix, threshold) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")

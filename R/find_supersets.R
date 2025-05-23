@@ -1,13 +1,13 @@
 #' Identify and optionally trim superset hierarchies
 #'
 #' @description
-#' `find_supersets` compares the outputs from `consecutive()` and `get_posets()`
-#' to identify redundant credible hierarchies (i.e., supersets).
+#' `find_supersets` compares the outputs from `get_arrangements()` and
+#' `get_phier()` to identify redundant credible hierarchies (i.e., supersets).
 #'
-#' @param algo1 a list of data frames outputted from `consecutive()` containing
-#'   the credible hierarchies for ranked permutations, permutations, ranked
-#'   combinations, and combinations.
-#' @param algo2 a data frame outputted from `get_posets()` containing credible
+#' @param algo1 a list of data frames outputted from `get_arrangements()`
+#'   containing the credible hierarchies for ranked permutations, permutations,
+#'   ranked combinations, and combinations.
+#' @param algo2 a data frame outputted from `get_phier()` containing credible
 #'   partial hierarchies.
 #' @param type a numeric vector indicating what types of supersets should be
 #'   trimmed. See details for more information. Default is 1:8.
@@ -40,7 +40,7 @@
 #' @export
 #'
 #' @examples
-#' find_supersets(consec_outputs, posets)
+#' find_supersets(algo1, algo2)
 find_supersets <- function(algo1, algo2, type = 1:8, trim = FALSE) {
 
   # Verify algo1 and algo2 objects correspond to the same threshold

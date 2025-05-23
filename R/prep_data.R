@@ -2,8 +2,8 @@
 #'
 #' @description
 #' `prep_data()` produces a list of inputs to be used altogether in
-#' `get_hierarchies()`, or individually in `consecutive()`, `get_cred_hier()`,
-#' and `singular_treatment()`.
+#' `get_hierarchies()`, or individually in `get_arranagements()`,
+#' `get_cred_phier()`, and `singular_treatment()`.
 #'
 #' @param effects_matrix a data frame where the column headers are treatment names
 #'   and each row displays each treatment’s sampled relative effect for that
@@ -12,12 +12,13 @@
 #' @param largerBetter a logical value indicating whether larger relative
 #'   effects are better (TRUE) or not (FALSE).
 #'
-#' @return \code{hierarchy.matrix} - A matrix where column headers are ranks and
+#' @return \code{hierarchy_matrix} - A matrix where column headers are ranks and
 #' each row displays the treatments assigned to each rank for that iteration.
-#' @return \code{effects.matrix} - A matrix where the column headers are
+#' @return \code{effects_matrix} - A matrix where the column headers are
 #' treatment names and each row displays each treatment’s sampled relative
 #' effect for that iteration.
-#' @return \code{ranking.df} - A data frame of each treatment's ranks and associated frequencies
+#' @return \code{ranking_df} - A data frame of each treatment's ranks and
+#' associated frequencies.
 #' @importFrom stats reshape
 #' @export
 #'
@@ -58,7 +59,7 @@ prep_data <- function(effects_matrix, reference, largerBetter) {
     x3_sorted <- x3[order(x3$iteration, x3$value), ]
   }
 
-  # prep for consecutive
+  # prep for arrangements
   strs <- sapply(split(x3_sorted$trt, x3_sorted$iteration), function(x) paste(x, collapse = ","))
   tbl<- t(sapply(strs, str_split_1, ","))
 

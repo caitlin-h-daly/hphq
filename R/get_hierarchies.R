@@ -1,10 +1,11 @@
 #' Get all credible hierarchies
 #'
 #' @description
-#' `get_hierarchies` runs the inputs through `consecutive()`, `get_cred_phier()`,
-#' and `singular_treatment()` to produce a list of all hierarchies with relative
-#' frequencies greater than or equal to the threshold. These hierarchies are
-#' then run through `find_supersets()` to determine which of them are supersets.
+#' `get_hierarchies` runs the inputs through `get_arrangements()`,
+#' `get_cred_phier()`, and `singular_treatment()` to produce a list of all
+#' hierarchies with relative frequencies greater than or equal to the threshold.
+#' These hierarchies are then run through `find_supersets()` to determine which
+#' of them are supersets.
 #'
 #' @param inputs the output from `prep_data()`, which consists of a list of
 #'   `hierarchy_matrix`, `effects_matrix`, and `ranking_df`.
@@ -35,11 +36,11 @@ get_hierarchies <- function(inputs, largerBetter, thresholds, MID = 0, printPlot
   treatments <- colnames(inputs[[2]])
   n_trt <- length(treatments)
 
-  consec_outputs <- consecutive(inputs[[1]], thresholds[[1]])
+  arrangements <- get_arrangements(inputs[[1]], thresholds[[1]])
   phier <- get_cred_phier(inputs[[2]], MID, thresholds[[2]], largerBetter)
   single <- get_cred_hier_single(inputs[[3]], thresholds[[3]], printPlot)
 
-  first_outputs <- find_supersets(consec_outputs, phier, n_trt)
+  first_outputs <- find_supersets(arrangements, phier, n_trt)
 
   all_outputs <- append(first_outputs, single)
   names(all_outputs) <- c("Ranked Permutations", "Permutations",
