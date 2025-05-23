@@ -7,17 +7,17 @@
 find_supersets(algo1, algo2, type = 1:8, trim = FALSE)
 }
 \arguments{
-\item{algo1}{A list of data frames outputted from `consecutive()` containing
+\item{algo1}{a list of data frames outputted from `consecutive()` containing
 the credible hierarchies for ranked permutations, permutations, ranked
 combinations, and combinations.}
 
-\item{algo2}{A data frame outputted from `get_posets()` containing credible
+\item{algo2}{a data frame outputted from `get_posets()` containing credible
 partial hierarchies.}
 
-\item{type}{A numeric vector indicating what types of supersets should be
+\item{type}{a numeric vector indicating what types of supersets should be
 trimmed. See details for more information. Default is 1:8.}
 
-\item{trim}{A logical value indicating whether the output should trim the
+\item{trim}{a logical value indicating whether the output should trim the
 include the identified subsets (TRUE) or not (FALSE, the default).}
 }
 \value{

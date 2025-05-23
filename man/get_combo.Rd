@@ -2,14 +2,21 @@
 % Please edit documentation in R/internal.R
 \name{get_combo}
 \alias{get_combo}
-\title{Gets credible combinations}
+\title{Get combinations}
 \usage{
 get_combo(all_ranked_combo)
 }
 \arguments{
-\item{all_ranked_combo}{data frame of all ranked combinations}
+\item{all_ranked_combo}{a data frame consisting of the ranks (`Range`) of all
+observed combinations (`Combinations`) and the corresponding proportion of
+samples for which they were observed (`Freq`).}
+}
+\value{
+A data frame containing
+  * `Combinations`: a string of the combination of treatments.
+  * `Freq`: the proportion of samples for which the combination was observed.
 }
 \description{
-Gets credible combinations
+`get_combo()`
 }
 \keyword{internal}

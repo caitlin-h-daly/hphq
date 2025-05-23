@@ -2,14 +2,23 @@
 % Please edit documentation in R/internal.R
 \name{get_perm}
 \alias{get_perm}
-\title{Gets credible permutations}
+\title{Get permutations}
 \usage{
 get_perm(all_ranked_perm)
 }
 \arguments{
-\item{all_ranked_perm}{data frame of all ranked permutations}
+\item{all_ranked_perm}{a data frame consisting of the ranks (`Range`) of all
+observed permutations (`Var1`) and the corresponding proportion of samples
+for which they were observed (`Freq`).}
+}
+\value{
+A data frame containing
+  * `Var1`: a string of the permutation of treatments.
+  * `Freq`: the proportion of samples for which the permutation was observed.
 }
 \description{
-Gets credible permutations
+`get_perm()` groups all ranked permutations by the permutation string
+  (ignoring ranks), and sums the proportion of samples for which they were
+  observed.
 }
 \keyword{internal}

@@ -2,21 +2,25 @@
 % Please edit documentation in R/consecutive.R
 \name{consecutive}
 \alias{consecutive}
-\title{Retrieves credible hierarchies for consecutive question types}
+\title{Retrieves credible hierarchies for consecutive (combinatorial) question types}
 \usage{
-consecutive(hierarchy.matrix, threshold)
+consecutive(hierarchy_matrix, threshold)
 }
 \arguments{
-\item{hierarchy.matrix}{A matrix where column headers are ranks and each row displays the treatments assigned to each rank for that iteration}
+\item{hierarchy_matrix}{a matrix where column headers are ranks and each row
+displays the treatments assigned to each rank for that iteration.}
 
-\item{threshold}{A number that determines which hierarchies are credible}
+\item{threshold}{a proportion between 0 and 1 for which a hierarchy must be
+observed in order to be credible.}
 }
 \value{
-A list of data frames containing the credible hierarchies for Ranked Permutations, Permutations, Ranked Combinations, and Combinations
+A list of data frames containing the credible hierarchies for ranked
+permutations, permutations, ranked combinations, and combinations.
 }
 \description{
-Finds all Ranked Permutations, Permutations, Ranked Combinations, and Combinations with frequencies greater than or equal to the threshold
+Finds all ranked permutations, permutations, ranked combinations, and
+combinations with frequencies greater than or equal to a given threshold.
 }
 \examples{
-consecutive(hierarchy.matrix,0.5)
+consecutive(hierarchy_matrix, 0.5)
 }

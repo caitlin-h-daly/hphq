@@ -1,43 +1,101 @@
-#' Gets frequency of columns
-#' @param data data frame
-#' @param col.range range of columns
+#' Get ranked permutations
+#'
+#' @description
+#' `get_ranked_perm()` calculates the proportion of samples for which a
+#' permutation with ranks `rank_range` was observed in `hierarchy_matrix`.
+#'
+#' @param hierarchy_matrix a matrix where column headers are ranks and each row
+#'   displays the treatments assigned to each rank for that iteration.
+#' @param rank_range a numeric vector of sequential ranks to consider.
+#'
+#' @returns A data frame containing
+#'   * `Range`: a string presenting the ranks corresponding to the permutation
+#'   in `Var1`, presented as min-max.
+#'   * `Var1`: a string of the permutation of treatments.
+#'   * `Freq`: the proportion of samples for which the ranked permutation was
+#'   observed.
+#'
 #' @keywords internal
-freq <- function(data, col.range){
-  out <- as.data.frame(table(apply(data[,col.range], 1, paste0, collapse = ","))/nrow(data))
-  new.col <- rep(paste0(min(col.range), "-", max(col.range)), nrow(out))
-  out <- cbind(new.col, out)
-  colnames(out) <- c("Range", "Var1", "Freq")
-  return(out)
+get_ranked_perm <- function(hierarchy_matrix, rank_range){
+  ranked_perm <- as.data.frame(table(apply(hierarchy_matrix[, rank_range], 1,
+                                           paste0, collapse = ",")) / nrow(hierarchy_matrix))
+  rank_int <- rep(paste0(min(rank_range), "-", max(rank_range)), nrow(ranked_perm))
+  ranked_perm <- cbind(rank_int, ranked_perm)
+  colnames(ranked_perm) <- c("Range", "Var1", "Freq")
+  return(ranked_perm)
 }
 
-#' Gets credible permutations
-#' @param all_ranked_perm data frame of all ranked permutations
+#' Get permutations
+#'
+#' @description
+#' `get_perm()` groups all ranked permutations by the permutation string
+#'   (ignoring ranks), and sums the proportion of samples for which they were
+#'   observed.
+#'
+#' @param all_ranked_perm a data frame consisting of the ranks (`Range`) of all
+#'   observed permutations (`Var1`) and the corresponding proportion of samples
+#'   for which they were observed (`Freq`).
+#'
+#' @returns A data frame containing
+#'   * `Var1`: a string of the permutation of treatments.
+#'   * `Freq`: the proportion of samples for which the permutation was observed.
+#'
 #' @keywords internal
-get_perm <- function (all_ranked_perm) {
-  # takes in all the anchored permutations, groups it by permutation, and
-  # calculates the sum of the frequency
-  perm <- aggregate(Freq ~ Var1, data = all_ranked_perm, sum)
-  return (perm)
+get_perm <- function(all_ranked_perm) {
+  # takes all ranked permutations, groups it by permutation, and calculates the
+  # sum of the frequency
+  all_perm <- aggregate(Freq ~ Var1, data = all_ranked_perm, sum)
+  return(all_perm)
 }
 
 #' Gets credible ranked combinations
-#' @param all_ranked_perm data frame of all ranked permutations
-#' @param trts vector of all the treatments
+#'
+#' @description
+#' get_ranked_comb()` first sorts the treatments within permutation strings to
+#' create a combination string that ignores order. It then groups all
+#' combinations by rank interval and sums the proportion of samples for which
+#' they were observed.
+#'
+#' @param all_ranked_perm a data frame consisting of the ranks (`Range`) of all
+#'   observed permutations (`Var1`) and the corresponding proportion of samples
+#'   for which they were observed (`Freq`).
+#' @param trts a vector of all the treatments strings.
+#'
+#' @returns A data frame containing
+#'   * `Range`: a string presenting the ranks corresponding to the combination
+#'   in `Combinations`, presented as min-max.
+#'   * `Combinations`: a string of the combination of treatments.
+#'   * `Freq`: the proportion of samples for which the ranked combination was
+#'   observed.
+#'
 #' @keywords internal
-indexed_combo <- function (all_ranked_perm,trts) {
-  trts<-sort(trts)
-  all_ranked_perm$Combinations <- vapply(strsplit(as.character(all_ranked_perm$Var1),','), function(x) paste(x[match(trts,x,nomatch=0)], collapse = ','), '')
+get_ranked_comb <- function(all_ranked_perm, trts) {
+  trts <- sort(trts)
+  # create a new column `Combinations`, which sorts within the permutation strings
+  all_ranked_perm$Combinations <- vapply(strsplit(as.character(all_ranked_perm$Var1), ','),
+                                         function(x) paste(x[match(trts, x, nomatch = 0)], collapse = ','), '')
 
-  ## groups Combinations and Position and calculates sum of the frequency
+  # groups combinations by rank interval and calculates sum of the frequency
   all_ranked_combo <- aggregate(Freq ~ Combinations + Range, data = all_ranked_perm, sum)
   all_ranked_combo <- all_ranked_combo[, c("Range", "Combinations", "Freq")]
-  return(all_ranked_combo)
+  return(ranked_combo)
 }
 
-#' Gets credible combinations
-#' @param all_ranked_combo data frame of all ranked combinations
+#' Get combinations
+#'
+#' @description
+#' `get_combo()`
+#'
+#' @param all_ranked_combo a data frame consisting of the ranks (`Range`) of all
+#'   observed combinations (`Combinations`) and the corresponding proportion of
+#'   samples for which they were observed (`Freq`).
+#'
+#' @return A data frame containing
+#'   * `Combinations`: a string of the combination of treatments.
+#'   * `Freq`: the proportion of samples for which the combination was observed.
+#'
 #' @keywords internal
-get_combo <- function (all_ranked_combo) {
+get_combo <- function(all_ranked_combo) {
   # takes in all ranked combinations, groups it by Combination, and sums the frequencies
   all_combo <- aggregate(Freq ~ Combinations, data = all_ranked_combo, sum)
   return(all_combo)
