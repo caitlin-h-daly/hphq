@@ -1,9 +1,9 @@
-#' Get credible rankings and HPD intervals for each treatment
+#' Get credible rankings and HPD sets for each treatment
 #'
 #' @description
 #' `get_cred_hier_single()` finds all ranks and high probability density (HPD)
-#' intervals with relative frequencies greater than or equal to the threshold
-#' for each treatment. The HPD intervals provide the subset of ranks with the
+#' sets with relative frequencies greater than or equal to the threshold for
+#' each treatment. The HPD intervals provide the subset of ranks with the
 #' smallest possible cumulative relative frequency that is at least equal to the
 #' threshold.
 #'
@@ -15,7 +15,8 @@
 #' printed (TRUE) or not (FALSE, the default).
 #'
 #' @return A list of data frames containing the credible rankings and HPD
-#' intervals for each treatment.
+#' set for each treatment.
+#'
 #' @importFrom graphics barplot
 #' @importFrom graphics legend
 #' @importFrom graphics par
@@ -24,16 +25,18 @@
 #' @examples
 #' get_cred_hier_single(df,0.1,c("CBT.exp","Placebo","PCT"))
 get_cred_hier_single <- function(ranking_df, threshold, printPlot = FALSE) {
-  if(threshold> 1 || threshold < 0) {
+
+  if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
   }
+
   df <- ranking_df
   treatments <- unique(df$Treatment)
   n_trt <- length(treatments)
   tolerance <- .Machine$double.eps ^ 0.5
   threshold <- threshold - tolerance
   comparator <- seq_len(n_trt)
-  outputs<-vector("list", length=2)
+  outputs <- vector("list", length = 2)
 
   # proportion of times each treatment is a specific rank
   filtered_df <- subset(df, df$Freq > threshold)
@@ -49,7 +52,7 @@ get_cred_hier_single <- function(ranking_df, threshold, printPlot = FALSE) {
     }
     sucra_matrix <- t(apply(sucra, 1, cumsum))
     sucra_values <- rowMeans(sucra_matrix)
-    sorted_sucra <- sort(sucra_values, decreasing=TRUE)
+    sorted_sucra <- sort(sucra_values, decreasing = TRUE)
   } else {
     sorted_sucra <- treatments
     names(sorted_sucra) <- treatments

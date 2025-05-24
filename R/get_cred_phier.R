@@ -88,7 +88,7 @@ get_cred_phier <- function(effects_matrix, MID = 0, threshold, largerBetter) {
     for (i in seq(1:total_rows)) {
       trts <- filtered_perms[i, ]
       trt1 <- trts[perm_size - 1]
-      new_trts = treatments[!(treatments %in% trts)]
+      new_trts <- treatments[!(treatments %in% trts)]
       perm_df <- create_perm(trts, trt1, new_trts, perm_size, credible)
       if (!is.logical(perm_df)) {
         df_list[[i]] <- perm_df

@@ -21,7 +21,7 @@
 #'
 #' @return A list of data frames containing the credible hierarchies for ranked
 #' permutations, permutations, ranked combinations, combinations, partial
-#' hierarchies, individual ranking probabilities, and HPD intervals.
+#' hierarchies, individual ranking probabilities, and HPD sets.
 #' @export
 #'
 #' @examples

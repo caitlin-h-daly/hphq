@@ -7,17 +7,37 @@
 create_perm(trts, trt1, new_trts, perm_size, credible)
 }
 \arguments{
-\item{trts}{list of treatment names}
+\item{trts}{a data frame consisting of one row of the treatment names
+corresponding to those in a permutation that we want to build on.}
 
-\item{trt1}{first treatment in the new pair}
+\item{trt1}{a character string belonging to the treatment with the worst
+effect in `trts`.}
 
-\item{new_trts}{potential new treatments to add}
+\item{new_trts}{a character vector of the remaining treatments to consider
+adding to `trts` to build a new permutation.}
 
-\item{perm_size}{size of the permutation}
+\item{perm_size}{a numeric value indicating the size of the permutation under
+consideration (i.e., the number of treatments involved).}
 
-\item{credible}{list of credible size two permutations}
+\item{credible}{a character vector listing credible permutations of size two
+(e.g., "trt1_name,trt2_name").}
+}
+\value{
+Either a data frame of the new, larger permutations to consider as
+potentially credible partial hierarchies, or "FALSE" to indicate that no new
+permutations have been created to be assessed as potentially credible partial
+hierarchies.
 }
 \description{
-`create_perm()`
+`create_perm()` looks at the credibility of a permutation of size 2 involving
+a treatment with the worst effect in an existing credible permutation `trts`
+and a new treatment not in `trts`; if the pair of these two treatments is a
+credible permutation, the new treatment will be added to `trts` to create a
+new, larger permutation to be assessed as a potentially credible partial
+hierarchy.
+}
+\details{
+Note the treatment names should match those in the column names of the
+`effects_matrix` inputted into `prep_data()`.
 }
 \keyword{internal}

@@ -2,18 +2,27 @@
 % Please edit documentation in R/internal.R
 \name{hpd}
 \alias{hpd}
-\title{Finds HPD intervals}
+\title{Find high probability density (HPD) set}
 \usage{
-hpd(ranks, threshold, freq_sum)
+hpd(ranks, threshold, freq_sum = 1)
 }
 \arguments{
-\item{ranks}{column of ranks and their frequency}
+\item{ranks}{a data frame for a particular treatment, consisting of one
+column (`Rank`) of all possible ranks and another column (`Freq`) listing
+the proportion of samples for which the treatment was ranked `Rank`.}
 
-\item{threshold}{cutoff for what is considered credible}
+\item{threshold}{a proportion between 0 and 1 for which a hierarchy must be
+observed in order to be credible.}
 
-\item{freq_sum}{value is always 1}
+\item{freq_sum}{a numeric value that should always be 1 (the default).}
+}
+\value{
+A list of 1) a string of the rank(s) in the HPD interval, 2) the
+corresponding observed relative frequency for the ranks in the HPD interval,
+3) a vector of the rank(s) in the HPD interval.
 }
 \description{
-`hpd()`
+`hpd()` determines the subset of ranks with the smallest possible cumulative
+relative frequency that is at least equal to `threshold`.
 }
 \keyword{internal}

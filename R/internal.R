@@ -143,55 +143,87 @@ is_phier_sup_of_phier <- function(phier_target, larger_phier_list) {
 #' Creates permutations for `get_cred_phier()` function
 #'
 #' @description
-#' `create_perm()`
+#' `create_perm()` looks at the credibility of a permutation of size 2 involving
+#' a treatment with the worst effect in an existing credible permutation `trts`
+#' and a new treatment not in `trts`; if the pair of these two treatments is a
+#' credible permutation, the new treatment will be added to `trts` to create a
+#' new, larger permutation to be assessed as a potentially credible partial
+#' hierarchy.
 #'
-#' @param trts list of treatment names
-#' @param trt1 first treatment in the new pair
-#' @param new_trts potential new treatments to add
-#' @param perm_size size of the permutation
-#' @param credible list of credible size two permutations
+#' @param trts a data frame consisting of one row of the treatment names
+#'   corresponding to those in a permutation that we want to build on.
+#' @param trt1 a character string belonging to the treatment with the worst
+#'   effect in `trts`.
+#' @param new_trts a character vector of the remaining treatments to consider
+#'   adding to `trts` to build a new permutation.
+#' @param perm_size a numeric value indicating the size of the permutation under
+#'   consideration (i.e., the number of treatments involved).
+#' @param credible a character vector listing credible permutations of size two
+#'   (e.g., "trt1_name,trt2_name").
+#'
+#' @details
+#' Note the treatment names should match those in the column names of the
+#' `effects_matrix` inputted into `prep_data()`.
+#'
+#' @return Either a data frame of the new, larger permutations to consider as
+#' potentially credible partial hierarchies, or "FALSE" to indicate that no new
+#' permutations have been created to be assessed as potentially credible partial
+#' hierarchies.
 #'
 #' @keywords internal
 create_perm <- function(trts, trt1, new_trts, perm_size, credible) {
   actual_new_trts <- c()
   for(trt2 in new_trts) { # iterates through each potential new treatment to add
     pair <- paste0(trt1, ",", trt2) # the potential pair to add
-    if(any(pair %in% credible)) { # if the pair exists in the credible list, we can add it to the permutation
+    # if the pair exists in the credible list, we can add it to the permutation
+    if(any(pair %in% credible)) {
       actual_new_trts <- c(actual_new_trts, trt2)
-    } # if the pair isn't credible, we do not need to add it to the permutation
+    }
   }
   size <- length(actual_new_trts)
   if(size == 0){ # no new treatments to add
     return (FALSE)
   }
-  list_trts <- lapply(trts, function(x) { # create vectors where each treatment from trts is repeated size times
+  # create vectors where each treatment from trts is repeated size times
+  list_trts <- lapply(trts, function(x) {
     rep(x,size)
   })
   list_trts[[length(list_trts) + 1]] <- actual_new_trts
-  trt_df <- do.call(cbind, list_trts) # binds the new treatments to the permutations
+  trt_df <- do.call(cbind, list_trts)  # binds the new treatments to the permutations
   return(trt_df)
 }
 
-#' Finds HPD intervals
+#' Find high probability density (HPD) set
 #'
 #' @description
-#' `hpd()`
+#' `hpd()` determines the subset of ranks with the smallest possible cumulative
+#' relative frequency that is at least equal to `threshold`.
 #'
-#' @param ranks column of ranks and their frequency
-#' @param threshold cutoff for what is considered credible
-#' @param freq_sum value is always 1
+#' @param ranks a data frame for a particular treatment, consisting of one
+#'   column (`Rank`) of all possible ranks and another column (`Freq`) listing
+#'   the proportion of samples for which the treatment was ranked `Rank`.
+#' @param threshold a proportion between 0 and 1 for which a hierarchy must be
+#'   observed in order to be credible.
+#' @param freq_sum a numeric value that should always be 1 (the default).
+#'
+#' @return A list of 1) a string of the rank(s) in the HPD interval, 2) the
+#' corresponding observed relative frequency for the ranks in the HPD interval,
+#' 3) a vector of the rank(s) in the HPD interval.
 #'
 #' @keywords internal
-hpd <- function(ranks, threshold, freq_sum) {
+hpd <- function(ranks, threshold, freq_sum = 1) {
   if(threshold == 0) {
     hpd_ranks <- c()
     ranks$Freq <- 0
   } else {
     ranks <- ranks[order(ranks$Freq), ] # sorts in increasing order
     while(freq_sum > threshold && nrow(ranks) > 0) {
-      freq_sum <- freq_sum - ranks[1, 2] # calculates freq_sum without smallest probability
 
-      if(freq_sum >= threshold) { # if >= threshold, we can drop the first row
+      # calculate freq_sum without smallest probability
+      freq_sum <- freq_sum - ranks[1, 2]
+
+      # if freq_sum >= threshold, we can drop the first row
+      if(freq_sum >= threshold) {
         ranks <- ranks[-1, ]
       }
     }
@@ -205,9 +237,11 @@ hpd <- function(ranks, threshold, freq_sum) {
   } else if(length(hpd_ranks) == 0) {
     concat_ranks <- "N/A"
   } else if(all(diff(as.numeric(as.character(hpd_ranks))) == 1)) { # hpd is an interval
-    concat_ranks <- paste(hpd_ranks[1], hpd_ranks[[length(hpd_ranks)]], sep = "-")  # formats the ranks into an interval
+    # formats the ranks into an interval
+    concat_ranks <- paste(hpd_ranks[1], hpd_ranks[[length(hpd_ranks)]], sep = "-")
   } else { # hpd is not an interval
-    concat_ranks <- paste(hpd_ranks, collapse=',') # collapses the ranks into one string
+    # collapses the ranks into one string
+    concat_ranks <- paste(hpd_ranks, collapse = ',')
   }
 
   hpd_vec <- list(concat_ranks, sum(ranks$Freq), hpd_ranks)
