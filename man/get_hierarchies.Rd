@@ -26,7 +26,7 @@ printed (TRUE) or not (FALSE, the default).}
 \value{
 A list of data frames containing the credible hierarchies for ranked
 permutations, permutations, ranked combinations, combinations, partial
-hierarchies, individual ranking probabilities, and HPD intervals.
+hierarchies, individual ranking probabilities, and HPD sets.
 }
 \description{
 `get_hierarchies` runs the inputs through `get_arrangements()`,
