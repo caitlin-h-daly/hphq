@@ -287,6 +287,20 @@ find_supersets <- function(algo1, algo2, type = 1:8, trim = FALSE) {
     phier <- phier[phier$Superset == FALSE, ]
   }
 
+  # add appropriate brackets for combinatorial type
+  if(nrow(ranked_perm) > 0) {
+    ranked_perm$`Ranked Permutations` <- paste0("(", ranked_perm$`Ranked Permutations`, ")")
+  }
+  if(nrow(perm) > 0) {
+    perm$Permutations <- paste0("(", perm$Permutations, ")")
+  }
+  if(nrow(ranked_comb) > 0) {
+    ranked_comb$`Ranked Combinations` <- paste0("{", ranked_comb$`Ranked Combinations`, "}")
+  }
+  if(nrow(comb) > 0) {
+    comb$Combinations <- paste0("{", comb$Combinations, "}")
+  }
+
   return(list(`Ranked Permutations` = ranked_perm,
               `Permutations` = perm,
               `Ranked Combinations` = ranked_comb,
