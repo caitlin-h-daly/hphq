@@ -102,7 +102,7 @@ find_supersets <- function(algo1, algo2, type = 1:8, trim = FALSE) {
               # extract jth partial hierarchy in current_phier_size
               phier_target <- stringr::str_split_1(as.character(current_phier_size[j, 1]), " > ")
               # check to see if jth partial hierarchy is in larger partial hierarchies
-              superset_check <- nmahierarchies::is_phier_sup_of_phier(phier_target,
+              superset_check <- nmahierarchies:::is_phier_sup_of_phier(phier_target,
                                                                       phier_larger_list)
               if(!is.null(superset_check)){
                 current_phier_size[j, "Superset"] <- superset_check

@@ -1,0 +1,155 @@
+---
+title: "Demonstration of the `nmahierarchies` package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Demonstration of the `nmahierarchies` package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(nmahierarchies)
+```
+
+# Required data
+
+We will use the results from a Bayesian fixed effect network meta-analysis (NMA) 
+run on a data set collected by Thijs et al. (2008) to demonstrate the functions 
+in this package. This results data consist of 300,000 MCMC samples from the 
+joint distribution of the relative effects for each treatment (aspirin, 
+aspirin + dipyridamole, thienopyridines, thienopyridines + aspirin, placebo) vs. 
+a reference (placebo), obtained from 3 chains (100,000 each). 
+
+Alternatively, samples from the joint distribution of pooled relative effects 
+may be simulated using the `ranksampling()` function in the `netmeta` R package.
+
+A data frame consisting of the relative effects vs. a reference treatment should 
+only be inputted. The chain index does not needs to be removed.
+
+```{r data}
+head(dat_Thijs2008)
+
+# Remove any columns that do not list relative effects of each treatment vs. the
+# reference treatment
+dat <- dat_Thijs2008[, -1]
+head(dat)
+```
+
+# Prepare the data
+
+To obtain the data inputs required for each algorithm available in this package,
+use the `prep_data()` function.
+
+```{r}
+inputs <- prep_data(effects_matrix = dat, 
+                    reference = "Placebo", 
+                    largerBetter = FALSE
+)  
+```
+
+`prep_data()` creates a list of three R objects: 
+
+* `hierachy_matrix`: a matrix where column headers are ranks and each row 
+displays the treatments assigned to each rank for that iteration.
+
+* `effects_matrix`: a matrix where the column headers are treatment names and 
+each row displays each treatment’s sampled relative effect for that iteration. 
+This should look exactly the same as the data inputted into `prep_data()`.
+
+* `ranking_df`: a data frame of each treatment's ranks and associated 
+frequencies.
+
+```{r}
+head(inputs$hierarchy_matrix)
+
+head(inputs$effects_matrix)
+
+head(inputs$ranking_df)
+```
+
+# Arrangements
+
+To obtain all credible arrangements (e.g., ranked permutations, permutations, 
+ranked combinations, and combinations), you may use the `get_arrangements()` 
+function. This uses the first algorithm described by Tan et al. (2025).
+
+```{r}
+algo1 <- get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, 
+                          threshold = 0.9)
+algo1
+```
+
+# Partial hierarchies
+
+To obtain all credible partial hierarchies (e.g., A > B > C), you may use the 
+`get_cred_phier()` function. This uses the second algorithm described by Tan et 
+al. (2025).
+
+```{r}
+algo2 <- get_cred_phier(effects_matrix = inputs$effects_matrix, 
+                        MID = 0, 
+                        threshold = 0.9, 
+                        largerBetter = FALSE)
+algo2
+```
+
+# Rankings and high probability density (HPD) sets
+
+To obtain all credible rankings, as well as the high probability density sets, 
+for each treatment at a given threshold, you may use the `get_cred_hier_single()` 
+function. This uses the third algorithm described by Tan et al. (2025).
+
+Note that the rankograms for each treatment may be plotted with overlayed HPD 
+sets by setting the `printPlot` argument to TRUE.
+
+```{r}
+algo3 <- get_cred_hier_single(ranking_df = inputs$ranking_df, 
+                              threshold = 0.9, 
+                              printPlot = FALSE)
+algo3
+```
+
+# Supersets
+
+Some credible hierarchies may be supersets of other credible hierarchies in the 
+outputs of algorithms 1 and 2 (e.g., $A > B > C$ is a superset of 
+$(A, B, C)_1^3$), and thus their output is redundant. You may use
+`find_supersets()` to detect these supersets and optionally remove them. By 
+default, `find_supersets()` detects supersets in the order proposed by Tan et 
+al. (2025). The user has the option to only check certain hierarchy types, in 
+their preferred order. See the help page for more details on this.
+
+```{r}
+super_check <- find_supersets(algo1, algo2)
+super_check
+
+find_supersets(algo1 = algo1, 
+               algo2 = algo2, 
+               trim = TRUE)
+```
+
+# All credible hierarchies at once
+
+Alternatively, you may use the `get_hierarchies()` to get all credible 
+hierarchies that answer binary questions (ranked permutations, permutations, 
+ranked combinations, combinations, partial hierarchies, rankings, and HPD sets) 
+in one go. Note this function will always detect if credible hierarchies are 
+supersets of other credible hierarchies in the output, using the default 
+settings of `find_supersets()`.
+
+```{r}
+all_cred_hier <- get_hierarchies(inputs = inputs, 
+                                 largerBetter = FALSE,
+                                 thresholds = c(0.9, 0.9, 0.9), 
+                                 MID = 0, 
+                                 printPlot = FALSE)
+
+all_cred_hier
+```
