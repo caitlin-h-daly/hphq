@@ -149,7 +149,8 @@ all_cred_hier <- get_all_questions(inputs = inputs,
                                    larger_better = FALSE,
                                    thresholds = c(0.9, 0.9, 0.9), 
                                    mid = 0, 
-                                   print_plot = FALSE)
+                                   print_plot = FALSE, 
+                                   trim = TRUE)
 
 all_cred_hier
 ```
