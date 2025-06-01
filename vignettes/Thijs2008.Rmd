@@ -116,7 +116,7 @@ algo3 <- get_ranks_by_treatment(ranking_df = inputs$ranking_df,
 algo3
 ```
 
-# Supersets
+# Check for redundant hierarchies
 
 Some credible hierarchies may be redundant because of other credible hierarchies
 in the outputs of algorithms 1 and 2 (e.g., $A > B > C$ is redundant because of 
