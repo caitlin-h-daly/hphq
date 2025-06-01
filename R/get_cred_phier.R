@@ -2,17 +2,17 @@
 #'
 #' @description
 #' `get_cred_phier()` finds all partial hierarchies reflecting treatment
-#' differences greater than or equal to `MID` and with relative frequencies
+#' differences greater than or equal to `mid` and with relative frequencies
 #' greater than or equal to the threshold.
 #'
 #' @param effects_matrix a matrix where the column headers are treatment names
 #'   and each row displays each treatment’s sampled relative effect for that
 #'   iteration.
-#' @param MID a numeric value indicating the absolute minimally important
+#' @param mid a numeric value indicating the absolute minimally important
 #'   difference. Default is 0.
 #' @param threshold a proportion between 0 and 1 for which a hierarchy must be
 #'   observed in order to be credible.
-#' @param largerBetter a logical value indicating whether larger relative
+#' @param larger_better a logical value indicating whether larger relative
 #'   effects are better (TRUE) or not (FALSE).
 #'
 #' @return A data frame containing the credible partial hierarchies.
@@ -20,8 +20,9 @@
 #' @export
 #'
 #' @examples
-#' get_cred_phier(effects_matrix, 10, 0.2, TRUE)
-get_cred_phier <- function(effects_matrix, MID = 0, threshold, largerBetter) {
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+#' get_cred_phier(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
+get_cred_phier <- function(effects_matrix, mid = 0, threshold, larger_better) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
@@ -33,12 +34,12 @@ get_cred_phier <- function(effects_matrix, MID = 0, threshold, largerBetter) {
   n_trt <- length(treatments)
   n_iter <- nrow(effects_matrix)
   tolerance <- .Machine$double.eps ^ 0.5
-  MID <- abs(MID)
-  if (largerBetter) {
-    MID_t <- MID - tolerance
+  mid <- abs(mid)
+  if (larger_better) {
+    mid_t <- mid - tolerance
   } else {
-    MID_t <- -MID + tolerance
-    MID <- -MID
+    mid_t <- -mid + tolerance
+    mid <- -mid
   }
   threshold <- threshold - tolerance
 
@@ -54,10 +55,10 @@ get_cred_phier <- function(effects_matrix, MID = 0, threshold, largerBetter) {
   Freq <- apply(perms, 1, function(row) {
     trt1 <- row['V1']
     trt2 <- row['V2']
-    if(largerBetter) {
-      sum((effects_matrix[,trt1] - effects_matrix[,trt2]) > MID_t) / n_iter
+    if(larger_better) {
+      sum((effects_matrix[,trt1] - effects_matrix[,trt2]) > mid_t) / n_iter
     } else {
-      sum((effects_matrix[,trt1] - effects_matrix[,trt2]) < MID_t)/ n_iter
+      sum((effects_matrix[,trt1] - effects_matrix[,trt2]) < mid_t)/ n_iter
     }
   })
   perms$Freq <- Freq
@@ -72,7 +73,7 @@ get_cred_phier <- function(effects_matrix, MID = 0, threshold, largerBetter) {
     formatted_perms <- paste0(filtered_perms$V1, " > ", filtered_perms$V2)
     finished_perms <- data.frame(formatted_perms, filtered_perms$Freq)
   }
-  heading <- paste0("Treatments at MID = ", MID)
+  heading <- paste0("Treatments at MID = ", mid)
   colnames(finished_perms) <- c(heading, "Freq")
   output_list[[output_list_index]] <- finished_perms
   output_list_index <- output_list_index + 1
@@ -106,10 +107,10 @@ get_cred_phier <- function(effects_matrix, MID = 0, threshold, largerBetter) {
       for (i in seq (1:(length(trts) - 1))) {
         trt1 <- row[i]
         trt2 <- row[i + 1]
-        if (largerBetter) {
-          compare_matrix[,i] <- (effects_matrix[, trt1] - effects_matrix[, trt2]) > MID_t
+        if (larger_better) {
+          compare_matrix[,i] <- (effects_matrix[, trt1] - effects_matrix[, trt2]) > mid_t
         } else {
-          compare_matrix[,i] <- (effects_matrix[, trt1] - effects_matrix[, trt2]) < MID_t
+          compare_matrix[,i] <- (effects_matrix[, trt1] - effects_matrix[, trt2]) < mid_t
         }
       }
       count <- sum(apply(compare_matrix, 1, function(row) {

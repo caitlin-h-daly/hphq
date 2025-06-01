@@ -4,7 +4,7 @@
 \alias{get_cred_hier_single}
 \title{Get credible rankings and HPD sets for each treatment}
 \usage{
-get_cred_hier_single(ranking_df, threshold, printPlot = FALSE)
+get_cred_hier_single(ranking_df, threshold, print_plot = FALSE)
 }
 \arguments{
 \item{ranking_df}{a data frame of each treatment's ranks and associated
@@ -13,7 +13,7 @@ frequencies.}
 \item{threshold}{a proportion between 0 and 1 for which a hierarchy must be
 observed in order to be credible.}
 
-\item{printPlot}{a logical value indicating whether the rankograms should be
+\item{print_plot}{a logical value indicating whether the rankograms should be
 printed (TRUE) or not (FALSE, the default).}
 }
 \value{
@@ -28,5 +28,6 @@ smallest possible cumulative relative frequency that is at least equal to the
 threshold.
 }
 \examples{
-get_cred_hier_single(df,0.1,c("CBT.exp","Placebo","PCT"))
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+get_cred_hier_single(ranking_df = inputs$ranking_df, threshold = 0.9, print_plot = FALSE)
 }

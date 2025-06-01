@@ -4,20 +4,20 @@
 \alias{get_cred_phier}
 \title{Get credible partial hierarchies}
 \usage{
-get_cred_phier(effects_matrix, MID = 0, threshold, largerBetter)
+get_cred_phier(effects_matrix, mid = 0, threshold, larger_better)
 }
 \arguments{
 \item{effects_matrix}{a matrix where the column headers are treatment names
 and each row displays each treatment’s sampled relative effect for that
 iteration.}
 
-\item{MID}{a numeric value indicating the absolute minimally important
+\item{mid}{a numeric value indicating the absolute minimally important
 difference. Default is 0.}
 
 \item{threshold}{a proportion between 0 and 1 for which a hierarchy must be
 observed in order to be credible.}
 
-\item{largerBetter}{a logical value indicating whether larger relative
+\item{larger_better}{a logical value indicating whether larger relative
 effects are better (TRUE) or not (FALSE).}
 }
 \value{
@@ -25,9 +25,10 @@ A data frame containing the credible partial hierarchies.
 }
 \description{
 `get_cred_phier()` finds all partial hierarchies reflecting treatment
-differences greater than or equal to `MID` and with relative frequencies
+differences greater than or equal to `mid` and with relative frequencies
 greater than or equal to the threshold.
 }
 \examples{
-get_cred_phier(effects_matrix, 10, 0.2, TRUE)
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+get_cred_phier(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
 }

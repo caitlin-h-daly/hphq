@@ -4,23 +4,23 @@
 \alias{get_hierarchies}
 \title{Get all credible hierarchies}
 \usage{
-get_hierarchies(inputs, largerBetter, thresholds, MID = 0, printPlot = FALSE)
+get_hierarchies(inputs, larger_better, thresholds, mid = 0, print_plot = FALSE)
 }
 \arguments{
 \item{inputs}{the output from `prep_data()`, which consists of a list of
 `hierarchy_matrix`, `effects_matrix`, and `ranking_df`.}
 
-\item{largerBetter}{a logical value indicating whether larger relative
+\item{larger_better}{a logical value indicating whether larger relative
 effects are better (TRUE) or not (FALSE).}
 
 \item{thresholds}{A numeric vector containing three proportions between 0 and
 1 for which a combinatorial hierarchy, partial hierarchy, and individual
 ranking probabilities would be credible.}
 
-\item{MID}{a numeric value indicating the absolute minimally important
+\item{mid}{a numeric value indicating the absolute minimally important
 difference. Default is 0.}
 
-\item{printPlot}{a logical value indicating whether the rankograms should be
+\item{print_plot}{a logical value indicating whether the rankograms should be
 printed (TRUE) or not (FALSE, the default).}
 }
 \value{
@@ -36,5 +36,6 @@ These hierarchies are then run through `find_supersets()` to determine which
 of them are supersets.
 }
 \examples{
-get_hierarchies(inputs, TRUE, c(0.5,0.6,0.7), 10)
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+get_hierarchies(inputs = inputs, larger_better = FALSE, thresholds = c(0.9, 0.9, 0.9), mid = 0, print_plot = FALSE)
 }

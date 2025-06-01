@@ -4,7 +4,7 @@
 \alias{prep_data}
 \title{Prepare data to determine credible hierarchies}
 \usage{
-prep_data(effects_matrix, reference, largerBetter)
+prep_data(effects_matrix, reference, larger_better)
 }
 \arguments{
 \item{effects_matrix}{a data frame where the column headers are treatment names
@@ -13,7 +13,7 @@ iteration.}
 
 \item{reference}{a character string of the reference treatment's name.}
 
-\item{largerBetter}{a logical value indicating whether larger relative
+\item{larger_better}{a logical value indicating whether larger relative
 effects are better (TRUE) or not (FALSE).}
 }
 \value{
@@ -33,5 +33,8 @@ associated frequencies.
 `get_cred_phier()`, and `singular_treatment()`.
 }
 \examples{
-prep_data(df, "waitlist", TRUE)
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+head(inputs$hierarchy_matrix)
+head(inputs$effects_matrix)
+head(inputs$ranking_df)
 }

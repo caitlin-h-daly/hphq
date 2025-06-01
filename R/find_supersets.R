@@ -4,10 +4,10 @@
 #' `find_supersets` compares the outputs from `get_arrangements()` and
 #' `get_phier()` to identify redundant credible hierarchies (i.e., supersets).
 #'
-#' @param algo1 a list of data frames outputted from `get_arrangements()`
+#' @param algo_1 a list of data frames outputted from `get_arrangements()`
 #'   containing the credible hierarchies for ranked permutations, permutations,
 #'   ranked combinations, and combinations.
-#' @param algo2 a data frame outputted from `get_phier()` containing credible
+#' @param algo_2 a data frame outputted from `get_phier()` containing credible
 #'   partial hierarchies.
 #' @param type a numeric vector indicating what types of supersets should be
 #'   trimmed. See details for more information. Default is 1:8.
@@ -40,14 +40,17 @@
 #' @export
 #'
 #' @examples
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+#' algo1 <- get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
+#' algo2 <- get_cred_phier(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
 #' find_supersets(algo1, algo2)
-find_supersets <- function(algo1, algo2, type = 1:8, trim = FALSE) {
+find_supersets <- function(algo_1, algo_2, type = 1:8, trim = FALSE) {
 
-  # Verify algo1 and algo2 objects correspond to the same threshold
-  # TO DO - add threshold to list in algo1 and algo2 outputs
+  # Verify algo_1 and algo_2 objects correspond to the same threshold
+  # TO DO - add threshold to list in algo_1 and algo_2 outputs
 
-  # Verify algo2 objects correspond to MID = 0
-  if(gsub("Treatments at MID = ", "", colnames(algo2)[1]) != 0){
+  # Verify algo_2 objects correspond to MID = 0
+  if(gsub("Treatments at MID = ", "", colnames(algo_2)[1]) != 0){
     warning("Partial hierarchies constructed with a non-zero MID; supersets of permutations will not be identified.")
     if(2 %in% type) {
       type <- type[-which(type == 2)]  # do not search for partial hierarchies that are supersets of permutations
@@ -60,15 +63,15 @@ find_supersets <- function(algo1, algo2, type = 1:8, trim = FALSE) {
   }
 
   # Extract different hierarchy types
-  ranked_perm <- algo1[[1]]
+  ranked_perm <- algo_1[[1]]
   ranked_perm[, 2] <- str_remove_all(ranked_perm[, 2], "[()]")
-  perm <- algo1[[2]]
+  perm <- algo_1[[2]]
   perm[, 1] <- str_remove_all(perm[, 1], "[()]")
-  ranked_comb <- algo1[[3]]
+  ranked_comb <- algo_1[[3]]
   ranked_comb[, 2] <- str_remove_all(ranked_comb[, 2], "[{}]")
-  comb <- algo1[[4]]
+  comb <- algo_1[[4]]
   comb[, 1] <- str_remove_all(comb[, 1], "[{}]")
-  phier <- algo2
+  phier <- algo_2
 
   # Now find supersets
   for(ind in type){

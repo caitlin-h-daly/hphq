@@ -50,7 +50,7 @@ use the `prep_data()` function.
 ```{r}
 inputs <- prep_data(effects_matrix = dat, 
                     reference = "Placebo", 
-                    largerBetter = FALSE
+                    larger_better = FALSE
 )  
 ```
 
@@ -94,9 +94,9 @@ al. (2025).
 
 ```{r}
 algo2 <- get_cred_phier(effects_matrix = inputs$effects_matrix, 
-                        MID = 0, 
+                        mid = 0, 
                         threshold = 0.9, 
-                        largerBetter = FALSE)
+                        larger_better = FALSE)
 algo2
 ```
 
@@ -107,12 +107,12 @@ for each treatment at a given threshold, you may use the `get_cred_hier_single()
 function. This uses the third algorithm described by Tan et al. (2025).
 
 Note that the rankograms for each treatment may be plotted with overlayed HPD 
-sets by setting the `printPlot` argument to TRUE.
+sets by setting the `print_plot` argument to TRUE.
 
 ```{r}
 algo3 <- get_cred_hier_single(ranking_df = inputs$ranking_df, 
                               threshold = 0.9, 
-                              printPlot = FALSE)
+                              print_plot = FALSE)
 algo3
 ```
 
@@ -130,8 +130,8 @@ their preferred order. See the help page for more details on this.
 super_check <- find_supersets(algo1, algo2)
 super_check
 
-find_supersets(algo1 = algo1, 
-               algo2 = algo2, 
+find_supersets(algo_1 = algo1, 
+               algo_2 = algo2, 
                trim = TRUE)
 ```
 
@@ -146,10 +146,10 @@ settings of `find_supersets()`.
 
 ```{r}
 all_cred_hier <- get_hierarchies(inputs = inputs, 
-                                 largerBetter = FALSE,
+                                 larger_better = FALSE,
                                  thresholds = c(0.9, 0.9, 0.9), 
-                                 MID = 0, 
-                                 printPlot = FALSE)
+                                 mid = 0, 
+                                 print_plot = FALSE)
 
 all_cred_hier
 ```

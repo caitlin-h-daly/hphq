@@ -17,7 +17,8 @@
 #' @export
 #'
 #' @examples
-#' get_arrangements(hierarchy_matrix, 0.5)
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+#' get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
 get_arrangements <- function(hierarchy_matrix, threshold) {
 
   if(threshold > 1 || threshold < 0) {

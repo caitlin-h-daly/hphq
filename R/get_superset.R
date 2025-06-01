@@ -5,7 +5,7 @@
 #'
 #' @param consec_outputs Output from consecutive(), which consists of a list of data frames containing the credible hierarchies for Ranked Permutations, Permutations, Ranked Combinations, and Combinations
 #' @param posets Output from get_posets(), which consists of a data frame of the credible Posets
-#' @param n.treatments Number of treatments
+#' @param n_treatments Number of treatments
 #'
 #' @return A list of credible hierarchies with a column indicating which hierarchies are supersets
 #' @importFrom stringr str_remove_all
@@ -17,7 +17,7 @@
 #' @examples
 #' get_superset(consec_outputs,posets,3)
 
-get_superset <- function(consec_outputs,posets,n.treatments) {
+get_superset <- function(consec_outputs,posets,n_treatments) {
   perm<-consec_outputs[[2]]
   perm[,1]<-str_remove_all(perm[,1], "[()]")
   ranked_perm<-consec_outputs[[1]]
@@ -144,8 +144,8 @@ get_superset <- function(consec_outputs,posets,n.treatments) {
       }
     }
 
-    intervals.drop.left <- paste0(1, "-", (floor(n.treatments/2)+1):(n.treatments-2))
-    intervals.drop.right <- paste0(3:(floor(n.treatments/2)+1), "-", n.treatments)
+    intervals.drop.left <- paste0(1, "-", (floor(n_treatments/2)+1):(n_treatments-2))
+    intervals.drop.right <- paste0(3:(floor(n_treatments/2)+1), "-", n_treatments)
     intervals <- c(intervals.drop.left,intervals.drop.right)
     rows_drop <- which(ranked_combo$Range %in% intervals)
 
@@ -154,7 +154,7 @@ get_superset <- function(consec_outputs,posets,n.treatments) {
         interval <- as.numeric(str_split_1(ranked_combo[index,1],"-"))
         trts<-ranked_combo[index,2]
         if (interval[1] == 1) {
-          complement_interval<-paste0((interval[2]+1),"-",n.treatments)
+          complement_interval<-paste0((interval[2]+1),"-",n_treatments)
         } else {
           complement_interval<-paste0(1,"-",(interval[1]-1))
         }

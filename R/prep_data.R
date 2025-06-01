@@ -9,7 +9,7 @@
 #'   and each row displays each treatment’s sampled relative effect for that
 #'   iteration.
 #' @param reference a character string of the reference treatment's name.
-#' @param largerBetter a logical value indicating whether larger relative
+#' @param larger_better a logical value indicating whether larger relative
 #'   effects are better (TRUE) or not (FALSE).
 #'
 #' @return \code{hierarchy_matrix} - A matrix where column headers are ranks and
@@ -23,8 +23,11 @@
 #' @export
 #'
 #' @examples
-#' prep_data(df, "waitlist", TRUE)
-prep_data <- function(effects_matrix, reference, largerBetter) {
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+#' head(inputs$hierarchy_matrix)
+#' head(inputs$effects_matrix)
+#' head(inputs$ranking_df)
+prep_data <- function(effects_matrix, reference, larger_better) {
   treatments <- colnames(effects_matrix)
   if (reference %in% treatments) {
     x <- effects_matrix
@@ -53,7 +56,7 @@ prep_data <- function(effects_matrix, reference, largerBetter) {
                 direction = "long")
   x3 <- x3[, -which(names(x3) == "id")]
 
-  if (largerBetter == TRUE) {
+  if (larger_better == TRUE) {
     x3_sorted <- x3[order(x3$iteration, -x3$value), ]
   } else {
     x3_sorted <- x3[order(x3$iteration, x3$value), ]

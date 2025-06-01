@@ -4,14 +4,14 @@
 \alias{find_supersets}
 \title{Identify and optionally trim superset hierarchies}
 \usage{
-find_supersets(algo1, algo2, type = 1:8, trim = FALSE)
+find_supersets(algo_1, algo_2, type = 1:8, trim = FALSE)
 }
 \arguments{
-\item{algo1}{a list of data frames outputted from `get_arrangements()`
+\item{algo_1}{a list of data frames outputted from `get_arrangements()`
 containing the credible hierarchies for ranked permutations, permutations,
 ranked combinations, and combinations.}
 
-\item{algo2}{a data frame outputted from `get_phier()` containing credible
+\item{algo_2}{a data frame outputted from `get_phier()` containing credible
 partial hierarchies.}
 
 \item{type}{a numeric vector indicating what types of supersets should be
@@ -50,5 +50,8 @@ We recommend these supersets are identified in increasing order (1 through
 8). Otherwise, a warning will be outputted.
 }
 \examples{
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+algo1 <- get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
+algo2 <- get_cred_phier(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
 find_supersets(algo1, algo2)
 }

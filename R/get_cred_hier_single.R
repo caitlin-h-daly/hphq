@@ -11,7 +11,7 @@
 #'   frequencies.
 #' @param threshold a proportion between 0 and 1 for which a hierarchy must be
 #'   observed in order to be credible.
-#' @param printPlot a logical value indicating whether the rankograms should be
+#' @param print_plot a logical value indicating whether the rankograms should be
 #' printed (TRUE) or not (FALSE, the default).
 #'
 #' @return A list of data frames containing the credible rankings and HPD
@@ -23,8 +23,9 @@
 #' @export
 #'
 #' @examples
-#' get_cred_hier_single(df,0.1,c("CBT.exp","Placebo","PCT"))
-get_cred_hier_single <- function(ranking_df, threshold, printPlot = FALSE) {
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+#' get_cred_hier_single(ranking_df = inputs$ranking_df, threshold = 0.9, print_plot = FALSE)
+get_cred_hier_single <- function(ranking_df, threshold, print_plot = FALSE) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
@@ -43,7 +44,7 @@ get_cred_hier_single <- function(ranking_df, threshold, printPlot = FALSE) {
   filtered_df <- filtered_df[order(filtered_df$Freq, decreasing = TRUE), ]
   outputs[[1]] <- filtered_df
 
-  if(printPlot) {
+  if(print_plot) {
     sucra <- matrix(, nrow = n_trt, ncol = n_trt - 1,
                     dimnames = list(treatments, seq_len(n_trt - 1)))
     for(i in 1:(n_trt - 1)) {
@@ -74,7 +75,7 @@ get_cred_hier_single <- function(ranking_df, threshold, printPlot = FALSE) {
   hpd_df <- do.call(rbind, hpd_list)
   outputs[[2]]<-hpd_df
 
-  if(printPlot) {
+  if(print_plot) {
     rows <- ceiling(sqrt(n_trt))
     cols <- ceiling(n_trt / rows)
     par(mfrow = c(rows, cols))

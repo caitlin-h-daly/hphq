@@ -4,14 +4,14 @@
 \alias{get_superset}
 \title{Determines if credible hierarchies are supersets}
 \usage{
-get_superset(consec_outputs, posets, n.treatments)
+get_superset(consec_outputs, posets, n_treatments)
 }
 \arguments{
 \item{consec_outputs}{Output from consecutive(), which consists of a list of data frames containing the credible hierarchies for Ranked Permutations, Permutations, Ranked Combinations, and Combinations}
 
 \item{posets}{Output from get_posets(), which consists of a data frame of the credible Posets}
 
-\item{n.treatments}{Number of treatments}
+\item{n_treatments}{Number of treatments}
 }
 \value{
 A list of credible hierarchies with a column indicating which hierarchies are supersets
