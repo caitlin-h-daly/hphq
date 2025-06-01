@@ -18,8 +18,9 @@
 #'   difference. Default is 0.
 #' @param print_plot a logical value indicating whether the rankograms should be
 #'   printed (TRUE) or not (FALSE, the default).
-#' @param trim a logical value indicating whether the output should trim the
-#'   include the identified subsets (TRUE) or not (FALSE, the default).
+#' @param trim_redundant a logical value indicating whether the redundant
+#'   hierarchies should be trimmed from the output (TRUE) or not (FALSE, the
+#'   default).
 #'
 #' @return A list of data frames containing the credible hierarchies for ranked
 #' permutations, permutations, ranked combinations, combinations, partial
@@ -28,9 +29,9 @@
 #'
 #' @examples
 #' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
-#' get_all_questions(inputs = inputs, larger_better = FALSE, thresholds = c(0.9, 0.9, 0.9), mid = 0, print_plot = FALSE, trim = FALSE)
+#' get_all_questions(inputs = inputs, larger_better = FALSE, thresholds = c(0.9, 0.9, 0.9), mid = 0, print_plot = FALSE, trim_redundant = FALSE)
 
-get_all_questions <- function(inputs, larger_better, thresholds, mid = 0, print_plot = FALSE, trim = FALSE) {
+get_all_questions <- function(inputs, larger_better, thresholds, mid = 0, print_plot = FALSE, trim_redundant = FALSE) {
 
   if(max(thresholds) > 1 || min(thresholds) < 0) {
     stop("Please ensure threshold values are between 0 and 1")
@@ -43,7 +44,7 @@ get_all_questions <- function(inputs, larger_better, thresholds, mid = 0, print_
   phier <- get_partial_hierarchies(inputs$effects_matrix, mid, thresholds[[2]], larger_better)
   single <- get_ranks_by_treatment(inputs$ranking_df, thresholds[[3]], print_plot)
 
-  first_outputs <- find_supersets(arrangements, phier, trim = trim)
+  first_outputs <- find_redundant_hierarchies(arrangements, phier, trim_redundant = trim_redundant)
 
   all_outputs <- append(first_outputs, single)
   names(all_outputs) <- c("Ranked Permutations", "Permutations",

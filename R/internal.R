@@ -103,27 +103,27 @@ get_combo <- function(all_ranked_combo) {
   return(all_combo)
 }
 
-#' Determine superset status of a (credible) partial hierarchy within (credible)
-#' partial hierarchies
+#' Determine redundancy status of a (credible) partial hierarchy within
+#' (credible) partial hierarchies
 #'
 #' @description
-#' `is_phier_sup_of_phier()` determines whether a (credible) partial hierachy
-#' specified by `phier_target` is a superset of any of the (credible) partial
-#' hierarchies specified in `phier_larger_list`.
+#' `is_phier_redundant_within_phier()` determines whether a (credible) partial
+#' hierarchy specified by `phier_target` is redundant because of any of the
+#' (credible) partial hierarchies specified in `phier_larger_list`.
 #'
 #' @param phier_target a single character vector of treatment names (without ">"
 #'   characters) in order of a (credible) partial hierarchy to assess the
-#'   superset status of.
+#'   redundancy status of.
 #' @param phier_larger_list list of data frames of larger (credible) partial
-#'   hierarchies by size, to assess the superset status of `phier_target`
+#'   hierarchies by size, to assess the redundancy status of `phier_target`
 #'   against.
 #'
-#' @return `TRUE` if `phier_target` is a superset of any of the (credible)
-#'   partial hierarchies listed in `larger_phier_list`.
+#' @return `TRUE` if `phier_target` is a redundant because of any of the
+#'   (credible) partial hierarchies listed in `larger_phier_list`.
 #'
 #' @keywords internal
-is_phier_sup_of_phier <- function(phier_target, larger_phier_list) {
-  # to find superset status faster, look at smaller larger_phier_list first
+is_phier_redundant_within_phier <- function(phier_target, larger_phier_list) {
+  # to find redundancy status faster, look at smaller larger_phier_list first
   phier_sizes <- sort(unique(do.call(rbind, larger_phier_list)$phier_size))
   for (i in sort(phier_sizes)) {
     current_phier_df <- larger_phier_list[[as.character(i)]]

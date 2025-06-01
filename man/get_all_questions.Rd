@@ -10,7 +10,7 @@ get_all_questions(
   thresholds,
   mid = 0,
   print_plot = FALSE,
-  trim = FALSE
+  trim_redundant = FALSE
 )
 }
 \arguments{
@@ -30,8 +30,9 @@ difference. Default is 0.}
 \item{print_plot}{a logical value indicating whether the rankograms should be
 printed (TRUE) or not (FALSE, the default).}
 
-\item{trim}{a logical value indicating whether the output should trim the
-include the identified subsets (TRUE) or not (FALSE, the default).}
+\item{trim_redundant}{a logical value indicating whether the redundant
+hierarchies should be trimmed from the output (TRUE) or not (FALSE, the
+default).}
 }
 \value{
 A list of data frames containing the credible hierarchies for ranked
@@ -47,5 +48,5 @@ of them are supersets.
 }
 \examples{
 inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
-get_all_questions(inputs = inputs, larger_better = FALSE, thresholds = c(0.9, 0.9, 0.9), mid = 0, print_plot = FALSE, trim = FALSE)
+get_all_questions(inputs = inputs, larger_better = FALSE, thresholds = c(0.9, 0.9, 0.9), mid = 0, print_plot = FALSE, trim_redundant = FALSE)
 }

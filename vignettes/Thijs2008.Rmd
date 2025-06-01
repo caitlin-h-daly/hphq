@@ -118,21 +118,23 @@ algo3
 
 # Supersets
 
-Some credible hierarchies may be supersets of other credible hierarchies in the 
-outputs of algorithms 1 and 2 (e.g., $A > B > C$ is a superset of 
+Some credible hierarchies may be redundant because of other credible hierarchies
+in the outputs of algorithms 1 and 2 (e.g., $A > B > C$ is redundant because of 
 $(A, B, C)_1^3$), and thus their output is redundant. You may use
-`find_supersets()` to detect these supersets and optionally remove them. By 
-default, `find_supersets()` detects supersets in the order proposed by Tan et 
-al. (2025). The user has the option to only check certain hierarchy types, in 
-their preferred order. See the help page for more details on this.
+`find_redundant_hierarchies()` to detect these redundant hierachies and 
+optionally remove them. By default, `find_redundant_hierarchies()` detects 
+redundant hierarchies in the order proposed by Tan et al. (2025). The user has 
+the option to only check certain hierarchy types, in their preferred order. See 
+the help page for more details on 
+this.
 
 ```{r}
-super_check <- find_supersets(algo1, algo2)
-super_check
+redundant_check <- find_redundant_hierarchies(algo1, algo2)
+redundant_check
 
-find_supersets(algo_1 = algo1, 
-               algo_2 = algo2, 
-               trim = TRUE)
+find_redundant_hierarchies(algo_1 = algo1, 
+                           algo_2 = algo2, 
+                           trim_redundant = TRUE)
 ```
 
 # All credible hierarchies at once
@@ -140,9 +142,9 @@ find_supersets(algo_1 = algo1,
 Alternatively, you may use the `get_all_questions()` to get all credible 
 hierarchies that answer binary questions (ranked permutations, permutations, 
 ranked combinations, combinations, partial hierarchies, rankings, and HPD sets) 
-in one go. Note this function will always detect if credible hierarchies are 
-supersets of other credible hierarchies in the output, using the default 
-settings of `find_supersets()`.
+in one go. Note this function can check if credible hierarchies are redundant 
+because of other credible hierarchies in the output, using the default 
+settings of `find_redundant_hierarchies()`.
 
 ```{r}
 all_cred_hier <- get_all_questions(inputs = inputs, 
@@ -150,7 +152,7 @@ all_cred_hier <- get_all_questions(inputs = inputs,
                                    thresholds = c(0.9, 0.9, 0.9), 
                                    mid = 0, 
                                    print_plot = FALSE, 
-                                   trim = TRUE)
+                                   trim_redundant = TRUE)
 
 all_cred_hier
 ```
