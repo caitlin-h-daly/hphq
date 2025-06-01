@@ -140,5 +140,6 @@ get_partial_hierarchies <- function(effects_matrix, mid = 0, threshold, larger_b
 
   all_output <- do.call(rbind, output_list)
   all_output <- all_output[order(all_output$Freq, decreasing = TRUE), ]
+  rownames(all_output) <- NULL
   return(all_output)
 }
