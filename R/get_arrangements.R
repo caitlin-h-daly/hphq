@@ -79,11 +79,10 @@ get_arrangements <- function(hierarchy_matrix, threshold) {
   consec_output[[2]] <- cred_perm
   message("Permutations completed")
 
-  # all ranked permutations up to size n_trt - 3
-  #all_ranked_perm_combo <- do.call(rbind, all_ranked_perm_list[1:(n_perm_grps - 3)])
+  # all ranked permutations up to size n_trt - 1
+  all_ranked_perm_combo <- do.call(rbind, all_ranked_perm_list[1:(n_perm_grps - 1)])
   # all ranked combinations
-  #all_ranked_combo <- indexed_combo(all_ranked_perm_combo, treatments)
-  all_ranked_combo <- get_ranked_comb(all_ranked_perm, treatments)
+  all_ranked_combo <- get_ranked_comb(all_ranked_perm_combo, treatments)
   # all credible ranked combinations
   cred_ranked_combo <- subset(all_ranked_combo, all_ranked_combo$Freq > threshold)
   # order credible ranked combinations by frequency
