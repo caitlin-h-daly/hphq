@@ -1,7 +1,7 @@
 #' Get credible rankings and HPD sets for each treatment
 #'
 #' @description
-#' `get_cred_hier_single()` finds all ranks and high probability density (HPD)
+#' `get_ranks_by_treatment()` finds all ranks and high probability density (HPD)
 #' sets with relative frequencies greater than or equal to the threshold for
 #' each treatment. The HPD intervals provide the subset of ranks with the
 #' smallest possible cumulative relative frequency that is at least equal to the
@@ -24,8 +24,8 @@
 #'
 #' @examples
 #' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
-#' get_cred_hier_single(ranking_df = inputs$ranking_df, threshold = 0.9, print_plot = FALSE)
-get_cred_hier_single <- function(ranking_df, threshold, print_plot = FALSE) {
+#' get_ranks_by_treatment(ranking_df = inputs$ranking_df, threshold = 0.9, print_plot = FALSE)
+get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")

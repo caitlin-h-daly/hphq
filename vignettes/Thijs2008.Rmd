@@ -89,30 +89,30 @@ algo1
 # Partial hierarchies
 
 To obtain all credible partial hierarchies (e.g., A > B > C), you may use the 
-`get_cred_phier()` function. This uses the second algorithm described by Tan et 
-al. (2025).
+`get_partial_hierarchies()` function. This uses the second algorithm described 
+by Tan et al. (2025).
 
 ```{r}
-algo2 <- get_cred_phier(effects_matrix = inputs$effects_matrix, 
-                        mid = 0, 
-                        threshold = 0.9, 
-                        larger_better = FALSE)
+algo2 <- get_partial_hierarchies(effects_matrix = inputs$effects_matrix, 
+                                 mid = 0, 
+                                 threshold = 0.9, 
+                                 larger_better = FALSE)
 algo2
 ```
 
 # Rankings and high probability density (HPD) sets
 
 To obtain all credible rankings, as well as the high probability density sets, 
-for each treatment at a given threshold, you may use the `get_cred_hier_single()` 
+for each treatment at a given threshold, you may use the `get_ranks_by_treatment()` 
 function. This uses the third algorithm described by Tan et al. (2025).
 
 Note that the rankograms for each treatment may be plotted with overlayed HPD 
 sets by setting the `print_plot` argument to TRUE.
 
 ```{r}
-algo3 <- get_cred_hier_single(ranking_df = inputs$ranking_df, 
-                              threshold = 0.9, 
-                              print_plot = FALSE)
+algo3 <- get_ranks_by_treatment(ranking_df = inputs$ranking_df, 
+                                threshold = 0.9, 
+                                print_plot = FALSE)
 algo3
 ```
 
@@ -137,7 +137,7 @@ find_supersets(algo_1 = algo1,
 
 # All credible hierarchies at once
 
-Alternatively, you may use the `get_hierarchies()` to get all credible 
+Alternatively, you may use the `get_all_questions()` to get all credible 
 hierarchies that answer binary questions (ranked permutations, permutations, 
 ranked combinations, combinations, partial hierarchies, rankings, and HPD sets) 
 in one go. Note this function will always detect if credible hierarchies are 
@@ -145,11 +145,11 @@ supersets of other credible hierarchies in the output, using the default
 settings of `find_supersets()`.
 
 ```{r}
-all_cred_hier <- get_hierarchies(inputs = inputs, 
-                                 larger_better = FALSE,
-                                 thresholds = c(0.9, 0.9, 0.9), 
-                                 mid = 0, 
-                                 print_plot = FALSE)
+all_cred_hier <- get_all_questions(inputs = inputs, 
+                                   larger_better = FALSE,
+                                   thresholds = c(0.9, 0.9, 0.9), 
+                                   mid = 0, 
+                                   print_plot = FALSE)
 
 all_cred_hier
 ```

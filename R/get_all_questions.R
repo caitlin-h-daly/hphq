@@ -1,8 +1,8 @@
 #' Get all credible hierarchies
 #'
 #' @description
-#' `get_hierarchies` runs the inputs through `get_arrangements()`,
-#' `get_cred_phier()`, and `singular_treatment()` to produce a list of all
+#' `get_all_questions` runs the inputs through `get_arrangements()`,
+#' `get_partial_hierarchies()`, and `get_all_questions()` to produce a list of all
 #' hierarchies with relative frequencies greater than or equal to the threshold.
 #' These hierarchies are then run through `find_supersets()` to determine which
 #' of them are supersets.
@@ -26,9 +26,9 @@
 #'
 #' @examples
 #' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
-#' get_hierarchies(inputs = inputs, larger_better = FALSE, thresholds = c(0.9, 0.9, 0.9), mid = 0, print_plot = FALSE)
+#' get_all_questions(inputs = inputs, larger_better = FALSE, thresholds = c(0.9, 0.9, 0.9), mid = 0, print_plot = FALSE)
 
-get_hierarchies <- function(inputs, larger_better, thresholds, mid = 0, print_plot = FALSE) {
+get_all_questions <- function(inputs, larger_better, thresholds, mid = 0, print_plot = FALSE) {
 
   if(max(thresholds) > 1 || min(thresholds) < 0) {
     stop("Please ensure threshold values are between 0 and 1")
@@ -38,8 +38,8 @@ get_hierarchies <- function(inputs, larger_better, thresholds, mid = 0, print_pl
   n_trt <- length(treatments)
 
   arrangements <- get_arrangements(inputs$hierarchy_matrix, thresholds[[1]])
-  phier <- get_cred_phier(inputs$effects_matrix, mid, thresholds[[2]], larger_better)
-  single <- get_cred_hier_single(inputs$ranking_df, thresholds[[3]], print_plot)
+  phier <- get_partial_hierarchies(inputs$effects_matrix, mid, thresholds[[2]], larger_better)
+  single <- get_ranks_by_treatment(inputs$ranking_df, thresholds[[3]], print_plot)
 
   first_outputs <- find_supersets(arrangements, phier)
 
