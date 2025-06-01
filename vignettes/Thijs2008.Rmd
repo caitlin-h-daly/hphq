@@ -22,10 +22,10 @@ library(nmahierarchies)
 
 We will use the results from a Bayesian fixed effect network meta-analysis (NMA) 
 run on a data set collected by Thijs et al. (2008) to demonstrate the functions 
-in this package. This results data consist of 300,000 MCMC samples from the 
+in this package. This results data consist of 15,000 MCMC samples from the 
 joint distribution of the relative effects for each treatment (aspirin, 
 aspirin + dipyridamole, thienopyridines, thienopyridines + aspirin, placebo) vs. 
-a reference (placebo), obtained from 3 chains (100,000 each). 
+a reference (placebo), obtained from 3 chains (5,000 each). 
 
 Alternatively, samples from the joint distribution of pooled relative effects 
 may be simulated using the `ranksampling()` function in the `netmeta` R package.
