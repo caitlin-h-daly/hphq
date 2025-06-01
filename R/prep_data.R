@@ -20,6 +20,10 @@
 #' @return \code{ranking_df} - A data frame of each treatment's ranks and
 #' associated frequencies.
 #' @importFrom stats reshape
+#' @importFrom stringr str_remove_all
+#' @importFrom stringr str_split_1
+#' @importFrom stringr str_detect
+#' @importFrom stringr str_count
 #' @export
 #'
 #' @examples
