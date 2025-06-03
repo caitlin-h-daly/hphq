@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
 library(hphq)
 ```
 
+test
+
 # Required data
 
 We will use the results from a Bayesian random effects network meta-analysis  
