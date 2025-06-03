@@ -1,8 +1,8 @@
 ---
-title: "Demonstration of the `nmahierarchies` package for NMA (2)"
+title: "Demonstration of the `hphq` package for NMA (2)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Demonstration of the `nmahierarchies` package for NMA (2)}
+  %\VignetteIndexEntry{Demonstration of the `hphq` package for NMA (2)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(nmahierarchies)
+library(hphq)
 ```
 
 # Required data
