@@ -4,7 +4,12 @@
 \alias{get_ranks_by_treatment}
 \title{Get credible rankings and HPD sets for each treatment}
 \usage{
-get_ranks_by_treatment(ranking_df, threshold, print_plot = FALSE)
+get_ranks_by_treatment(
+  ranking_df,
+  threshold,
+  print_plot = FALSE,
+  freq_digits = 4
+)
 }
 \arguments{
 \item{ranking_df}{a data frame of each treatment's ranks and associated
@@ -15,6 +20,9 @@ observed in order to be credible.}
 
 \item{print_plot}{a logical value indicating whether the rankograms should be
 printed (TRUE) or not (FALSE, the default).}
+
+\item{freq_digits}{a numeric value indicating the desired number of decimal
+places for which the relative frequencies will be rounded. Default is 4.}
 }
 \value{
 A list of data frames containing the credible rankings and HPD

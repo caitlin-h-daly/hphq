@@ -4,7 +4,7 @@
 \alias{get_arrangements}
 \title{Get credible arrangement hierarchies}
 \usage{
-get_arrangements(hierarchy_matrix, threshold)
+get_arrangements(hierarchy_matrix, threshold, freq_digits = 4)
 }
 \arguments{
 \item{hierarchy_matrix}{a matrix where column headers are ranks and each row
@@ -12,6 +12,9 @@ displays the treatments assigned to each rank for that iteration.}
 
 \item{threshold}{a proportion between 0 and 1 for which a hierarchy must be
 observed in order to be credible.}
+
+\item{freq_digits}{a numeric value indicating the desired number of decimal
+places for which the relative frequencies will be rounded. Default is 4.}
 }
 \value{
 A list of data frames containing the credible hierarchies for ranked

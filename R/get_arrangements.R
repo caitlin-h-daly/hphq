@@ -14,6 +14,8 @@
 #'   displays the treatments assigned to each rank for that iteration.
 #' @param threshold a proportion between 0 and 1 for which a hierarchy must be
 #'   observed in order to be credible.
+#' @param freq_digits a numeric value indicating the desired number of decimal
+#'   places for which the relative frequencies will be rounded. Default is 4.
 #'
 #' @return A list of data frames containing the credible hierarchies for ranked
 #' permutations, permutations, ranked combinations, and combinations.
@@ -24,7 +26,7 @@
 #' @examples
 #' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
 #' get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
-get_arrangements <- function(hierarchy_matrix, threshold) {
+get_arrangements <- function(hierarchy_matrix, threshold, freq_digits = 4) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
@@ -107,15 +109,19 @@ get_arrangements <- function(hierarchy_matrix, threshold) {
   # add appropriate brackets for combinatorial type
   if(nrow(consec_output[[1]]) > 0) {
     consec_output[[1]]$`Ranked Permutations` <- paste0("(", consec_output[[1]]$`Ranked Permutations`, ")")
+    consec_output[[1]]$Freq <- round(consec_output[[1]]$Freq, digits = freq_digits)
   }
   if(nrow(consec_output[[2]]) > 0) {
     consec_output[[2]]$Permutations <- paste0("(", consec_output[[2]]$Permutations, ")")
+    consec_output[[2]]$Freq <- round(consec_output[[2]]$Freq, digits = freq_digits)
   }
   if(nrow(consec_output[[3]]) > 0) {
     consec_output[[3]]$`Ranked Combinations` <- paste0("{", consec_output[[3]]$`Ranked Combinations`, "}")
+    consec_output[[3]]$Freq <- round(consec_output[[3]]$Freq, digits = freq_digits)
   }
   if(nrow(consec_output[[4]]) > 0) {
     consec_output[[4]]$Combinations <- paste0("{", consec_output[[4]]$Combinations, "}")
+    consec_output[[4]]$Freq <- round(consec_output[[4]]$Freq, digits = freq_digits)
   }
   names(consec_output) <- c("Ranked Permutations", "Permutations",
                             "Ranked Combinations", "Combinations")

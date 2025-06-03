@@ -13,6 +13,8 @@
 #'   observed in order to be credible.
 #' @param print_plot a logical value indicating whether the rankograms should be
 #' printed (TRUE) or not (FALSE, the default).
+#' @param freq_digits a numeric value indicating the desired number of decimal
+#'   places for which the relative frequencies will be rounded. Default is 4.
 #'
 #' @return A list of data frames containing the credible rankings and HPD
 #' set for each treatment.
@@ -25,7 +27,7 @@
 #' @examples
 #' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
 #' get_ranks_by_treatment(ranking_df = inputs$ranking_df, threshold = 0.9, print_plot = FALSE)
-get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
+get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE, freq_digits = 4) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
@@ -106,6 +108,8 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
   }
 
   names(outputs) <- c("Individual Rank", "HPD")
+  outputs[[1]]$Freq <- round(outputs[[1]]$Freq, digits = freq_digits)
+  outputs[[2]]$`Sum of Freq` <- round(outputs[[2]]$`Sum of Freq`, digits = freq_digits)
   return(outputs)
 
 }

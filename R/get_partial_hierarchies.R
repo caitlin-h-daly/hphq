@@ -14,6 +14,8 @@
 #'   observed in order to be credible.
 #' @param larger_better a logical value indicating whether larger relative
 #'   effects are better (TRUE) or not (FALSE).
+#' @param freq_digits a numeric value indicating the desired number of decimal
+#'   places for which the relative frequencies will be rounded. Default is 4.
 #'
 #' @return A data frame containing the credible partial hierarchies.
 #' @importFrom utils combn
@@ -22,7 +24,7 @@
 #' @examples
 #' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
 #' get_partial_hierarchies(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
-get_partial_hierarchies <- function(effects_matrix, mid = 0, threshold, larger_better) {
+get_partial_hierarchies <- function(effects_matrix, mid = 0, threshold, larger_better, freq_digits = 4) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
@@ -141,5 +143,6 @@ get_partial_hierarchies <- function(effects_matrix, mid = 0, threshold, larger_b
   all_output <- do.call(rbind, output_list)
   all_output <- all_output[order(all_output$Freq, decreasing = TRUE), ]
   rownames(all_output) <- NULL
+  all_output$Freq <- round(all_output$Freq, digits = freq_digits)
   return(all_output)
 }

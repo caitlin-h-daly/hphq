@@ -4,7 +4,13 @@
 \alias{get_partial_hierarchies}
 \title{Get credible partial hierarchies}
 \usage{
-get_partial_hierarchies(effects_matrix, mid = 0, threshold, larger_better)
+get_partial_hierarchies(
+  effects_matrix,
+  mid = 0,
+  threshold,
+  larger_better,
+  freq_digits = 4
+)
 }
 \arguments{
 \item{effects_matrix}{a matrix where the column headers are treatment names
@@ -19,6 +25,9 @@ observed in order to be credible.}
 
 \item{larger_better}{a logical value indicating whether larger relative
 effects are better (TRUE) or not (FALSE).}
+
+\item{freq_digits}{a numeric value indicating the desired number of decimal
+places for which the relative frequencies will be rounded. Default is 4.}
 }
 \value{
 A data frame containing the credible partial hierarchies.
