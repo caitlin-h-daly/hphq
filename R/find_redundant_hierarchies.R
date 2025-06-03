@@ -315,6 +315,13 @@ find_redundant_hierarchies <- function(algo_1, algo_2, type = 1:8, trim_redundan
 
   }
 
+  # remove non-informative row names
+  rownames(ranked_perm) <- NULL
+  rownames(perm) <- NULL
+  rownames(ranked_comb) <- NULL
+  rownames(comb) <- NULL
+  rownames(phier) <- NULL
+
   if(trim_redundant == TRUE){
     ranked_perm <- ranked_perm[ranked_perm$Redundant == FALSE, ]
     perm <- perm[perm$Redundant == FALSE, ]
