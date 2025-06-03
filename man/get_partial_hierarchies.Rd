@@ -9,7 +9,6 @@ get_partial_hierarchies(
   mid = 0,
   threshold,
   larger_better,
-  freq_digits = 4,
   order_by = c("Length", "Freq")
 )
 }
@@ -26,9 +25,6 @@ observed in order to be credible.}
 
 \item{larger_better}{a logical value indicating whether larger relative
 effects are better (TRUE) or not (FALSE).}
-
-\item{freq_digits}{a numeric value indicating the desired number of decimal
-places for which the relative frequencies will be rounded. Default is 4.}
 
 \item{order_by}{a character vector consisting of "Freq" and "Length" only,
 indicating the desired order of the arrangements within types (i.e., ranked
