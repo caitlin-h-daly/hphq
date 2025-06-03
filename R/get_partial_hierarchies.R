@@ -14,8 +14,6 @@
 #'   observed in order to be credible.
 #' @param larger_better a logical value indicating whether larger relative
 #'   effects are better (TRUE) or not (FALSE).
-#' @param freq_digits a numeric value indicating the desired number of decimal
-#'   places for which the relative frequencies will be rounded. Default is 4.
 #' @param order_by a character vector consisting of "Freq" and "Length" only,
 #'   indicating the desired order of the arrangements within types (i.e., ranked
 #'   permutations, permutations, ranked combinations, and combinations). Default
@@ -33,7 +31,6 @@ get_partial_hierarchies <- function(effects_matrix,
                                     mid = 0,
                                     threshold,
                                     larger_better,
-                                    freq_digits = 4,
                                     order_by = c("Length", "Freq")) {
 
   if(threshold > 1 || threshold < 0) {
@@ -158,6 +155,5 @@ get_partial_hierarchies <- function(effects_matrix,
   to_order <- eval(parse(text = paste0("list(", paste0("all_output$", order_by, collapse = ", "), ")")))
   all_output <- all_output[rev(do.call(order, to_order)), ]
   rownames(all_output) <- NULL
-  all_output$Freq <- round(all_output$Freq, digits = freq_digits)
   return(all_output)
 }
