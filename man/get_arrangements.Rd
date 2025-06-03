@@ -4,7 +4,12 @@
 \alias{get_arrangements}
 \title{Get credible arrangement hierarchies}
 \usage{
-get_arrangements(hierarchy_matrix, threshold, freq_digits = 4)
+get_arrangements(
+  hierarchy_matrix,
+  threshold,
+  freq_digits = 4,
+  order_by = c("Length", "Freq")
+)
 }
 \arguments{
 \item{hierarchy_matrix}{a matrix where column headers are ranks and each row
@@ -15,6 +20,12 @@ observed in order to be credible.}
 
 \item{freq_digits}{a numeric value indicating the desired number of decimal
 places for which the relative frequencies will be rounded. Default is 4.}
+
+\item{order_by}{a character vector consisting of "Freq" and "Length" only,
+indicating the desired order of the arrangements within types (i.e., ranked
+permutations, permutations, ranked combinations, and combinations). Default
+is to order by the number of treatments ("Length") in the arrangements,
+followed by the relative frequencies ("Freq").}
 }
 \value{
 A list of data frames containing the credible hierarchies for ranked

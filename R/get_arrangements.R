@@ -16,6 +16,11 @@
 #'   observed in order to be credible.
 #' @param freq_digits a numeric value indicating the desired number of decimal
 #'   places for which the relative frequencies will be rounded. Default is 4.
+#' @param order_by a character vector consisting of "Freq" and "Length" only,
+#'   indicating the desired order of the arrangements within types (i.e., ranked
+#'   permutations, permutations, ranked combinations, and combinations). Default
+#'   is to order by the number of treatments ("Length") in the arrangements,
+#'   followed by the relative frequencies ("Freq").
 #'
 #' @return A list of data frames containing the credible hierarchies for ranked
 #' permutations, permutations, ranked combinations, and combinations.
@@ -26,10 +31,17 @@
 #' @examples
 #' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
 #' get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
-get_arrangements <- function(hierarchy_matrix, threshold, freq_digits = 4) {
+get_arrangements <- function(hierarchy_matrix,
+                             threshold,
+                             freq_digits = 4,
+                             order_by = c("Length", "Freq")) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
+  }
+
+  if(!all(order_by %in% c("Length", "Freq"))) {
+    stop("Please ensure `order_by` consists of either 'Length', 'Freq', or both")
   }
 
   treatments <- hierarchy_matrix[1, ]
@@ -62,8 +74,9 @@ get_arrangements <- function(hierarchy_matrix, threshold, freq_digits = 4) {
   # credible ranked permutations
   cred_ranked_perm <- subset(all_ranked_perm, all_ranked_perm$Freq > threshold)
   names(cred_ranked_perm)[names(cred_ranked_perm) == 'Var1'] <- 'Ranked Permutations'
-  # order credible ranked permutations by frequency
-  cred_ranked_perm <- cred_ranked_perm[order(cred_ranked_perm$Freq, decreasing = TRUE), ]
+  # order credible ranked permutations
+  to_order <- eval(parse(text = paste0("list(", paste0("cred_ranked_perm$", order_by, collapse = ", "), ")")))
+  cred_ranked_perm <- cred_ranked_perm[rev(do.call(order, to_order)), ]
   # remove row names
   rownames(cred_ranked_perm) <- NULL
   consec_output[[1]] <- cred_ranked_perm
@@ -74,8 +87,9 @@ get_arrangements <- function(hierarchy_matrix, threshold, freq_digits = 4) {
   # credible permutations
   cred_perm <- subset(all_perm, all_perm$Freq > threshold)
   names(cred_perm)[names(cred_perm) == 'Var1'] <- 'Permutations'
-  # order credible permutations by frequency
-  cred_perm <- cred_perm[order(cred_perm$Freq, decreasing = TRUE), ]
+  # order credible permutations
+  to_order <- eval(parse(text = paste0("list(", paste0("cred_perm$", order_by, collapse = ", "), ")")))
+  cred_perm <- cred_perm[rev(do.call(order, to_order)), ]
   # remove row names
   rownames(cred_perm) <- NULL
   consec_output[[2]] <- cred_perm
@@ -87,8 +101,9 @@ get_arrangements <- function(hierarchy_matrix, threshold, freq_digits = 4) {
   all_ranked_combo <- get_ranked_comb(all_ranked_perm_combo, treatments)
   # all credible ranked combinations
   cred_ranked_combo <- subset(all_ranked_combo, all_ranked_combo$Freq > threshold)
-  # order credible ranked combinations by frequency
-  cred_ranked_combo <- cred_ranked_combo[order(cred_ranked_combo$Freq, decreasing = TRUE), ]
+  # order credible ranked combinations
+  to_order <- eval(parse(text = paste0("list(", paste0("cred_ranked_combo$", order_by, collapse = ", "), ")")))
+  cred_ranked_combo <- cred_ranked_combo[rev(do.call(order, to_order)), ]
   # remove row names
   rownames(cred_ranked_combo) <- NULL
   consec_output[[3]] <- cred_ranked_combo
@@ -99,8 +114,9 @@ get_arrangements <- function(hierarchy_matrix, threshold, freq_digits = 4) {
   all_combo <- get_combo(all_ranked_combo)
   # all credible combinations
   cred_combo <- subset(all_combo, all_combo$Freq > threshold)
-  # order credible ranked combinations by frequency
-  cred_combo <- cred_combo[order(cred_combo$Freq, decreasing = TRUE), ]
+  # order credible ranked combinations
+  to_order <- eval(parse(text = paste0("list(", paste0("cred_combo$", order_by, collapse = ", "), ")")))
+  cred_combo <- cred_combo[rev(do.call(order, to_order)), ]
   # remove row names
   rownames(cred_combo) <- NULL
   consec_output[[4]] <- cred_combo

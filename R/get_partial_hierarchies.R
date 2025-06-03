@@ -16,6 +16,11 @@
 #'   effects are better (TRUE) or not (FALSE).
 #' @param freq_digits a numeric value indicating the desired number of decimal
 #'   places for which the relative frequencies will be rounded. Default is 4.
+#' @param order_by a character vector consisting of "Freq" and "Length" only,
+#'   indicating the desired order of the arrangements within types (i.e., ranked
+#'   permutations, permutations, ranked combinations, and combinations). Default
+#'   is to order by the number of treatments ("Length") in the arrangements,
+#'   followed by the relative frequencies ("Freq").
 #'
 #' @return A data frame containing the credible partial hierarchies.
 #' @importFrom utils combn
@@ -24,10 +29,19 @@
 #' @examples
 #' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
 #' get_partial_hierarchies(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
-get_partial_hierarchies <- function(effects_matrix, mid = 0, threshold, larger_better, freq_digits = 4) {
+get_partial_hierarchies <- function(effects_matrix,
+                                    mid = 0,
+                                    threshold,
+                                    larger_better,
+                                    freq_digits = 4,
+                                    order_by = c("Length", "Freq")) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
+  }
+
+  if(!all(order_by %in% c("Length", "Freq"))) {
+    stop("Please ensure `order_by` consists of either 'Length', 'Freq', or both")
   }
 
   treatments <- colnames(effects_matrix)
@@ -73,10 +87,10 @@ get_partial_hierarchies <- function(effects_matrix, mid = 0, threshold, larger_b
   } else {
     credible <- paste0(filtered_perms$V1, ",", filtered_perms$V2)
     formatted_perms <- paste0(filtered_perms$V1, " > ", filtered_perms$V2)
-    finished_perms <- data.frame(formatted_perms, filtered_perms$Freq)
+    finished_perms <- data.frame(formatted_perms, 2, filtered_perms$Freq)
   }
   heading <- paste0("Treatments at MID = ", mid)
-  colnames(finished_perms) <- c(heading, "Freq")
+  colnames(finished_perms) <- c(heading, "Length", "Freq")
   output_list[[output_list_index]] <- finished_perms
   output_list_index <- output_list_index + 1
   perm_size <- 3
@@ -92,7 +106,7 @@ get_partial_hierarchies <- function(effects_matrix, mid = 0, threshold, larger_b
       trts <- filtered_perms[i, ]
       trt1 <- trts[perm_size - 1]
       new_trts <- treatments[!(treatments %in% trts)]
-      perm_df <- create_perm(trts, trt1, new_trts, perm_size, credible)
+      perm_df <- create_perm(trts, trt1, new_trts, credible)
       if (!is.logical(perm_df)) {
         df_list[[i]] <- perm_df
       }
@@ -132,8 +146,8 @@ get_partial_hierarchies <- function(effects_matrix, mid = 0, threshold, larger_b
     hierarchies <- apply(just_perms, 1, function(x) {
       paste(x, collapse = " > ")
     })
-    all_perms <- data.frame(hierarchies, filtered_perms$Freq)
-    colnames(all_perms) <- c(heading, "Freq")
+    all_perms <- data.frame(hierarchies, perm_size, filtered_perms$Freq)
+    colnames(all_perms) <- c(heading, "Length", "Freq")
     output_list[[output_list_index]] <- all_perms
     output_list_index <- output_list_index + 1
     total_rows <- nrow(filtered_perms)
@@ -141,7 +155,8 @@ get_partial_hierarchies <- function(effects_matrix, mid = 0, threshold, larger_b
   }
 
   all_output <- do.call(rbind, output_list)
-  all_output <- all_output[order(all_output$Freq, decreasing = TRUE), ]
+  to_order <- eval(parse(text = paste0("list(", paste0("all_output$", order_by, collapse = ", "), ")")))
+  all_output <- all_output[rev(do.call(order, to_order)), ]
   rownames(all_output) <- NULL
   all_output$Freq <- round(all_output$Freq, digits = freq_digits)
   return(all_output)

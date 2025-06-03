@@ -12,6 +12,7 @@
 #'   * `Range`: a string presenting the ranks corresponding to the permutation
 #'   in `Var1`, presented as min-max.
 #'   * `Var1`: a string of the permutation of treatments.
+#'   * `Length`: the number of treatments in the permutation.
 #'   * `Freq`: the proportion of samples for which the ranked permutation was
 #'   observed.
 #'
@@ -22,6 +23,8 @@ get_ranked_perm <- function(hierarchy_matrix, rank_range){
   rank_int <- rep(paste0(min(rank_range), "-", max(rank_range)), nrow(ranked_perm))
   ranked_perm <- cbind(rank_int, ranked_perm)
   colnames(ranked_perm) <- c("Range", "Var1", "Freq")
+  ranked_perm$Length <- max(rank_range) - min(rank_range) + 1
+  ranked_perm <- ranked_perm[, c("Range", "Var1", "Length", "Freq")]
   return(ranked_perm)
 }
 
@@ -38,13 +41,14 @@ get_ranked_perm <- function(hierarchy_matrix, rank_range){
 #'
 #' @returns A data frame containing
 #'   * `Var1`: a string of the permutation of treatments.
+#'   * `Length`: the number of treatments in the permutation.
 #'   * `Freq`: the proportion of samples for which the permutation was observed.
 #'
 #' @keywords internal
 get_perm <- function(all_ranked_perm) {
   # takes all ranked permutations, groups it by permutation, and calculates the
   # sum of the frequency
-  all_perm <- aggregate(Freq ~ Var1, data = all_ranked_perm, sum)
+  all_perm <- aggregate(Freq ~ Var1 + Length, data = all_ranked_perm, sum)
   return(all_perm)
 }
 
@@ -65,6 +69,7 @@ get_perm <- function(all_ranked_perm) {
 #'   * `Range`: a string presenting the ranks corresponding to the combination
 #'   in `Combinations`, presented as min-max.
 #'   * `Combinations`: a string of the combination of treatments.
+#'   * `Length`: the number of treatments in the combination.
 #'   * `Freq`: the proportion of samples for which the ranked combination was
 #'   observed.
 #'
@@ -76,8 +81,8 @@ get_ranked_comb <- function(all_ranked_perm, trts) {
                                          function(x) paste(x[match(trts, x, nomatch = 0)], collapse = ','), '')
 
   # groups combinations by rank interval and calculates sum of the frequency
-  all_ranked_combo <- aggregate(Freq ~ Combinations + Range, data = all_ranked_perm, sum)
-  all_ranked_combo <- all_ranked_combo[, c("Range", "Combinations", "Freq")]
+  all_ranked_combo <- aggregate(Freq ~ Length + Combinations + Range, data = all_ranked_perm, sum)
+  all_ranked_combo <- all_ranked_combo[, c( "Range", "Combinations", "Length", "Freq")]
   return(all_ranked_combo)
 }
 
@@ -94,12 +99,13 @@ get_ranked_comb <- function(all_ranked_perm, trts) {
 #'
 #' @return A data frame containing
 #'   * `Combinations`: a string of the combination of treatments.
+#'   * `Length`: the number of treatments in the combination.
 #'   * `Freq`: the proportion of samples for which the combination was observed.
 #'
 #' @keywords internal
 get_combo <- function(all_ranked_combo) {
   # takes in all ranked combinations, groups it by Combination, and sums the frequencies
-  all_combo <- aggregate(Freq ~ Combinations, data = all_ranked_combo, sum)
+  all_combo <- aggregate(Freq ~ Combinations + Length, data = all_ranked_combo, sum)
   return(all_combo)
 }
 
@@ -156,8 +162,6 @@ is_phier_redundant_within_phier <- function(phier_target, larger_phier_list) {
 #'   effect in `trts`.
 #' @param new_trts a character vector of the remaining treatments to consider
 #'   adding to `trts` to build a new permutation.
-#' @param perm_size a numeric value indicating the size of the permutation under
-#'   consideration (i.e., the number of treatments involved).
 #' @param credible a character vector listing credible permutations of size two
 #'   (e.g., "trt1_name,trt2_name").
 #'
@@ -171,7 +175,7 @@ is_phier_redundant_within_phier <- function(phier_target, larger_phier_list) {
 #' hierarchies.
 #'
 #' @keywords internal
-create_perm <- function(trts, trt1, new_trts, perm_size, credible) {
+create_perm <- function(trts, trt1, new_trts, credible) {
   actual_new_trts <- c()
   for(trt2 in new_trts) { # iterates through each potential new treatment to add
     pair <- paste0(trt1, ",", trt2) # the potential pair to add
@@ -186,7 +190,7 @@ create_perm <- function(trts, trt1, new_trts, perm_size, credible) {
   }
   # create vectors where each treatment from trts is repeated size times
   list_trts <- lapply(trts, function(x) {
-    rep(x,size)
+    rep(x, size)
   })
   list_trts[[length(list_trts) + 1]] <- actual_new_trts
   trt_df <- do.call(cbind, list_trts)  # binds the new treatments to the permutations

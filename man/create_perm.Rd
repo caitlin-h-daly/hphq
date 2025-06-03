@@ -4,7 +4,7 @@
 \alias{create_perm}
 \title{Creates permutations for `get_cred_phier()` function}
 \usage{
-create_perm(trts, trt1, new_trts, perm_size, credible)
+create_perm(trts, trt1, new_trts, credible)
 }
 \arguments{
 \item{trts}{a data frame consisting of one row of the treatment names
@@ -15,9 +15,6 @@ effect in `trts`.}
 
 \item{new_trts}{a character vector of the remaining treatments to consider
 adding to `trts` to build a new permutation.}
-
-\item{perm_size}{a numeric value indicating the size of the permutation under
-consideration (i.e., the number of treatments involved).}
 
 \item{credible}{a character vector listing credible permutations of size two
 (e.g., "trt1_name,trt2_name").}
