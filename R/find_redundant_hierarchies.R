@@ -109,7 +109,7 @@ find_redundant_hierarchies <- function(algo_1, algo_2, type = 1:8, trim_redundan
                 # extract jth partial hierarchy in current_phier_size
                 phier_target <- stringr::str_split_1(as.character(current_phier_size[j, 1]), " > ")
                 # check to see if jth partial hierarchy is in larger partial hierarchies
-                redundant_check <- nmahierarchies:::is_phier_redundant_within_phier(phier_target,
+                redundant_check <- hphq:::is_phier_redundant_within_phier(phier_target,
                                                                                     phier_larger_list)
                 if(!is.null(redundant_check)){
                   current_phier_size[j, "Redundant"] <- redundant_check
