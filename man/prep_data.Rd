@@ -7,9 +7,9 @@
 prep_data(effects_matrix, reference, larger_better)
 }
 \arguments{
-\item{effects_matrix}{a data frame where the column headers are treatment names
-and each row displays each treatment’s sampled relative effect for that
-iteration.}
+\item{effects_matrix}{a data frame where the column headers are treatment
+names and each row displays each treatment’s sampled relative effect for
+that iteration.}
 
 \item{reference}{a character string of the reference treatment's name.}
 

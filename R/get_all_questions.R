@@ -2,10 +2,10 @@
 #'
 #' @description
 #' `get_all_questions` runs the inputs through `get_arrangements()`,
-#' `get_partial_hierarchies()`, and `get_all_questions()` to produce a list of all
-#' hierarchies with relative frequencies greater than or equal to the threshold.
-#' These hierarchies are then run through `find_supersets()` to determine which
-#' of them are supersets.
+#' `get_partial_hierarchies()`, and `get_all_questions()` to produce a list of
+#' all hierarchies with relative frequencies greater than or equal to the
+#' threshold. These hierarchies are then run through `find_supersets()` to
+#' determine which of them are supersets.
 #'
 #' @param inputs the output from `prep_data()`, which consists of a list of
 #'   `hierarchy_matrix`, `effects_matrix`, and `ranking_df`.

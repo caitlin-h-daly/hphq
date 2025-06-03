@@ -1,13 +1,16 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# nmahierarchies
+# hphq
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-`nmahierarchies` is an R package for producing all credible treatment
-hierarchies from a network meta-analysis.
+`hphq` is an R package for producing all credible treatment hierarchies
+arising from highly probable hierarchy questions. It was designed for
+network meta-analysis (NMA), but may be applied to other settings for
+which there is a joint distribution of the relative effects between
+multiple (\>2) treatment options.
 
 Please refer to the vignette for a package demonstration.
 
@@ -16,16 +19,16 @@ Please refer to the vignette for a package demonstration.
 ### Development
 
 To install the development version from
-[GitHub](https://github.com/caitlin-h-daly/nmahierarchies)
+[GitHub](https://github.com/caitlin-h-daly/hphq)
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("caitlin-h-daly/nmahierarchies")
+remotes::install_github("caitlin-h-daly/hphq")
 ```
 
 or including the vignette
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("caitlin-h-daly/nmahierarchies", build_vignettes = TRUE)
+remotes::install_github("caitlin-h-daly/hphq", build_vignettes = TRUE)
 ```

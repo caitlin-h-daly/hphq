@@ -5,9 +5,9 @@
 #' `get_hierarchies()`, or individually in `get_arranagements()`,
 #' `get_cred_phier()`, and `singular_treatment()`.
 #'
-#' @param effects_matrix a data frame where the column headers are treatment names
-#'   and each row displays each treatment’s sampled relative effect for that
-#'   iteration.
+#' @param effects_matrix a data frame where the column headers are treatment
+#'   names and each row displays each treatment’s sampled relative effect for
+#'   that iteration.
 #' @param reference a character string of the reference treatment's name.
 #' @param larger_better a logical value indicating whether larger relative
 #'   effects are better (TRUE) or not (FALSE).

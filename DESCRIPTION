@@ -1,5 +1,5 @@
-Package: nmahierarchies
-Title: Automated Cataloging of Highly Credible Treatment Hierarchy Questions in Network Meta-Analysis
+Package: hphq
+Title: Automated Cataloging of Highly Probable Hierarchy Questions (HPHQ)
 Version: 0.1.0
 Authors@R: 
   c(person("Chloe", "Tan", , "caitlin.daly@uwaterloo.ca", role = c("aut", "cre")),
@@ -8,8 +8,10 @@ Authors@R:
 Maintainer: Audrey Béliveau <audrey.beliveau@uwaterloo.ca>
 Description: This package implements an efficient computational approach (Tan et 
   al. 2024) that systematically compiles a comprehensive catalog of all highly 
-  credible treatment hierarchies in an NMA (e.g., those with an empirical 
-  probability exceeding 90%).
+  probable treatment questions (e.g., those with an empirical 
+  probability exceeding 90%) that may be asked in the context of network 
+  meta-analysis (NMA) or other situations where there is a joint distribution 
+  of the relative effects between multiple (>2) treatments.
 License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true

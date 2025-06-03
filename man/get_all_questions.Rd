@@ -41,10 +41,10 @@ hierarchies, individual ranking probabilities, and HPD sets.
 }
 \description{
 `get_all_questions` runs the inputs through `get_arrangements()`,
-`get_partial_hierarchies()`, and `get_all_questions()` to produce a list of all
-hierarchies with relative frequencies greater than or equal to the threshold.
-These hierarchies are then run through `find_supersets()` to determine which
-of them are supersets.
+`get_partial_hierarchies()`, and `get_all_questions()` to produce a list of
+all hierarchies with relative frequencies greater than or equal to the
+threshold. These hierarchies are then run through `find_supersets()` to
+determine which of them are supersets.
 }
 \examples{
 inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
