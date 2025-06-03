@@ -14,6 +14,7 @@ samples for which they were observed (`Freq`).}
 \value{
 A data frame containing
   * `Combinations`: a string of the combination of treatments.
+  * `Length`: the number of treatments in the combination.
   * `Freq`: the proportion of samples for which the combination was observed.
 }
 \description{

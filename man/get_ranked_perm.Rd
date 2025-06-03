@@ -17,6 +17,7 @@ A data frame containing
   * `Range`: a string presenting the ranks corresponding to the permutation
   in `Var1`, presented as min-max.
   * `Var1`: a string of the permutation of treatments.
+  * `Length`: the number of treatments in the permutation.
   * `Freq`: the proportion of samples for which the ranked permutation was
   observed.
 }

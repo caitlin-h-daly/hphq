@@ -9,7 +9,8 @@ get_partial_hierarchies(
   mid = 0,
   threshold,
   larger_better,
-  freq_digits = 4
+  freq_digits = 4,
+  order_by = c("Length", "Freq")
 )
 }
 \arguments{
@@ -28,6 +29,12 @@ effects are better (TRUE) or not (FALSE).}
 
 \item{freq_digits}{a numeric value indicating the desired number of decimal
 places for which the relative frequencies will be rounded. Default is 4.}
+
+\item{order_by}{a character vector consisting of "Freq" and "Length" only,
+indicating the desired order of the arrangements within types (i.e., ranked
+permutations, permutations, ranked combinations, and combinations). Default
+is to order by the number of treatments ("Length") in the arrangements,
+followed by the relative frequencies ("Freq").}
 }
 \value{
 A data frame containing the credible partial hierarchies.

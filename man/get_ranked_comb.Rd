@@ -18,6 +18,7 @@ A data frame containing
   * `Range`: a string presenting the ranks corresponding to the combination
   in `Combinations`, presented as min-max.
   * `Combinations`: a string of the combination of treatments.
+  * `Length`: the number of treatments in the combination.
   * `Freq`: the proportion of samples for which the ranked combination was
   observed.
 }

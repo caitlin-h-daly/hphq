@@ -14,6 +14,7 @@ for which they were observed (`Freq`).}
 \value{
 A data frame containing
   * `Var1`: a string of the permutation of treatments.
+  * `Length`: the number of treatments in the permutation.
   * `Freq`: the proportion of samples for which the permutation was observed.
 }
 \description{
