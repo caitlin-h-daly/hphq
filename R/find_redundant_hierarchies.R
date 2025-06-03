@@ -78,204 +78,235 @@ find_redundant_hierarchies <- function(algo_1, algo_2, type = 1:8, trim_redundan
   # Now find redundant hierarchies
   for(ind in type){
 
-    if(ind == 1 & nrow(phier) > 0) {
+    if(ind == 1) {
 
-      if(!exists("Redundant", phier)) {
-        phier$Redundant <- FALSE
-      }
+      if(nrow(phier) > 0) {
 
-      # size of all credible partial hierarchies
-      phier$phier_size <- sapply(phier[, 1], function(x) { stringr::str_count(x, ">") + 1 } )
-      phier <- phier[order(phier$phier_size), ]
+        if(!exists("Redundant", phier)) {
+          phier$Redundant <- FALSE
+        }
 
-      # create a list of credible hierarchies by size
-      phier_list <- split(phier, phier$phier_size)
+        # size of all credible partial hierarchies
+        phier$phier_size <- sapply(phier[, 1], function(x) { stringr::str_count(x, ">") + 1 } )
+        phier <- phier[order(phier$phier_size), ]
 
-      # unique sizes of credible partial hierarchies
-      phier_sizes <- sort(unique(phier$phier_size))
+        # create a list of credible hierarchies by size
+        phier_list <- split(phier, phier$phier_size)
 
-      # check if credible partial hierarchies are redundant within
-      if(length(phier_sizes) > 1) {
-        # assess whether smaller credible partial hierarchies are within larger credible partial hierarchies
-        for(i in phier_sizes[-which.max(phier_sizes)]) {
-          # extract credible partial hierarchies of size i
-          current_phier_size <- phier_list[[as.character(i)]]
-          # list of larger hierarchies to check against
-          phier_larger_list <- phier_list[as.character(phier_sizes[which(phier_sizes > i)])]
-          for(j in 1:nrow(current_phier_size)) {
-            if(current_phier_size[j, "Redundant"] == FALSE) {
-              # extract jth partial hierarchy in current_phier_size
-              phier_target <- stringr::str_split_1(as.character(current_phier_size[j, 1]), " > ")
-              # check to see if jth partial hierarchy is in larger partial hierarchies
-              redundant_check <- nmahierarchies:::is_phier_redundant_within_phier(phier_target,
-                                                                                  phier_larger_list)
-              if(!is.null(redundant_check)){
-                current_phier_size[j, "Redundant"] <- redundant_check
+        # unique sizes of credible partial hierarchies
+        phier_sizes <- sort(unique(phier$phier_size))
+
+        # check if credible partial hierarchies are redundant within
+        if(length(phier_sizes) > 1) {
+          # assess whether smaller credible partial hierarchies are within larger credible partial hierarchies
+          for(i in phier_sizes[-which.max(phier_sizes)]) {
+            # extract credible partial hierarchies of size i
+            current_phier_size <- phier_list[[as.character(i)]]
+            # list of larger hierarchies to check against
+            phier_larger_list <- phier_list[as.character(phier_sizes[which(phier_sizes > i)])]
+            for(j in 1:nrow(current_phier_size)) {
+              if(current_phier_size[j, "Redundant"] == FALSE) {
+                # extract jth partial hierarchy in current_phier_size
+                phier_target <- stringr::str_split_1(as.character(current_phier_size[j, 1]), " > ")
+                # check to see if jth partial hierarchy is in larger partial hierarchies
+                redundant_check <- nmahierarchies:::is_phier_redundant_within_phier(phier_target,
+                                                                                    phier_larger_list)
+                if(!is.null(redundant_check)){
+                  current_phier_size[j, "Redundant"] <- redundant_check
+                }
               }
             }
-          }
-          phier_list[[as.character(i)]] <- current_phier_size
-        }
-      }
-      phier <- do.call(rbind, phier_list)[-4]  # drop the phier_size column
-
-    } else if(ind == 2 & nrow(phier) > 0 & nrow(perm) > 0) {
-
-      if(!exists("Redundant", phier)) {
-        phier$Redundant <- FALSE
-      }
-
-      # check if (remaining) credible partial hierarchies are redundant because of credible permutations
-      for (i in 1:nrow(phier)) {
-        if(phier[i, "Redundant"] == FALSE) {
-          phier_target <- str_split_1(as.character(phier[i, 1]), " > ")
-          for(j in 1:nrow(perm)) {
-            perm_string_to_check <- str_split_1(as.character(perm[j, 1]), ",")
-            # finds position of treatments in phier_target within perm_string_to_check
-            positions <- match(phier_target, perm_string_to_check)
-            if (!anyNA(positions) && all(diff(positions) >= 0)) { # checks if position[j+1] >= position[j]
-              phier[i, "Redundant"] <- TRUE
-              break
-            }
+            phier_list[[as.character(i)]] <- current_phier_size
           }
         }
+        phier <- do.call(rbind, phier_list)[-4]  # drop the phier_size column
+
       }
 
+    } else if(ind == 2) {
 
-    } else if(ind == 3 & nrow(comb) > 0 & nrow(ranked_comb) > 0) {
+      if(nrow(phier) > 0 & nrow(perm) > 0) {
 
-      if(!exists("Redundant", comb)) {
-        comb$Redundant <- FALSE
-      }
-
-      # check if (remaining) credible combinations are redundant because of credible ranked combinations
-      for(i in 1:nrow(comb)) {
-        comb_target <- str_split_1(comb[i, 1], ",")
-        if(comb[i, "Redundant"] == FALSE) {
-          for(j in 1:nrow(ranked_comb)) {
-            if(setequal(comb_target, str_split_1(ranked_comb[j, 2], ","))) {
-              comb[i, "Redundant"] <- TRUE
-              break
-            }
-          }
+        if(!exists("Redundant", phier)) {
+          phier$Redundant <- FALSE
         }
-      }
 
-    } else if(ind == 4 & nrow(comb) > 0 & nrow(perm) > 0) {
-
-      if(!exists("Redundant", comb)) {
-        comb$Redundant <- FALSE
-      }
-
-      # check if (remaining) credible combinations are redundant because of credible permutations
-      for(i in 1:nrow(comb)) {
-        comb_target <- str_split_1(comb[i, 1], ",")
-        if(comb[i, "Redundant"] == FALSE) {
-          for(j in 1:nrow(perm)) {
-            if(setequal(comb_target, str_split_1(perm[j, 1], ","))) {
-              comb[i, "Redundant"] <- TRUE
-              break
-            }
-          }
-        }
-      }
-
-    } else if(ind == 5 & nrow(ranked_comb) > 0 & nrow(ranked_perm) > 0) {
-
-      if(!exists("Redundant", ranked_comb)) {
-        ranked_comb$Redundant <- FALSE
-      }
-
-      # check if (remaining) credible ranked combinations are redundant because of credible ranked permutations
-      for(i in 1:nrow(ranked_comb)) {
-        range_target <- as.character(ranked_comb[i, 1])
-        ranked_comb_target <- str_split_1(ranked_comb[i, 2], ",")
-        if(ranked_comb[i, "Redundant"] == FALSE) {
-          for(j in 1:nrow(ranked_perm)) {
-            if(range_target == as.character(ranked_perm[j, 1]) &&
-               setequal(ranked_comb_target, str_split_1(ranked_perm[j, 2], ","))) {
-              ranked_comb[i, "Redundant"] <- TRUE
-              break
-            }
-          }
-        }
-      }
-
-    } else if(ind == 6 & nrow(perm) > 0) {
-
-      if(!exists("Redundant", perm)) {
-        perm$Redundant <- FALSE
-      }
-
-      # check if (remaining) credible permutations are redundant within
-      perm_ind <- 1:nrow(perm)
-      for(i in perm_ind){
-        if(perm[i, "Redundant"] == FALSE) {
-          perm_target <- as.character(perm[i, 1])
-          for(j in perm_ind[-i]) {
-            perm_string <- as.character(perm[j, 1])
-            if(str_detect(perm_string, perm_target)) {
-              perm[i, "Redundant"] <- TRUE
-              break
-            }
-          }
-        }
-      }
-
-    } else if(ind == 7 & nrow(perm) > 0 & nrow(ranked_perm) > 0) {
-
-      if(!exists("Redundant", perm)) {
-        perm$Redundant <- FALSE
-      }
-
-      # check if (remaining) credible permutations are redundant because of credible ranked permutations
-      for(i in 1:nrow(perm)) {
-        perm_target <- str_split_1(perm[i, 1], ",")
-        if(perm[i, "Redundant"] == FALSE) {
-          for(j in 1:nrow(ranked_perm)) {
-            if(setequal(perm_target, str_split_1(ranked_perm[j, 2], ","))) {
-              perm[i, "Redundant"] <- TRUE
-              break
-            }
-          }
-        }
-      }
-
-    } else if(ind == 8 & nrow(ranked_perm) > 0) {
-
-      if(!exists("Redundant", ranked_perm)) {
-        ranked_perm$Redundant <- FALSE
-      }
-
-      # check if credible ranked permutations are redundant within
-      ranked_perm_ind <- 1:nrow(ranked_perm)
-      for(i in ranked_perm_ind){
-        if(ranked_perm[i, "Redundant"] == FALSE) {
-          range_target <- str_split_1(ranked_perm[i, 1], "-")
-          ranked_perm_target <- str_split_1(as.character(ranked_perm[i, 2]), ",")
-          for(j in ranked_perm_ind[-i]) {
-            ranked_perm_range_to_check <- str_split_1(ranked_perm[j, 1], "-")
-
-            # if target permutation ranks are within range of permutation ranks to check
-            if(range_target[1] >= ranked_perm_range_to_check[1] &
-               range_target[2] <= ranked_perm_range_to_check[2] ) {
-
-              # find index of ranked_perm_string_to_check that would match positions of treatments to check
-              upper <- as.numeric(range_target[2]) - as.numeric(ranked_perm_range_to_check[1]) + 1
-              lower <- as.numeric(range_target[1]) - as.numeric(ranked_perm_range_to_check[1]) + 1
-
-              # extract treatments in range of target ranked permutation
-              ranked_perm_string_to_check <- str_split_1(as.character(ranked_perm[j, 2]), ",")[lower:upper]
-
-              if(identical(ranked_perm_target, ranked_perm_string_to_check)) {
-                ranked_perm[i, "Redundant"] <- TRUE
+        # check if (remaining) credible partial hierarchies are redundant because of credible permutations
+        for (i in 1:nrow(phier)) {
+          if(phier[i, "Redundant"] == FALSE) {
+            phier_target <- str_split_1(as.character(phier[i, 1]), " > ")
+            for(j in 1:nrow(perm)) {
+              perm_string_to_check <- str_split_1(as.character(perm[j, 1]), ",")
+              # finds position of treatments in phier_target within perm_string_to_check
+              positions <- match(phier_target, perm_string_to_check)
+              if (!anyNA(positions) && all(diff(positions) >= 0)) { # checks if position[j+1] >= position[j]
+                phier[i, "Redundant"] <- TRUE
                 break
               }
-
             }
-
           }
         }
+
+      }
+
+    } else if(ind == 3) {
+
+      if(nrow(comb) > 0 & nrow(ranked_comb) > 0) {
+
+        if(!exists("Redundant", comb)) {
+          comb$Redundant <- FALSE
+        }
+
+        # check if (remaining) credible combinations are redundant because of credible ranked combinations
+        for(i in 1:nrow(comb)) {
+          comb_target <- str_split_1(comb[i, 1], ",")
+          if(comb[i, "Redundant"] == FALSE) {
+            for(j in 1:nrow(ranked_comb)) {
+              if(setequal(comb_target, str_split_1(ranked_comb[j, 2], ","))) {
+                comb[i, "Redundant"] <- TRUE
+                break
+              }
+            }
+          }
+        }
+
+      }
+
+    } else if(ind == 4) {
+
+      if(nrow(comb) > 0 & nrow(perm) > 0) {
+
+        if(!exists("Redundant", comb)) {
+          comb$Redundant <- FALSE
+        }
+
+        # check if (remaining) credible combinations are redundant because of credible permutations
+        for(i in 1:nrow(comb)) {
+          comb_target <- str_split_1(comb[i, 1], ",")
+          if(comb[i, "Redundant"] == FALSE) {
+            for(j in 1:nrow(perm)) {
+              if(setequal(comb_target, str_split_1(perm[j, 1], ","))) {
+                comb[i, "Redundant"] <- TRUE
+                break
+              }
+            }
+          }
+        }
+
+      }
+
+    } else if(ind == 5) {
+
+      if(nrow(ranked_comb) > 0 & nrow(ranked_perm) > 0) {
+
+        if(!exists("Redundant", ranked_comb)) {
+          ranked_comb$Redundant <- FALSE
+        }
+
+        # check if (remaining) credible ranked combinations are redundant because of credible ranked permutations
+        for(i in 1:nrow(ranked_comb)) {
+          range_target <- as.character(ranked_comb[i, 1])
+          ranked_comb_target <- str_split_1(ranked_comb[i, 2], ",")
+          if(ranked_comb[i, "Redundant"] == FALSE) {
+            for(j in 1:nrow(ranked_perm)) {
+              if(range_target == as.character(ranked_perm[j, 1]) &&
+                 setequal(ranked_comb_target, str_split_1(ranked_perm[j, 2], ","))) {
+                ranked_comb[i, "Redundant"] <- TRUE
+                break
+              }
+            }
+          }
+        }
+
+      }
+
+    } else if(ind == 6) {
+
+      if(nrow(perm) > 0) {
+
+        if(!exists("Redundant", perm)) {
+          perm$Redundant <- FALSE
+        }
+
+        # check if (remaining) credible permutations are redundant within
+        perm_ind <- 1:nrow(perm)
+        for(i in perm_ind){
+          if(perm[i, "Redundant"] == FALSE) {
+            perm_target <- as.character(perm[i, 1])
+            for(j in perm_ind[-i]) {
+              perm_string <- as.character(perm[j, 1])
+              if(str_detect(perm_string, perm_target)) {
+                perm[i, "Redundant"] <- TRUE
+                break
+              }
+            }
+          }
+        }
+
+      }
+
+    } else if(ind == 7) {
+
+      if(nrow(perm) > 0 & nrow(ranked_perm) > 0) {
+
+        if(!exists("Redundant", perm)) {
+          perm$Redundant <- FALSE
+        }
+
+        # check if (remaining) credible permutations are redundant because of credible ranked permutations
+        for(i in 1:nrow(perm)) {
+          perm_target <- str_split_1(perm[i, 1], ",")
+          if(perm[i, "Redundant"] == FALSE) {
+            for(j in 1:nrow(ranked_perm)) {
+              if(setequal(perm_target, str_split_1(ranked_perm[j, 2], ","))) {
+                perm[i, "Redundant"] <- TRUE
+                break
+              }
+            }
+          }
+        }
+
+      }
+
+    } else if(ind == 8) {
+
+      if(nrow(ranked_perm) > 0) {
+
+        if(!exists("Redundant", ranked_perm)) {
+          ranked_perm$Redundant <- FALSE
+        }
+
+        # check if credible ranked permutations are redundant within
+        ranked_perm_ind <- 1:nrow(ranked_perm)
+        for(i in ranked_perm_ind){
+          if(ranked_perm[i, "Redundant"] == FALSE) {
+            range_target <- str_split_1(ranked_perm[i, 1], "-")
+            ranked_perm_target <- str_split_1(as.character(ranked_perm[i, 2]), ",")
+            for(j in ranked_perm_ind[-i]) {
+              ranked_perm_range_to_check <- str_split_1(ranked_perm[j, 1], "-")
+
+              # if target permutation ranks are within range of permutation ranks to check
+              if(range_target[1] >= ranked_perm_range_to_check[1] &
+                 range_target[2] <= ranked_perm_range_to_check[2] ) {
+
+                # find index of ranked_perm_string_to_check that would match positions of treatments to check
+                upper <- as.numeric(range_target[2]) - as.numeric(ranked_perm_range_to_check[1]) + 1
+                lower <- as.numeric(range_target[1]) - as.numeric(ranked_perm_range_to_check[1]) + 1
+
+                # extract treatments in range of target ranked permutation
+                ranked_perm_string_to_check <- str_split_1(as.character(ranked_perm[j, 2]), ",")[lower:upper]
+
+                if(identical(ranked_perm_target, ranked_perm_string_to_check)) {
+                  ranked_perm[i, "Redundant"] <- TRUE
+                  break
+                }
+
+              }
+
+            }
+          }
+        }
+
       }
 
     } else {
