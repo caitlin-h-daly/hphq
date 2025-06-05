@@ -121,21 +121,20 @@ algo3
 Some credible hierarchies may be redundant because of other credible hierarchies
 in the outputs of algorithms 1 and 2 (e.g., $A > B > C$ is redundant because of 
 $(A, B, C)_1^3$), and thus their output is redundant. You may use
-`find_redundant_hierarchies()` to detect these redundant hierachies and 
-optionally remove them. By default, `find_redundant_hierarchies()` detects 
-redundant hierarchies in the order proposed by Tan et al. (2025). The user has 
-the option to only check certain hierarchy types, in their preferred order. See 
-the help page for more details on 
-this.
+`find_redundancies()` to detect these redundant hierachies and optionally remove
+them. By default, `find_redundancies()` detects redundant hierarchies in the 
+order proposed by Tan et al. (2025). The user has the option to only check 
+certain hierarchy types, in their preferred order. See the help page for more 
+details on this.
 
 ```{r}
-redundant_check <- find_redundant_hierarchies(algo_1 = algo1, 
-                                              algo_2 = algo2)
+redundant_check <- find_redundancies(algo_1 = algo1, 
+                                     algo_2 = algo2)
 redundant_check
 
-find_redundant_hierarchies(algo_1 = algo1, 
-                           algo_2 = algo2, 
-                           trim_redundant = TRUE)
+find_redundancies(algo_1 = algo1, 
+                  algo_2 = algo2, 
+                  trim_redundant = TRUE)
 ```
 
 # All credible hierarchies at once

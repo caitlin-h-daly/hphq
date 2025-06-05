@@ -1,7 +1,7 @@
 #' Identify and optionally trim redundant hierarchies
 #'
 #' @description
-#' `find_redundant_hierarchies` compares the outputs from `get_arrangements()`
+#' `find_redundancies` compares the outputs from `get_arrangements()`
 #' and `get_phier()` to identify redundant credible hierarchies.
 #'
 #' @param algo_1 a list of data frames outputted from `get_arrangements()`
@@ -46,7 +46,7 @@
 #' algo1 <- get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
 #' algo2 <- get_cred_phier(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
 #' find_redundant_hierarchies(algo1, algo2)
-find_redundant_hierarchies <- function(algo_1, algo_2, type = 1:8, trim_redundant = FALSE) {
+find_redundancies <- function(algo_1, algo_2, type = 1:8, trim_redundant = FALSE) {
 
   # Verify algo_1 and algo_2 objects correspond to the same threshold
   # TO DO - add threshold to list in algo_1 and algo_2 outputs

@@ -44,7 +44,7 @@ get_all_questions <- function(inputs, larger_better, thresholds, mid = 0, print_
   phier <- get_partial_hierarchies(inputs$effects_matrix, mid, thresholds[[2]], larger_better)
   single <- get_ranks_by_treatment(inputs$ranking_df, thresholds[[3]], print_plot)
 
-  first_outputs <- find_redundant_hierarchies(arrangements, phier, trim_redundant = trim_redundant)
+  first_outputs <- find_redundancies(arrangements, phier, trim_redundant = trim_redundant)
 
   all_outputs <- append(first_outputs, single)
   names(all_outputs) <- c("Ranked Permutations", "Permutations",
