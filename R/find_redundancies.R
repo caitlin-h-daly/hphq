@@ -329,13 +329,6 @@ find_redundancies <- function(algo_1, algo_2, type = 1:8, trim_redundant = FALSE
 
   }
 
-  # remove non-informative row names
-  rownames(ranked_perm) <- NULL
-  rownames(perm) <- NULL
-  rownames(ranked_comb) <- NULL
-  rownames(comb) <- NULL
-  rownames(phier) <- NULL
-
   if(trim_redundant == TRUE){
     ranked_perm <- ranked_perm[ranked_perm$Redundant == FALSE, ]
     perm <- perm[perm$Redundant == FALSE, ]
@@ -343,6 +336,13 @@ find_redundancies <- function(algo_1, algo_2, type = 1:8, trim_redundant = FALSE
     comb <- comb[comb$Redundant == FALSE, ]
     phier <- phier[phier$Redundant == FALSE, ]
   }
+
+  # remove non-informative row names
+  rownames(ranked_perm) <- NULL
+  rownames(perm) <- NULL
+  rownames(ranked_comb) <- NULL
+  rownames(comb) <- NULL
+  rownames(phier) <- NULL
 
   # add appropriate brackets for combinatorial type
   if(nrow(ranked_perm) > 0) {

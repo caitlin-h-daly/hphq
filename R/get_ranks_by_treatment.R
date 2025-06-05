@@ -42,6 +42,7 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
   # proportion of times each treatment is a specific rank
   filtered_df <- subset(df, df$Freq > threshold)
   filtered_df <- filtered_df[order(filtered_df$Freq, decreasing = TRUE), ]
+  row.names(filtered_df) <- NULL
   outputs[[1]] <- filtered_df
 
   if(print_plot) {
@@ -73,7 +74,8 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
   }
 
   hpd_df <- do.call(rbind, hpd_list)
-  outputs[[2]]<-hpd_df
+  row.names(hpd_df) <- NULL
+  outputs[[2]] <- hpd_df
 
   if(print_plot) {
     rows <- ceiling(sqrt(n_trt))
