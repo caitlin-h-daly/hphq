@@ -130,7 +130,8 @@ get_combo <- function(all_ranked_combo) {
 #' @keywords internal
 is_phier_redundant_within_phier <- function(phier_target, larger_phier_list) {
   # to find redundancy status faster, look at smaller larger_phier_list first
-  phier_sizes <- sort(unique(do.call(rbind, larger_phier_list)$phier_size))
+  # (smaller are more likely to be credible)
+  phier_sizes <- sort(unique(do.call(rbind, larger_phier_list)$Length))
   for (i in sort(phier_sizes)) {
     current_phier_df <- larger_phier_list[[as.character(i)]]
     for(j in 1:nrow(current_phier_df)) {

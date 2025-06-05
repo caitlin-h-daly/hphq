@@ -86,15 +86,14 @@ find_redundancies <- function(algo_1, algo_2, type = 1:8, trim_redundant = FALSE
           phier$Redundant <- FALSE
         }
 
-        # size of all credible partial hierarchies
-        phier$phier_size <- sapply(phier[, 1], function(x) { stringr::str_count(x, ">") + 1 } )
-        phier <- phier[order(phier$phier_size), ]
+        # order by size of all credible partial hierarchies
+        phier <- phier[order(phier$Length), ]
 
         # create a list of credible hierarchies by size
-        phier_list <- split(phier, phier$phier_size)
+        phier_list <- split(phier, phier$Length)
 
         # unique sizes of credible partial hierarchies
-        phier_sizes <- sort(unique(phier$phier_size))
+        phier_sizes <- sort(unique(phier$Length))
 
         # check if credible partial hierarchies are redundant within
         if(length(phier_sizes) > 1) {
@@ -119,7 +118,7 @@ find_redundancies <- function(algo_1, algo_2, type = 1:8, trim_redundant = FALSE
             phier_list[[as.character(i)]] <- current_phier_size
           }
         }
-        phier <- do.call(rbind, phier_list)[-4]  # drop the phier_size column
+        phier <- do.call(rbind, phier_list)
 
       }
 
