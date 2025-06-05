@@ -144,7 +144,7 @@ hierarchies that answer binary questions (ranked permutations, permutations,
 ranked combinations, combinations, partial hierarchies, rankings, and HPD sets) 
 in one go. Note this function can check if credible hierarchies are redundant 
 because of other credible hierarchies in the output, using the default 
-settings of `find_redundant_hierarchies()`.
+settings of `find_redundancies()`.
 
 ```{r}
 all_cred_hier <- get_all_questions(inputs = inputs, 
