@@ -49,7 +49,7 @@ prep_data <- function(effects_matrix, reference, larger_better) {
 
   n_trt <- length(treatments)
   value_matrix <- as.matrix(x)
-  x2 <- x
+  x2 <- as.data.frame(x)
   n_iter <- nrow(x2)
   x2$iteration <- seq_len(n_iter)
   x3 <- reshape(x2,
