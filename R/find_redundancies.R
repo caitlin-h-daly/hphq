@@ -23,8 +23,8 @@
 #'   because of (A, B)).
 #' 3) Between combinations and ranked combinations (e.g., ${A, B}$ is redundant
 #'   because of ${A, B}_1^2$).
-#' 4) Between combinations and ranked combinations (e.g., ${A, B}$ is redundant
-#'   because of $(A, B)$).
+#' 4) Between combinations and permutations (e.g., ${A, B}$ is redundant because
+#'   of $(A, B)$).
 #' 5) Between ranked combinations and ranked permutations (e.g., ${A, B}_1^2$ is
 #'   redundant because of $(A, B)_1^2$).
 #' 6) Within permutations (e.g., (A, B) is redundant because of (A, B, C)).
