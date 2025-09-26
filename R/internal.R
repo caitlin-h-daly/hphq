@@ -202,7 +202,7 @@ create_perm <- function(trts, trt1, new_trts, credible) {
 #'
 #' @description
 #' `hdr()` determines the subset of ranks with the smallest possible cumulative
-#' relative frequency that is at least equal to `threshold`.
+#' empirical probability that is at least equal to `threshold`.
 #'
 #' @param ranks a data frame for a particular treatment, consisting of one
 #'   column (`Rank`) of all possible ranks and another column (`Freq`) listing
@@ -212,7 +212,7 @@ create_perm <- function(trts, trt1, new_trts, credible) {
 #' @param freq_sum a numeric value that should always be 1 (the default).
 #'
 #' @return A list of 1) a string of the rank(s) in the HDR set, 2) the
-#' corresponding observed relative frequency for the ranks in the HDR set,
+#' corresponding empirical probability for the ranks in the HDR set,
 #' 3) a vector of the rank(s) in the HDR set.
 #'
 #' @keywords internal

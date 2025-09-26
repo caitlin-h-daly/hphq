@@ -37,8 +37,8 @@ A data frame containing the credible partial hierarchies.
 }
 \description{
 `get_partial_hierarchies()` finds all partial hierarchies reflecting
-treatment differences greater than or equal to `mid` and with relative
-frequencies greater than or equal to the threshold.
+treatment differences greater than or equal to `mid` and with empirical
+probabilities greater than or equal to the threshold.
 }
 \examples{
 inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)

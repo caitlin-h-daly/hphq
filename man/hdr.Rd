@@ -18,11 +18,11 @@ observed in order to be credible.}
 }
 \value{
 A list of 1) a string of the rank(s) in the HDR set, 2) the
-corresponding observed relative frequency for the ranks in the HDR set,
+corresponding empirical probability for the ranks in the HDR set,
 3) a vector of the rank(s) in the HDR set.
 }
 \description{
 `hdr()` determines the subset of ranks with the smallest possible cumulative
-relative frequency that is at least equal to `threshold`.
+empirical probability that is at least equal to `threshold`.
 }
 \keyword{internal}

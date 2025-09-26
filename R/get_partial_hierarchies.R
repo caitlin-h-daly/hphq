@@ -2,8 +2,8 @@
 #'
 #' @description
 #' `get_partial_hierarchies()` finds all partial hierarchies reflecting
-#' treatment differences greater than or equal to `mid` and with relative
-#' frequencies greater than or equal to the threshold.
+#' treatment differences greater than or equal to `mid` and with empirical
+#' probabilities greater than or equal to the threshold.
 #'
 #' @param effects_matrix a matrix where the column headers are treatment names
 #'   and each row displays each treatment’s sampled relative effect for that

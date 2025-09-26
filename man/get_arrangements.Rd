@@ -17,7 +17,7 @@ observed in order to be credible.}
 indicating the desired order of the arrangements within types (i.e., ranked
 permutations, permutations, ranked combinations, and combinations). Default
 is to order by the number of treatments ("Size") in the arrangements,
-followed by the relative frequencies ("Freq").}
+followed by the empirical probabilities ("Freq").}
 }
 \value{
 A list of data frames containing the credible hierarchies for ranked
@@ -25,7 +25,7 @@ permutations, permutations, ranked combinations, and combinations.
 }
 \description{
 `get_arrangements()` finds all ranked permutations, permutations, ranked
-combinations, and combinations with relative frequencies greater than or
+combinations, and combinations with empirical probabilities greater than or
 equal to a given threshold.
 }
 \details{
