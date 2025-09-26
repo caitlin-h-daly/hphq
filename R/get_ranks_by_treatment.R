@@ -1,10 +1,10 @@
-#' Get credible rankings and HPD sets for each treatment
+#' Get credible HDR sets for each treatment
 #'
 #' @description
-#' `get_ranks_by_treatment()` finds all ranks and high probability density (HPD)
-#' sets with relative frequencies greater than or equal to the threshold for
-#' each treatment. The HPD intervals provide the subset of ranks with the
-#' smallest possible cumulative relative frequency that is at least equal to the
+#' `get_ranks_by_treatment()` finds all highest density region (HDR) sets with
+#' empirical probabilities greater than or equal to the threshold for each
+#' treatment. The HDR sets provide the subset of ranks with the smallest
+#' possible cumulative empirical probability that is at least equal to the
 #' threshold.
 #'
 #' @param ranking_df a data frame of each treatment's ranks and associated
@@ -14,8 +14,7 @@
 #' @param print_plot a logical value indicating whether the rankograms should be
 #' printed (TRUE) or not (FALSE, the default).
 #'
-#' @return A list of data frames containing the credible rankings and HPD
-#' set for each treatment.
+#' @return A data frame containing the credible HDR set for each treatment.
 #'
 #' @importFrom graphics barplot
 #' @importFrom graphics legend
@@ -23,7 +22,7 @@
 #' @export
 #'
 #' @examples
-#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
 #' get_ranks_by_treatment(ranking_df = inputs$ranking_df, threshold = 0.9, print_plot = FALSE)
 get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
 
@@ -37,13 +36,6 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
   tolerance <- .Machine$double.eps ^ 0.5
   threshold <- threshold - tolerance
   comparator <- seq_len(n_trt)
-  outputs <- vector("list", length = 2)
-
-  # proportion of times each treatment is a specific rank
-  filtered_df <- subset(df, df$Freq > threshold)
-  filtered_df <- filtered_df[order(filtered_df$Freq, decreasing = TRUE), ]
-  row.names(filtered_df) <- NULL
-  outputs[[1]] <- filtered_df
 
   if(print_plot) {
     sucra <- matrix(, nrow = n_trt, ncol = n_trt - 1,
@@ -75,7 +67,6 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
 
   hpd_df <- do.call(rbind, hpd_list)
   row.names(hpd_df) <- NULL
-  outputs[[2]] <- hpd_df
 
   if(print_plot) {
     rows <- ceiling(sqrt(n_trt))
@@ -107,7 +98,6 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
     par(mfrow = c(1, 1))
   }
 
-  names(outputs) <- c("Individual Rank", "HPD")
-  return(outputs)
+  return(hpd_df)
 
 }
