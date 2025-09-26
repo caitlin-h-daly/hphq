@@ -4,18 +4,35 @@
 \alias{find_redundancies}
 \title{Identify and optionally trim redundant hierarchies}
 \usage{
-find_redundancies(algo_1, algo_2, type = 1:8, trim_redundant = FALSE)
+find_redundancies(
+  algo_1,
+  algo_2,
+  algo_3,
+  n_trt,
+  threshold,
+  type = 1:18,
+  trim_redundant = FALSE
+)
 }
 \arguments{
 \item{algo_1}{a list of data frames outputted from `get_arrangements()`
 containing the credible hierarchies for ranked permutations, permutations,
 ranked combinations, and combinations.}
 
-\item{algo_2}{a data frame outputted from `get_phier()` containing credible
-partial hierarchies.}
+\item{algo_2}{a data frame outputted from `get_partial_hierarchies()`
+containing credible partial hierarchies.}
+
+\item{algo_3}{a data frame outputted from `get_ranks_by_treatments()`
+containing credible HDRs.}
+
+\item{n_trt}{a numeric value indicating the number of treatments in the
+network.}
+
+\item{threshold}{a proportion between 0 and 1 for which a hierarchy must be
+observed in order to be credible.}
 
 \item{type}{a numeric vector indicating what types of hierarchy redundancies
-should be trimmed. See details for more information. Default is 1:8.}
+should be trimmed. See details for more information. Default is 1:18.}
 
 \item{trim_redundant}{a logical value indicating whether the redundant
 hierarchies should be trimmed from the output (TRUE) or not (FALSE, the
@@ -23,37 +40,43 @@ default).}
 }
 \value{
 A list of the credible ranked permutations, permutations, ranked
-combinations, combinations, and partial hierarchies along with their
+combinations, combinations, partial hierarchies, and HDRs along with their
 redundancy status.
 }
 \description{
-`find_redundancies` compares the outputs from `get_arrangements()`
-and `get_phier()` to identify redundant credible hierarchies.
+`find_redundancies` compares the outputs from `get_arrangements()`,
+`get_partial_hiearchies()`, and `get_ranks_by_treatment()` to identify
+redundant credible hierarchies.
 }
 \details{
-Hierarchy redundancy types can be identified with numbers through 1 through 8
-as follows:
-1) Within partial hierarchies (e.g., A > B is redundant because of A > B > C).
-2) Between partial hierarchies and permutations (e.g., A > B is redundant
-  because of (A, B)).
-3) Between combinations and ranked combinations (e.g., ${A, B}$ is redundant
-  because of ${A, B}_1^2$).
-4) Between combinations and ranked combinations (e.g., ${A, B}$ is redundant
-  because of $(A, B)$).
-5) Between ranked combinations and ranked permutations (e.g., ${A, B}_1^2$ is
-  redundant because of $(A, B)_1^2$).
-6) Within permutations (e.g., (A, B) is redundant because of (A, B, C)).
-7) Between permutations and ranked permutations(e.g., $(A, B)$ is redundant
-  because of $(A, B)_1^2$).
-8) Within ranked permutations (e.g., $(A, B)_1^2$ is redundant because of
-  $(A, B, C)_1^3$).
+Redundancy types can be identified with numbers through 1 through 18 as follows:
+1) Within ranked permutations (e.g., $(A, B)_1^2$ is redundant because of $(A, B, C)_1^3$).
+2) Within permutations (e.g., (A, B) is redundant because of (A, B, C)).
+3) Within partial hierarchies (e.g., A > B is redundant because of A > B > C).
+4) Between permutations and partial hierarchies (e.g., A > B is redundant because of (A, B)).
+5) Between ranked permutations and permutations (e.g., $(A, B)$ is redundant because of $(A, B)_1^2$).
+6) Between ranked combinations and combinations (e.g., ${A, B}$ is redundant because of ${A, B}_1^2$).
+7) Between permutations and combinations (e.g., ${A, B}$ is redundant because of $(A, B)$).
+8) Between ranked permutations and ranked combinations (e.g., ${A, B}_1^2$ is redundant because of $(A, B)_1^2$).
+9) Between a ranked permutation and multiple single HDR ranks.
+10) Between a ranked combination and multiple HDRs.
+11) Within top/bottom ranked combinations.
+12) Between top/bottom single HDR ranks and a combination ranking from 1:(n_trt-1) or 2:n_trt.
+13) Between permutations ranking from 1:(n_trt-1) or 2:n_trt and a top/bottom single HDR rank.
+14) Between top/bottom single HDR ranks and a middle combination ranking 2:(n_trt-1).
+15) Between (top/bottom single HDR rank + tail-ranked permutation) and a middle ranked combination.
+16) Between tail-ranked permutations and a middle ranked combination.
+17) Between (ranked permutation + smaller ranked combination) and ranked combination.
+18) Between (single HDR rank + smaller ranked combination) and ranked combination.
 
-We recommend these hierarchy redundancies are identified in increasing order
-(1 through 8). Otherwise, a warning will be outputted.
+We recommend these redundancies are identified in increasing order (1 through
+18) to ensure a complete assessment and output. Otherwise, a warning will be
+outputted.
 }
 \examples{
-inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = "FALSE")
 algo1 <- get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
-algo2 <- get_cred_phier(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
-find_redundant_hierarchies(algo1, algo2)
+algo2 <- get_partial_hierarchies(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = "FALSE")
+algo3 <- get_ranks_by_treatment(ranking_df = inputs$ranking_df, mid = 0, threshold = 0.9, larger_better = "FALSE")
+find_redundancies(algo1, algo2, algo3, n_trt = 5, threshold = 0.90)
 }

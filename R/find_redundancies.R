@@ -86,8 +86,8 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
   comb <- algo_1[[4]]
   comb[, 1] <- stringr::str_remove_all(comb[, 1], "[{}]")
   phier <- algo_2
-  hdr <- algo_3$HPD
-  hdr <- hdr[order(hdr$`HPD Rank(s)`, hdr$Treatment),]
+  hdr <- algo_3$HDR
+  hdr <- hdr[order(hdr$`HDR Rank(s)`, hdr$Treatment),]
 
   # Now find redundant hierarchies
   for(ind in type) {
@@ -358,7 +358,7 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
       # Between a ranked permutation and multiple single HDR ranks.
 
       # Find HDRs with single rank
-      HDR_single_ind <- which(nchar(hdr[, "HPD Rank(s)"]) == 1)
+      HDR_single_ind <- which(nchar(hdr[, "HDR Rank(s)"]) == 1)
 
       if(nrow(ranked_perm) > 0 & length(HDR_single_ind) > 0) {
 
@@ -377,9 +377,9 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
           perm_ranks <- stringr::str_split_1(ranked_perm[i, "Range"], "-")
           perm_ranks <- as.character(perm_ranks[1]:perm_ranks[2])
           perm_set <- stringr::str_split_1(ranked_perm[i, "Ranked Permutations"], ",")
-          if(all(perm_ranks %in% hdr[HDR_single_ind, "HPD Rank(s)"],
-                 na.omit(hdr[match(perm_ranks, hdr[, "HPD Rank(s)"]), "Treatment"]) == perm_set)) {
-            hdr[na.omit(match(perm_ranks, hdr[, "HPD Rank(s)"])), "Redundant"] <- "TRUE"
+          if(all(perm_ranks %in% hdr[HDR_single_ind, "HDR Rank(s)"],
+                 na.omit(hdr[match(perm_ranks, hdr[, "HDR Rank(s)"]), "Treatment"]) == perm_set)) {
+            hdr[na.omit(match(perm_ranks, hdr[, "HDR Rank(s)"])), "Redundant"] <- "TRUE"
           }
         }
       }
@@ -393,13 +393,13 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
       }
 
       # Which treatments have the same HDRs
-      dup_ind <- which(duplicated(hdr[, "HPD Rank(s)"]) == TRUE)
+      dup_ind <- which(duplicated(hdr[, "HDR Rank(s)"]) == TRUE)
 
       # If any treatments have same set of HDRs...
       if(length(dup_ind) > 0) {
 
         # Which ranked combinations' ranking ranges == the HDRs?
-        rk_comb_ind <- which(ranked_comb[, "Range"] %in% hdr[dup_ind, "HPD Rank(s)"] == TRUE)
+        rk_comb_ind <- which(ranked_comb[, "Range"] %in% hdr[dup_ind, "HDR Rank(s)"] == TRUE)
 
         # If any of the ranked combinations' ranking range == the HDRs ...
         if(length(rk_comb_ind) > 0) {
@@ -414,9 +414,9 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
 
             for(j in dup_ind) {
               # Index of HDRs to assess redundancy status
-              hdr_to_check <- which(hdr[, "HPD Rank(s)"] == hdr[j, "HPD Rank(s)"])
+              hdr_to_check <- which(hdr[, "HDR Rank(s)"] == hdr[j, "HDR Rank(s)"])
               # Range of HDR being checked
-              hdr_range <- unique(hdr[hdr_to_check, "HPD Rank(s)"])
+              hdr_range <- unique(hdr[hdr_to_check, "HDR Rank(s)"])
               # Treatments with HDR being checked
               hdr_trt <-  hdr[hdr_to_check, "Treatment"]
 
@@ -489,9 +489,9 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
       # Between top/bottom single HDR ranks and a combination ranking from 1:(n_trt-1) or 2:n_trt.
 
       # Find HDR consisting of single rank 1
-      HDR_single_1_ind <- which(hdr[, "HPD Rank(s)"] == "1")
+      HDR_single_1_ind <- which(hdr[, "HDR Rank(s)"] == "1")
       # Find HDR consisting of single rank n_trt
-      HDR_single_n_ind <- which(hdr[, "HPD Rank(s)"] == as.character(n_trt))
+      HDR_single_n_ind <- which(hdr[, "HDR Rank(s)"] == as.character(n_trt))
 
       if(nrow(ranked_comb) > 0 & (length(HDR_single_1_ind) > 0 | length(HDR_single_n_ind) > 0)) {
 
@@ -536,9 +536,9 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
       }
 
       # Find HDR consisting of single rank 1
-      HDR_single_1_ind <- which(hdr[, "HPD Rank(s)"] == "1")
+      HDR_single_1_ind <- which(hdr[, "HDR Rank(s)"] == "1")
       # Find HDR consisting of single rank n_trt
-      HDR_single_n_ind <- which(hdr[, "HPD Rank(s)"] == as.character(n_trt))
+      HDR_single_n_ind <- which(hdr[, "HDR Rank(s)"] == as.character(n_trt))
 
       if(nrow(ranked_perm) > 0 & (length(HDR_single_1_ind) > 0 | length(HDR_single_n_ind) > 0)) {
 
@@ -577,9 +577,9 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
       # Between top/bottom single HDR ranks and a middle combination ranking 2:(n_trt-1).
 
       # Find HDR consisting of single rank 1
-      HDR_single_1_ind <- which(hdr[, "HPD Rank(s)"] == "1" & hdr[, "Redundant"] == "TRUE")
+      HDR_single_1_ind <- which(hdr[, "HDR Rank(s)"] == "1" & hdr[, "Redundant"] == "TRUE")
       # Find HDR consisting of single rank n_trt
-      HDR_single_n_ind <- which(hdr[, "HPD Rank(s)"] == as.character(n_trt) & hdr[, "Redundant"] == "TRUE")
+      HDR_single_n_ind <- which(hdr[, "HDR Rank(s)"] == as.character(n_trt) & hdr[, "Redundant"] == "TRUE")
 
       if(nrow(ranked_comb) > 0 & length(HDR_single_1_ind) > 0 & length(HDR_single_n_ind) > 0) {
 
@@ -625,9 +625,9 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
       # Between (top/bottom single HDR rank + tail-ranked permutation) and a middle ranked combination.
 
       # Find HDR consisting of single rank 1
-      HDR_single_1_ind <- which(hdr[, "HPD Rank(s)"] == "1" & hdr[, "Redundant"] == "TRUE")
+      HDR_single_1_ind <- which(hdr[, "HDR Rank(s)"] == "1" & hdr[, "Redundant"] == "TRUE")
       # Find HDR consisting of single rank n_trt
-      HDR_single_n_ind <- which(hdr[, "HPD Rank(s)"] == as.character(n_trt) & hdr[, "Redundant"] == "TRUE")
+      HDR_single_n_ind <- which(hdr[, "HDR Rank(s)"] == as.character(n_trt) & hdr[, "Redundant"] == "TRUE")
 
       if(nrow(ranked_comb) > 0 & nrow(ranked_perm) > 0 & (length(HDR_single_1_ind) > 0 | length(HDR_single_n_ind) > 0)) {
 
@@ -950,14 +950,14 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
             sm_ranked_comb_ind <- which(ranked_comb[, "Length"] < ranked_comb_size)
 
             # Find HDRs with single rank
-            HDR_single_ind <- which(nchar(hdr[, "HPD Rank(s)"]) == 1)
+            HDR_single_ind <- which(nchar(hdr[, "HDR Rank(s)"]) == 1)
 
             if(length(sm_ranked_comb_ind) > 0 & length(HDR_single_ind) > 0) {
 
               for(j in HDR_single_ind) {
 
                 # Single rank in HDR to check against
-                HDR_single_rk <- hdr[j, "HPD Rank(s)"]
+                HDR_single_rk <- hdr[j, "HDR Rank(s)"]
                 # Treatment with an HDR containing single rank to check against
                 HDR_single_trt <- hdr[j, "Treatment"]
 

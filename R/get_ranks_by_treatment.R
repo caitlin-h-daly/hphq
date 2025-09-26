@@ -52,21 +52,21 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
     names(sorted_sucra) <- treatments
   }
 
-  # freq for hpd
-  hpd_list <- vector("list", length = n_trt)
+  # freq for hdr
+  hdr_list <- vector("list", length = n_trt)
   rank_list <- vector("list", length = n_trt)
   for(i in 1:n_trt) {
     trt_name <- names(sorted_sucra[i])
     ranks <- (subset(df, df$Treatment == trt_name))[-1]
-    hpd_vec <- hpd(ranks, threshold, 1)
-    rank_list[[i]] <- hpd_vec[[3]]
-    hpd_vec <- data.frame(hpd_vec[[1]], hpd_vec[[2]])
-    hpd_list[[i]] <- cbind(trt_name, hpd_vec)
-    colnames(hpd_list[[i]]) <- c("Treatment", "HPD Rank(s)", "Sum of Freq")
+    hdr_vec <- hdr(ranks, threshold, 1)
+    rank_list[[i]] <- hdr_vec[[3]]
+    hdr_vec <- data.frame(hdr_vec[[1]], hdr_vec[[2]])
+    hdr_list[[i]] <- cbind(trt_name, hdr_vec)
+    colnames(hdr_list[[i]]) <- c("Treatment", "HDR Rank(s)", "Sum of Freq")
   }
 
-  hpd_df <- do.call(rbind, hpd_list)
-  row.names(hpd_df) <- NULL
+  hdr_df <- do.call(rbind, hdr_list)
+  row.names(hdr_df) <- NULL
 
   if(print_plot) {
     rows <- ceiling(sqrt(n_trt))
@@ -92,12 +92,12 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
               xlab = "Rank", ylab = "Frequency",
               ylim = c(0, 1))
       legend("topright",
-             legend = c("Non HPD", "HPD*"),
+             legend = c("Non HDR", "HDR*"),
              fill = c("black", "lightblue"), bty = "n")
     }
     par(mfrow = c(1, 1))
   }
 
-  return(hpd_df)
+  return(hdr_df)
 
 }

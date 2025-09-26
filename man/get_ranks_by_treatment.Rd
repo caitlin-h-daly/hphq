@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_ranks_by_treatment.R
 \name{get_ranks_by_treatment}
 \alias{get_ranks_by_treatment}
-\title{Get credible rankings and HPD sets for each treatment}
+\title{Get credible HDR sets for each treatment}
 \usage{
 get_ranks_by_treatment(ranking_df, threshold, print_plot = FALSE)
 }
@@ -17,17 +17,16 @@ observed in order to be credible.}
 printed (TRUE) or not (FALSE, the default).}
 }
 \value{
-A list of data frames containing the credible rankings and HPD
-set for each treatment.
+A data frame containing the credible HDR set for each treatment.
 }
 \description{
-`get_ranks_by_treatment()` finds all ranks and high probability density (HPD)
-sets with relative frequencies greater than or equal to the threshold for
-each treatment. The HPD intervals provide the subset of ranks with the
-smallest possible cumulative relative frequency that is at least equal to the
+`get_ranks_by_treatment()` finds all highest density region (HDR) sets with
+empirical probabilities greater than or equal to the threshold for each
+treatment. The HDR sets provide the subset of ranks with the smallest
+possible cumulative empirical probability that is at least equal to the
 threshold.
 }
 \examples{
-inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
 get_ranks_by_treatment(ranking_df = inputs$ranking_df, threshold = 0.9, print_plot = FALSE)
 }

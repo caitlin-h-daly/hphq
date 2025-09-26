@@ -198,10 +198,10 @@ create_perm <- function(trts, trt1, new_trts, credible) {
   return(trt_df)
 }
 
-#' Find high probability density (HPD) set
+#' Find highest density region (HDR) set
 #'
 #' @description
-#' `hpd()` determines the subset of ranks with the smallest possible cumulative
+#' `hdr()` determines the subset of ranks with the smallest possible cumulative
 #' relative frequency that is at least equal to `threshold`.
 #'
 #' @param ranks a data frame for a particular treatment, consisting of one
@@ -211,14 +211,14 @@ create_perm <- function(trts, trt1, new_trts, credible) {
 #'   observed in order to be credible.
 #' @param freq_sum a numeric value that should always be 1 (the default).
 #'
-#' @return A list of 1) a string of the rank(s) in the HPD interval, 2) the
-#' corresponding observed relative frequency for the ranks in the HPD interval,
-#' 3) a vector of the rank(s) in the HPD interval.
+#' @return A list of 1) a string of the rank(s) in the HDR set, 2) the
+#' corresponding observed relative frequency for the ranks in the HDR set,
+#' 3) a vector of the rank(s) in the HDR set.
 #'
 #' @keywords internal
-hpd <- function(ranks, threshold, freq_sum = 1) {
+hdr <- function(ranks, threshold, freq_sum = 1) {
   if(threshold == 0) {
-    hpd_ranks <- c()
+    hdr_ranks <- c()
     ranks$Freq <- 0
   } else {
     ranks <- ranks[order(ranks$Freq), ] # sorts in increasing order
@@ -233,23 +233,23 @@ hpd <- function(ranks, threshold, freq_sum = 1) {
       }
     }
     ranks <- ranks[order(ranks$Rank), ] # re-orders it in terms of rank
-    hpd_ranks <- ranks$Rank
+    hdr_ranks <- ranks$Rank
   }
 
   # formatting
-  if(length(hpd_ranks) == 1) { # if there is just one element
-    concat_ranks <- hpd_ranks
-  } else if(length(hpd_ranks) == 0) {
+  if(length(hdr_ranks) == 1) { # if there is just one element
+    concat_ranks <- hdr_ranks
+  } else if(length(hdr_ranks) == 0) {
     concat_ranks <- "N/A"
-  } else if(all(diff(as.numeric(as.character(hpd_ranks))) == 1)) { # hpd is an interval
+  } else if(all(diff(as.numeric(as.character(hdr_ranks))) == 1)) { # hdr is an interval
     # formats the ranks into an interval
-    concat_ranks <- paste(hpd_ranks[1], hpd_ranks[[length(hpd_ranks)]], sep = "-")
-  } else { # hpd is not an interval
+    concat_ranks <- paste(hdr_ranks[1], hdr_ranks[[length(hdr_ranks)]], sep = "-")
+  } else { # hdr is not an interval
     # collapses the ranks into one string
-    concat_ranks <- paste(hpd_ranks, collapse = ',')
+    concat_ranks <- paste(hdr_ranks, collapse = ',')
   }
 
-  hpd_vec <- list(concat_ranks, sum(ranks$Freq), hpd_ranks)
+  hdr_vec <- list(concat_ranks, sum(ranks$Freq), hdr_ranks)
 
-  return(hpd_vec)
+  return(hdr_vec)
 }
