@@ -18,7 +18,7 @@
 #'   indicating the desired order of the arrangements within types (i.e., ranked
 #'   permutations, permutations, ranked combinations, and combinations). Default
 #'   is to order by the number of treatments ("Length") in the arrangements,
-#'   followed by the relative frequencies ("Freq").
+#'   followed by the empirical probabilities ("Freq").
 #'
 #' @return A data frame containing the credible partial hierarchies.
 #' @importFrom utils combn
@@ -139,13 +139,15 @@ get_partial_hierarchies <- function(effects_matrix,
     # formatting data
     filtered_perms <- data.frame(perms, Freq)
     filtered_perms <- subset(filtered_perms, filtered_perms$Freq > threshold)
-    just_perms <- filtered_perms[, 1:ncol(filtered_perms) - 1]
-    hierarchies <- apply(just_perms, 1, function(x) {
-      paste(x, collapse = " > ")
-    })
-    all_perms <- data.frame(hierarchies, perm_size, filtered_perms$Freq)
-    colnames(all_perms) <- c(heading, "Length", "Freq")
-    output_list[[output_list_index]] <- all_perms
+    if(nrow(filtered_perms > 0)) {
+      just_perms <- filtered_perms[, 1:ncol(filtered_perms) - 1]
+      hierarchies <- apply(just_perms, 1, function(x) {
+        paste(x, collapse = " > ")
+      })
+      all_perms <- data.frame(hierarchies, perm_size, filtered_perms$Freq)
+      colnames(all_perms) <- c(heading, "Length", "Freq")
+      output_list[[output_list_index]] <- all_perms
+    }
     output_list_index <- output_list_index + 1
     total_rows <- nrow(filtered_perms)
     perm_size <- perm_size + 1
