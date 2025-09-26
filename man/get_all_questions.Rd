@@ -6,6 +6,7 @@
 \usage{
 get_all_questions(
   inputs,
+  n_trt,
   larger_better,
   thresholds,
   mid = 0,
@@ -16,6 +17,9 @@ get_all_questions(
 \arguments{
 \item{inputs}{the output from `prep_data()`, which consists of a list of
 `hierarchy_matrix`, `effects_matrix`, and `ranking_df`.}
+
+\item{n_trt}{a numeric value indicating the number of treatments in the
+network.}
 
 \item{larger_better}{a logical value indicating whether larger relative
 effects are better (TRUE) or not (FALSE).}
@@ -37,16 +41,16 @@ default).}
 \value{
 A list of data frames containing the credible hierarchies for ranked
 permutations, permutations, ranked combinations, combinations, partial
-hierarchies, individual ranking probabilities, and HPD sets.
+hierarchies, and HDR sets.
 }
 \description{
 `get_all_questions` runs the inputs through `get_arrangements()`,
 `get_partial_hierarchies()`, and `get_all_questions()` to produce a list of
-all hierarchies with relative frequencies greater than or equal to the
-threshold. These hierarchies are then run through `find_supersets()` to
-determine which of them are supersets.
+all hierarchies with empirical probabilities greater than or equal to the
+threshold. These hierarchies are then run through `find_redundancies()` to
+determine which of them are redundant.
 }
 \examples{
-inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
 get_all_questions(inputs = inputs, larger_better = FALSE, thresholds = c(0.9, 0.9, 0.9), mid = 0, print_plot = FALSE, trim_redundant = FALSE)
 }

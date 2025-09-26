@@ -53,10 +53,10 @@
 #' @export
 #'
 #' @examples
-#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = "FALSE")
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
 #' algo1 <- get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
-#' algo2 <- get_partial_hierarchies(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = "FALSE")
-#' algo3 <- get_ranks_by_treatment(ranking_df = inputs$ranking_df, mid = 0, threshold = 0.9, larger_better = "FALSE")
+#' algo2 <- get_partial_hierarchies(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
+#' algo3 <- get_ranks_by_treatment(ranking_df = inputs$ranking_df, threshold = 0.9, print_plot = FALSE)
 #' find_redundancies(algo1, algo2, algo3, n_trt = 5, threshold = 0.90)
 find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1:18, trim_redundant = FALSE) {
 
@@ -86,7 +86,7 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
   comb <- algo_1[[4]]
   comb[, 1] <- stringr::str_remove_all(comb[, 1], "[{}]")
   phier <- algo_2
-  hdr <- algo_3$HDR
+  hdr <- algo_3
   hdr <- hdr[order(hdr$`HDR Rank(s)`, hdr$Treatment),]
 
   # Now find redundant hierarchies
@@ -173,13 +173,13 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
         }
 
         # order by size of all credible partial hierarchies
-        phier <- phier[order(phier$Length), ]
+        phier <- phier[order(phier$Size), ]
 
         # create a list of credible hierarchies by size
-        phier_list <- split(phier, phier$Length)
+        phier_list <- split(phier, phier$Size)
 
         # unique sizes of credible partial hierarchies
-        phier_sizes <- sort(unique(phier$Length))
+        phier_sizes <- sort(unique(phier$Size))
 
         # check if credible partial hierarchies are redundant within
         if(length(phier_sizes) > 1) {
@@ -841,10 +841,10 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
             # Treatments of ranked combination to check
             ranked_comb_trt <- stringr::str_split_1(ranked_comb[i, "Ranked Combinations"], ",")
             # Size of ranked combination to check
-            ranked_comb_size <- ranked_comb[i, "Length"]
+            ranked_comb_size <- ranked_comb[i, "Size"]
 
             # Find ranked combinations of smaller size
-            sm_ranked_comb_ind <- which(ranked_comb[, "Length"] < ranked_comb_size)
+            sm_ranked_comb_ind <- which(ranked_comb[, "Size"] < ranked_comb_size)
 
             if(length(sm_ranked_comb_ind) > 0) {
 
@@ -944,10 +944,10 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
             # Treatments of ranked combination to check
             ranked_comb_trt <- stringr::str_split_1(ranked_comb[i, "Ranked Combinations"], ",")
             # Size of ranked combination to check
-            ranked_comb_size <- ranked_comb[i, "Length"]
+            ranked_comb_size <- ranked_comb[i, "Size"]
 
             # Find ranked combinations of smaller size
-            sm_ranked_comb_ind <- which(ranked_comb[, "Length"] < ranked_comb_size)
+            sm_ranked_comb_ind <- which(ranked_comb[, "Size"] < ranked_comb_size)
 
             # Find HDRs with single rank
             HDR_single_ind <- which(nchar(hdr[, "HDR Rank(s)"]) == 1)

@@ -9,7 +9,7 @@ get_partial_hierarchies(
   mid = 0,
   threshold,
   larger_better,
-  order_by = c("Length", "Freq")
+  order_by = c("Size", "Freq")
 )
 }
 \arguments{
@@ -26,11 +26,11 @@ observed in order to be credible.}
 \item{larger_better}{a logical value indicating whether larger relative
 effects are better (TRUE) or not (FALSE).}
 
-\item{order_by}{a character vector consisting of "Freq" and "Length" only,
+\item{order_by}{a character vector consisting of "Freq" and "Size" only,
 indicating the desired order of the arrangements within types (i.e., ranked
 permutations, permutations, ranked combinations, and combinations). Default
-is to order by the number of treatments ("Length") in the arrangements,
-followed by the relative frequencies ("Freq").}
+is to order by the number of treatments ("Size") in the arrangements,
+followed by the empirical probabilities ("Freq").}
 }
 \value{
 A data frame containing the credible partial hierarchies.
@@ -41,6 +41,6 @@ treatment differences greater than or equal to `mid` and with relative
 frequencies greater than or equal to the threshold.
 }
 \examples{
-inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
 get_partial_hierarchies(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
 }

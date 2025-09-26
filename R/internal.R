@@ -12,7 +12,7 @@
 #'   * `Range`: a string presenting the ranks corresponding to the permutation
 #'   in `Var1`, presented as min-max.
 #'   * `Var1`: a string of the permutation of treatments.
-#'   * `Length`: the number of treatments in the permutation.
+#'   * `Size`: the number of treatments in the permutation.
 #'   * `Freq`: the proportion of samples for which the ranked permutation was
 #'   observed.
 #'
@@ -23,8 +23,8 @@ get_ranked_perm <- function(hierarchy_matrix, rank_range){
   rank_int <- rep(paste0(min(rank_range), "-", max(rank_range)), nrow(ranked_perm))
   ranked_perm <- cbind(rank_int, ranked_perm)
   colnames(ranked_perm) <- c("Range", "Var1", "Freq")
-  ranked_perm$Length <- max(rank_range) - min(rank_range) + 1
-  ranked_perm <- ranked_perm[, c("Range", "Var1", "Length", "Freq")]
+  ranked_perm$Size <- max(rank_range) - min(rank_range) + 1
+  ranked_perm <- ranked_perm[, c("Range", "Var1", "Size", "Freq")]
   return(ranked_perm)
 }
 
@@ -41,14 +41,14 @@ get_ranked_perm <- function(hierarchy_matrix, rank_range){
 #'
 #' @returns A data frame containing
 #'   * `Var1`: a string of the permutation of treatments.
-#'   * `Length`: the number of treatments in the permutation.
+#'   * `Size`: the number of treatments in the permutation.
 #'   * `Freq`: the proportion of samples for which the permutation was observed.
 #'
 #' @keywords internal
 get_perm <- function(all_ranked_perm) {
   # takes all ranked permutations, groups it by permutation, and calculates the
   # sum of the frequency
-  all_perm <- aggregate(Freq ~ Var1 + Length, data = all_ranked_perm, sum)
+  all_perm <- aggregate(Freq ~ Var1 + Size, data = all_ranked_perm, sum)
   return(all_perm)
 }
 
@@ -69,7 +69,7 @@ get_perm <- function(all_ranked_perm) {
 #'   * `Range`: a string presenting the ranks corresponding to the combination
 #'   in `Combinations`, presented as min-max.
 #'   * `Combinations`: a string of the combination of treatments.
-#'   * `Length`: the number of treatments in the combination.
+#'   * `Size`: the number of treatments in the combination.
 #'   * `Freq`: the proportion of samples for which the ranked combination was
 #'   observed.
 #'
@@ -81,8 +81,8 @@ get_ranked_comb <- function(all_ranked_perm, trts) {
                                          function(x) paste(x[match(trts, x, nomatch = 0)], collapse = ','), '')
 
   # groups combinations by rank interval and calculates sum of the frequency
-  all_ranked_combo <- aggregate(Freq ~ Length + Combinations + Range, data = all_ranked_perm, sum)
-  all_ranked_combo <- all_ranked_combo[, c( "Range", "Combinations", "Length", "Freq")]
+  all_ranked_combo <- aggregate(Freq ~ Size + Combinations + Range, data = all_ranked_perm, sum)
+  all_ranked_combo <- all_ranked_combo[, c( "Range", "Combinations", "Size", "Freq")]
   return(all_ranked_combo)
 }
 
@@ -99,13 +99,13 @@ get_ranked_comb <- function(all_ranked_perm, trts) {
 #'
 #' @return A data frame containing
 #'   * `Combinations`: a string of the combination of treatments.
-#'   * `Length`: the number of treatments in the combination.
+#'   * `Size`: the number of treatments in the combination.
 #'   * `Freq`: the proportion of samples for which the combination was observed.
 #'
 #' @keywords internal
 get_combo <- function(all_ranked_combo) {
   # takes in all ranked combinations, groups it by Combination, and sums the frequencies
-  all_combo <- aggregate(Freq ~ Combinations + Length, data = all_ranked_combo, sum)
+  all_combo <- aggregate(Freq ~ Combinations + Size, data = all_ranked_combo, sum)
   return(all_combo)
 }
 
@@ -131,7 +131,7 @@ get_combo <- function(all_ranked_combo) {
 is_phier_redundant_within_phier <- function(phier_target, larger_phier_list) {
   # to find redundancy status faster, look at smaller larger_phier_list first
   # (smaller are more likely to be credible)
-  phier_sizes <- sort(unique(do.call(rbind, larger_phier_list)$Length))
+  phier_sizes <- sort(unique(do.call(rbind, larger_phier_list)$Size))
   for (i in sort(phier_sizes)) {
     current_phier_df <- larger_phier_list[[as.character(i)]]
     for(j in 1:nrow(current_phier_df)) {

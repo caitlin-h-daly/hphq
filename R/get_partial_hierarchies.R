@@ -14,10 +14,10 @@
 #'   observed in order to be credible.
 #' @param larger_better a logical value indicating whether larger relative
 #'   effects are better (TRUE) or not (FALSE).
-#' @param order_by a character vector consisting of "Freq" and "Length" only,
+#' @param order_by a character vector consisting of "Freq" and "Size" only,
 #'   indicating the desired order of the arrangements within types (i.e., ranked
 #'   permutations, permutations, ranked combinations, and combinations). Default
-#'   is to order by the number of treatments ("Length") in the arrangements,
+#'   is to order by the number of treatments ("Size") in the arrangements,
 #'   followed by the empirical probabilities ("Freq").
 #'
 #' @return A data frame containing the credible partial hierarchies.
@@ -25,20 +25,20 @@
 #' @export
 #'
 #' @examples
-#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
 #' get_partial_hierarchies(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
 get_partial_hierarchies <- function(effects_matrix,
                                     mid = 0,
                                     threshold,
                                     larger_better,
-                                    order_by = c("Length", "Freq")) {
+                                    order_by = c("Size", "Freq")) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
   }
 
-  if(!all(order_by %in% c("Length", "Freq"))) {
-    stop("Please ensure `order_by` consists of either 'Length', 'Freq', or both")
+  if(!all(order_by %in% c("Size", "Freq"))) {
+    stop("Please ensure `order_by` consists of either 'Size', 'Freq', or both")
   }
 
   treatments <- colnames(effects_matrix)
@@ -87,7 +87,7 @@ get_partial_hierarchies <- function(effects_matrix,
     finished_perms <- data.frame(formatted_perms, 2, filtered_perms$Freq)
   }
   heading <- paste0("Treatments at MID = ", mid)
-  colnames(finished_perms) <- c(heading, "Length", "Freq")
+  colnames(finished_perms) <- c(heading, "Size", "Freq")
   output_list[[output_list_index]] <- finished_perms
   output_list_index <- output_list_index + 1
   perm_size <- 3
@@ -145,7 +145,7 @@ get_partial_hierarchies <- function(effects_matrix,
         paste(x, collapse = " > ")
       })
       all_perms <- data.frame(hierarchies, perm_size, filtered_perms$Freq)
-      colnames(all_perms) <- c(heading, "Length", "Freq")
+      colnames(all_perms) <- c(heading, "Size", "Freq")
       output_list[[output_list_index]] <- all_perms
     }
     output_list_index <- output_list_index + 1

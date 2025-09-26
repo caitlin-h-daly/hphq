@@ -14,10 +14,10 @@
 #'   displays the treatments assigned to each rank for that iteration.
 #' @param threshold a proportion between 0 and 1 for which a hierarchy must be
 #'   observed in order to be credible.
-#' @param order_by a character vector consisting of "Freq" and "Length" only,
+#' @param order_by a character vector consisting of "Freq" and "Size" only,
 #'   indicating the desired order of the arrangements within types (i.e., ranked
 #'   permutations, permutations, ranked combinations, and combinations). Default
-#'   is to order by the number of treatments ("Length") in the arrangements,
+#'   is to order by the number of treatments ("Size") in the arrangements,
 #'   followed by the relative frequencies ("Freq").
 #'
 #' @return A list of data frames containing the credible hierarchies for ranked
@@ -27,18 +27,18 @@
 #' @export
 #'
 #' @examples
-#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
 #' get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
 get_arrangements <- function(hierarchy_matrix,
                              threshold,
-                             order_by = c("Length", "Freq")) {
+                             order_by = c("Size", "Freq")) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
   }
 
-  if(!all(order_by %in% c("Length", "Freq"))) {
-    stop("Please ensure `order_by` consists of either 'Length', 'Freq', or both")
+  if(!all(order_by %in% c("Size", "Freq"))) {
+    stop("Please ensure `order_by` consists of either 'Size', 'Freq', or both")
   }
 
   treatments <- hierarchy_matrix[1, ]
