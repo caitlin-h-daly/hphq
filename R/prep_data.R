@@ -27,7 +27,7 @@
 #' @export
 #'
 #' @examples
-#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", largerbetter = FALSE)
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
 #' head(inputs$hierarchy_matrix)
 #' head(inputs$effects_matrix)
 #' head(inputs$ranking_df)
