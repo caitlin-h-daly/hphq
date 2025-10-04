@@ -9,17 +9,18 @@ get_combo(all_ranked_combo)
 \arguments{
 \item{all_ranked_combo}{a data frame consisting of the ranks (`Range`) of all
 observed combinations (`Combinations`) and the corresponding proportion of
-samples for which they were observed (`Freq`).}
+samples for which they were observed (`pi_hat`).}
 }
 \value{
 A data frame containing
   * `Combinations`: a string of the combination of treatments.
   * `Size`: the number of treatments in the combination.
-  * `Freq`: the proportion of samples for which the combination was observed.
+  * `pi_hat`: the proportion of samples for which the combination was
+  observed  (i.e., empirical probabilities).
 }
 \description{
 `get_combo()`groups all ranked combinations by the combination string
  (ignoring ranks), and sums the proportion of samples for which they were
- observed.
+ observed (i.e., empirical probabilities).
 }
 \keyword{internal}

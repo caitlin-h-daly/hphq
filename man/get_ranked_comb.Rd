@@ -9,7 +9,7 @@ get_ranked_comb(all_ranked_perm, trts)
 \arguments{
 \item{all_ranked_perm}{a data frame consisting of the ranks (`Range`) of all
 observed permutations (`Var1`) and the corresponding proportion of samples
-for which they were observed (`Freq`).}
+for which they were observed (`pi_hat`).}
 
 \item{trts}{a vector of all the treatments strings.}
 }
@@ -19,13 +19,13 @@ A data frame containing
   in `Combinations`, presented as min-max.
   * `Combinations`: a string of the combination of treatments.
   * `Size`: the number of treatments in the combination.
-  * `Freq`: the proportion of samples for which the ranked combination was
+  * `pi_hat`: the proportion of samples for which the ranked combination was
   observed.
 }
 \description{
 get_ranked_comb()` first sorts the treatments within permutation strings to
 create a combination string that ignores order. It then groups all
 combinations by rank interval and sums the proportion of samples for which
-they were observed.
+they were observed (i.e., empirical probabilities).
 }
 \keyword{internal}

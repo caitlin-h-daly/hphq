@@ -4,17 +4,17 @@
 \alias{hdr}
 \title{Find highest density region (HDR) set}
 \usage{
-hdr(ranks, threshold, freq_sum = 1)
+hdr(ranks, threshold, pi_hat_sum = 1)
 }
 \arguments{
 \item{ranks}{a data frame for a particular treatment, consisting of one
-column (`Rank`) of all possible ranks and another column (`Freq`) listing
+column (`Rank`) of all possible ranks and another column (`pi_hat`) listing
 the proportion of samples for which the treatment was ranked `Rank`.}
 
 \item{threshold}{a proportion between 0 and 1 for which a hierarchy must be
 observed in order to be credible.}
 
-\item{freq_sum}{a numeric value that should always be 1 (the default).}
+\item{pi_hat_sum}{a numeric value that should always be 1 (the default).}
 }
 \value{
 A list of 1) a string of the rank(s) in the HDR set, 2) the

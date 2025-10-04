@@ -14,11 +14,11 @@
 #'   displays the treatments assigned to each rank for that iteration.
 #' @param threshold a proportion between 0 and 1 for which a hierarchy must be
 #'   observed in order to be credible.
-#' @param order_by a character vector consisting of "Freq" and "Size" only,
+#' @param order_by a character vector consisting of "pi_hat" and "Size" only,
 #'   indicating the desired order of the arrangements within types (i.e., ranked
 #'   permutations, permutations, ranked combinations, and combinations). Default
 #'   is to order by the number of treatments ("Size") in the arrangements,
-#'   followed by the empirical probabilities ("Freq").
+#'   followed by the empirical probabilities ("pi_hat").
 #'
 #' @return A list of data frames containing the credible hierarchies for ranked
 #' permutations, permutations, ranked combinations, and combinations.
@@ -31,14 +31,14 @@
 #' get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
 get_arrangements <- function(hierarchy_matrix,
                              threshold,
-                             order_by = c("Size", "Freq")) {
+                             order_by = c("Size", "pi_hat")) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
   }
 
-  if(!all(order_by %in% c("Size", "Freq"))) {
-    stop("Please ensure `order_by` consists of either 'Size', 'Freq', or both")
+  if(!all(order_by %in% c("Size", "pi_hat"))) {
+    stop("Please ensure `order_by` consists of either 'Size', 'pi_hat', or both")
   }
 
   treatments <- hierarchy_matrix[1, ]
@@ -69,7 +69,7 @@ get_arrangements <- function(hierarchy_matrix,
   # all observed ranked permutations
   all_ranked_perm <- do.call(rbind, all_ranked_perm_list)
   # credible ranked permutations
-  cred_ranked_perm <- subset(all_ranked_perm, all_ranked_perm$Freq > threshold)
+  cred_ranked_perm <- subset(all_ranked_perm, all_ranked_perm$pi_hat > threshold)
   names(cred_ranked_perm)[names(cred_ranked_perm) == 'Var1'] <- 'Ranked Permutations'
   # order credible ranked permutations
   to_order <- eval(parse(text = paste0("list(", paste0("cred_ranked_perm$", order_by, collapse = ", "), ")")))
@@ -82,7 +82,7 @@ get_arrangements <- function(hierarchy_matrix,
   # all observed permutations
   all_perm <- get_perm(all_ranked_perm)
   # credible permutations
-  cred_perm <- subset(all_perm, all_perm$Freq > threshold)
+  cred_perm <- subset(all_perm, all_perm$pi_hat > threshold)
   names(cred_perm)[names(cred_perm) == 'Var1'] <- 'Permutations'
   # order credible permutations
   to_order <- eval(parse(text = paste0("list(", paste0("cred_perm$", order_by, collapse = ", "), ")")))
@@ -97,7 +97,7 @@ get_arrangements <- function(hierarchy_matrix,
   # all ranked combinations
   all_ranked_combo <- get_ranked_comb(all_ranked_perm_combo, treatments)
   # all credible ranked combinations
-  cred_ranked_combo <- subset(all_ranked_combo, all_ranked_combo$Freq > threshold)
+  cred_ranked_combo <- subset(all_ranked_combo, all_ranked_combo$pi_hat > threshold)
   # order credible ranked combinations
   to_order <- eval(parse(text = paste0("list(", paste0("cred_ranked_combo$", order_by, collapse = ", "), ")")))
   cred_ranked_combo <- cred_ranked_combo[rev(do.call(order, to_order)), ]
@@ -110,7 +110,7 @@ get_arrangements <- function(hierarchy_matrix,
   # all combinations
   all_combo <- get_combo(all_ranked_combo)
   # all credible combinations
-  cred_combo <- subset(all_combo, all_combo$Freq > threshold)
+  cred_combo <- subset(all_combo, all_combo$pi_hat > threshold)
   # order credible ranked combinations
   to_order <- eval(parse(text = paste0("list(", paste0("cred_combo$", order_by, collapse = ", "), ")")))
   cred_combo <- cred_combo[rev(do.call(order, to_order)), ]

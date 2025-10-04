@@ -601,7 +601,7 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
                    min(as.numeric(stringr::str_split_1(ranked_comb[i, "Range"], "-"))) - 1 == 1,
                    max(as.numeric(stringr::str_split_1(ranked_comb[i, "Range"], "-"))) + 1 == n_trt)) {
 
-              if( (hdr[HDR_single_1_ind, "Sum of Freq"] + hdr[HDR_single_n_ind, "Sum of Freq"] - 1) >= threshold ) {
+              if( (hdr[HDR_single_1_ind, "Sum of pi_hat"] + hdr[HDR_single_n_ind, "Sum of pi_hat"] - 1) >= threshold ) {
                 ranked_comb[i, "Redundant"] <- "TRUE"
                 break
               } else {
@@ -662,7 +662,7 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
                      max(as.numeric(stringr::str_split_1(ranked_comb[i, "Range"], "-"))) ==
                      min(as.numeric(stringr::str_split_1(ranked_perm[j, "Range"], "-"))) - 1)) {
 
-                if( (hdr[HDR_single_1_ind, "Sum of Freq"] + ranked_perm[j, "Freq"] - 1) >= threshold ) {
+                if( (hdr[HDR_single_1_ind, "Sum of pi_hat"] + ranked_perm[j, "pi_hat"] - 1) >= threshold ) {
                   ranked_comb[i, "Redundant"] <- "TRUE"
                   break
                 } else {
@@ -697,7 +697,7 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
                      min(as.numeric(stringr::str_split_1(ranked_comb[i, "Range"], "-"))) ==
                      max(as.numeric(stringr::str_split_1(ranked_perm[j, "Range"], "-"))) + 1)) {
 
-                if( (hdr[HDR_single_n_ind, "Sum of Freq"] + ranked_perm[j, "Freq"] - 1) >= threshold ) {
+                if( (hdr[HDR_single_n_ind, "Sum of pi_hat"] + ranked_perm[j, "pi_hat"] - 1) >= threshold ) {
                   ranked_comb[i, "Redundant"] <- "TRUE"
                   break
                 } else {
@@ -785,7 +785,7 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
                            !(ranked_perm_n_trt %in% ranked_perm_n_trt))) {
 
                       # Verify joint empirical probability of tail-ranked permutations is credible
-                      if( (red_ranked_perm[j, "Freq"] + red_ranked_perm[k, "Freq"] - 1) >= threshold ) {
+                      if( (red_ranked_perm[j, "pi_hat"] + red_ranked_perm[k, "pi_hat"] - 1) >= threshold ) {
                         ranked_comb[i, "Redundant"] <- "TRUE"
                         break
                       } else {
@@ -887,7 +887,7 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
                            setequal(c(ranked_perm_trt, sm_ranked_comb_trt), ranked_comb_trt))) {
 
                       # Verify joint empirical probability of ranked permutation + smaller ranked combination is credible
-                      if( (ranked_perm[j, "Freq"] + ranked_comb[k, "Freq"] - 1) >= threshold ) {
+                      if( (ranked_perm[j, "pi_hat"] + ranked_comb[k, "pi_hat"] - 1) >= threshold ) {
                         ranked_comb[i, "Redundant"] <- "TRUE"
                         break
                       } else {
@@ -993,7 +993,7 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
                            setequal(c(HDR_single_trt, sm_ranked_comb_trt), ranked_comb_trt))) {
 
                       # Verify joint empirical probability of single HDR rank + smaller ranked combination is credible
-                      if( (hdr[j, "Sum of Freq"] + ranked_comb[k, "Freq"] - 1) >= threshold ) {
+                      if( (hdr[j, "Sum of pi_hat"] + ranked_comb[k, "pi_hat"] - 1) >= threshold ) {
                         ranked_comb[i, "Redundant"] <- "TRUE"
                         break
                       } else {

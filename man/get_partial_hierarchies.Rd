@@ -9,7 +9,7 @@ get_partial_hierarchies(
   mid = 0,
   threshold,
   larger_better,
-  order_by = c("Size", "Freq")
+  order_by = c("Size", "pi_hat")
 )
 }
 \arguments{
@@ -26,11 +26,11 @@ observed in order to be credible.}
 \item{larger_better}{a logical value indicating whether larger relative
 effects are better (TRUE) or not (FALSE).}
 
-\item{order_by}{a character vector consisting of "Freq" and "Size" only,
+\item{order_by}{a character vector consisting of "pi_hat" and "Size" only,
 indicating the desired order of the arrangements within types (i.e., ranked
 permutations, permutations, ranked combinations, and combinations). Default
 is to order by the number of treatments ("Size") in the arrangements,
-followed by the empirical probabilities ("Freq").}
+followed by the empirical probabilities ("pi_hat").}
 }
 \value{
 A data frame containing the credible partial hierarchies.

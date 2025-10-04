@@ -8,7 +8,7 @@
 #' threshold.
 #'
 #' @param ranking_df a data frame of each treatment's ranks and associated
-#'   frequencies.
+#'   empirical probabilities.
 #' @param threshold a proportion between 0 and 1 for which a hierarchy must be
 #'   observed in order to be credible.
 #' @param print_plot a logical value indicating whether the rankograms should be
@@ -42,7 +42,7 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
                     dimnames = list(treatments, seq_len(n_trt - 1)))
     for(i in 1:(n_trt - 1)) {
       temp_df <- subset(df, df$Rank == i)
-      sucra[, i] <- (temp_df[match(treatments, temp_df$Treatment), ])$Freq
+      sucra[, i] <- (temp_df[match(treatments, temp_df$Treatment), ])$pi_hat
     }
     sucra_matrix <- t(apply(sucra, 1, cumsum))
     sucra_values <- rowMeans(sucra_matrix)
@@ -52,7 +52,7 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
     names(sorted_sucra) <- treatments
   }
 
-  # freq for hdr
+  # pi_hat for hdr
   hdr_list <- vector("list", length = n_trt)
   rank_list <- vector("list", length = n_trt)
   for(i in 1:n_trt) {
@@ -62,7 +62,7 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
     rank_list[[i]] <- hdr_vec[[3]]
     hdr_vec <- data.frame(hdr_vec[[1]], hdr_vec[[2]])
     hdr_list[[i]] <- cbind(trt_name, hdr_vec)
-    colnames(hdr_list[[i]]) <- c("Treatment", "HDR Rank(s)", "Sum of Freq")
+    colnames(hdr_list[[i]]) <- c("Treatment", "HDR Rank(s)", "Sum of pi_hat")
   }
 
   hdr_df <- do.call(rbind, hdr_list)
@@ -85,11 +85,11 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
       trt_name <- names(sorted_sucra[i])
       trt_df <- (subset(df, df$Treatment == trt_name))
       sucra_val<-round(sorted_sucra[i],3)
-      barplot(trt_df$Freq, names.arg = x_ranks,
+      barplot(trt_df$pi_hat, names.arg = x_ranks,
               col = colour_vec,
               main = paste("Rank of", trt_name),
               sub = paste("SUCRA = ", sucra_val),
-              xlab = "Rank", ylab = "Frequency",
+              xlab = "Rank", ylab = "Empirical Probability",
               ylim = c(0, 1))
       legend("topright",
              legend = c("Non HDR", "HDR*"),

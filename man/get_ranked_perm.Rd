@@ -18,8 +18,8 @@ A data frame containing
   in `Var1`, presented as min-max.
   * `Var1`: a string of the permutation of treatments.
   * `Size`: the number of treatments in the permutation.
-  * `Freq`: the proportion of samples for which the ranked permutation was
-  observed.
+  * `pi_hat`: the proportion of samples for which the ranked permutation was
+  observed (i.e., empirical probabilities).
 }
 \description{
 `get_ranked_perm()` calculates the proportion of samples for which a

@@ -25,7 +25,7 @@ treatment names and each row displays each treatment’s sampled relative
 effect for that iteration.
 
 \code{ranking_df} - A data frame of each treatment's ranks and
-associated frequencies.
+associated empirical probabilities (pi_hat).
 }
 \description{
 `prep_data()` produces a list of inputs to be used altogether in

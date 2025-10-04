@@ -13,8 +13,8 @@
 #'   in `Var1`, presented as min-max.
 #'   * `Var1`: a string of the permutation of treatments.
 #'   * `Size`: the number of treatments in the permutation.
-#'   * `Freq`: the proportion of samples for which the ranked permutation was
-#'   observed.
+#'   * `pi_hat`: the proportion of samples for which the ranked permutation was
+#'   observed (i.e., empirical probabilities).
 #'
 #' @keywords internal
 get_ranked_perm <- function(hierarchy_matrix, rank_range){
@@ -22,9 +22,9 @@ get_ranked_perm <- function(hierarchy_matrix, rank_range){
                                            paste0, collapse = ",")) / nrow(hierarchy_matrix))
   rank_int <- rep(paste0(min(rank_range), "-", max(rank_range)), nrow(ranked_perm))
   ranked_perm <- cbind(rank_int, ranked_perm)
-  colnames(ranked_perm) <- c("Range", "Var1", "Freq")
+  colnames(ranked_perm) <- c("Range", "Var1", "pi_hat")
   ranked_perm$Size <- max(rank_range) - min(rank_range) + 1
-  ranked_perm <- ranked_perm[, c("Range", "Var1", "Size", "Freq")]
+  ranked_perm <- ranked_perm[, c("Range", "Var1", "Size", "pi_hat")]
   return(ranked_perm)
 }
 
@@ -33,22 +33,23 @@ get_ranked_perm <- function(hierarchy_matrix, rank_range){
 #' @description
 #' `get_perm()` groups all ranked permutations by the permutation string
 #'   (ignoring ranks), and sums the proportion of samples for which they were
-#'   observed.
+#'   observed (i.e., empirical probabilities).
 #'
 #' @param all_ranked_perm a data frame consisting of the ranks (`Range`) of all
 #'   observed permutations (`Var1`) and the corresponding proportion of samples
-#'   for which they were observed (`Freq`).
+#'   for which they were observed (`pi_hat`).
 #'
 #' @returns A data frame containing
 #'   * `Var1`: a string of the permutation of treatments.
 #'   * `Size`: the number of treatments in the permutation.
-#'   * `Freq`: the proportion of samples for which the permutation was observed.
+#'   * `pi_hat`: the proportion of samples for which the permutation was
+#'   observed  (i.e., empirical probabilities).
 #'
 #' @keywords internal
 get_perm <- function(all_ranked_perm) {
   # takes all ranked permutations, groups it by permutation, and calculates the
-  # sum of the frequency
-  all_perm <- aggregate(Freq ~ Var1 + Size, data = all_ranked_perm, sum)
+  # empirical probability
+  all_perm <- aggregate(pi_hat ~ Var1 + Size, data = all_ranked_perm, sum)
   return(all_perm)
 }
 
@@ -58,11 +59,11 @@ get_perm <- function(all_ranked_perm) {
 #' get_ranked_comb()` first sorts the treatments within permutation strings to
 #' create a combination string that ignores order. It then groups all
 #' combinations by rank interval and sums the proportion of samples for which
-#' they were observed.
+#' they were observed (i.e., empirical probabilities).
 #'
 #' @param all_ranked_perm a data frame consisting of the ranks (`Range`) of all
 #'   observed permutations (`Var1`) and the corresponding proportion of samples
-#'   for which they were observed (`Freq`).
+#'   for which they were observed (`pi_hat`).
 #' @param trts a vector of all the treatments strings.
 #'
 #' @returns A data frame containing
@@ -70,7 +71,7 @@ get_perm <- function(all_ranked_perm) {
 #'   in `Combinations`, presented as min-max.
 #'   * `Combinations`: a string of the combination of treatments.
 #'   * `Size`: the number of treatments in the combination.
-#'   * `Freq`: the proportion of samples for which the ranked combination was
+#'   * `pi_hat`: the proportion of samples for which the ranked combination was
 #'   observed.
 #'
 #' @keywords internal
@@ -80,9 +81,9 @@ get_ranked_comb <- function(all_ranked_perm, trts) {
   all_ranked_perm$Combinations <- vapply(strsplit(as.character(all_ranked_perm$Var1), ','),
                                          function(x) paste(x[match(trts, x, nomatch = 0)], collapse = ','), '')
 
-  # groups combinations by rank interval and calculates sum of the frequency
-  all_ranked_combo <- aggregate(Freq ~ Size + Combinations + Range, data = all_ranked_perm, sum)
-  all_ranked_combo <- all_ranked_combo[, c( "Range", "Combinations", "Size", "Freq")]
+  # groups combinations by rank interval and calculates the empirical probability
+  all_ranked_combo <- aggregate(pi_hat ~ Size + Combinations + Range, data = all_ranked_perm, sum)
+  all_ranked_combo <- all_ranked_combo[, c( "Range", "Combinations", "Size", "pi_hat")]
   return(all_ranked_combo)
 }
 
@@ -91,21 +92,22 @@ get_ranked_comb <- function(all_ranked_perm, trts) {
 #' @description
 #' `get_combo()`groups all ranked combinations by the combination string
 #'  (ignoring ranks), and sums the proportion of samples for which they were
-#'  observed.
+#'  observed (i.e., empirical probabilities).
 #'
 #' @param all_ranked_combo a data frame consisting of the ranks (`Range`) of all
 #'   observed combinations (`Combinations`) and the corresponding proportion of
-#'   samples for which they were observed (`Freq`).
+#'   samples for which they were observed (`pi_hat`).
 #'
 #' @return A data frame containing
 #'   * `Combinations`: a string of the combination of treatments.
 #'   * `Size`: the number of treatments in the combination.
-#'   * `Freq`: the proportion of samples for which the combination was observed.
+#'   * `pi_hat`: the proportion of samples for which the combination was
+#'   observed  (i.e., empirical probabilities).
 #'
 #' @keywords internal
 get_combo <- function(all_ranked_combo) {
-  # takes in all ranked combinations, groups it by Combination, and sums the frequencies
-  all_combo <- aggregate(Freq ~ Combinations + Size, data = all_ranked_combo, sum)
+  # takes in all ranked combinations, groups it by Combination, and sums the empirical probabilities
+  all_combo <- aggregate(pi_hat ~ Combinations + Size, data = all_ranked_combo, sum)
   return(all_combo)
 }
 
@@ -205,30 +207,30 @@ create_perm <- function(trts, trt1, new_trts, credible) {
 #' empirical probability that is at least equal to `threshold`.
 #'
 #' @param ranks a data frame for a particular treatment, consisting of one
-#'   column (`Rank`) of all possible ranks and another column (`Freq`) listing
+#'   column (`Rank`) of all possible ranks and another column (`pi_hat`) listing
 #'   the proportion of samples for which the treatment was ranked `Rank`.
 #' @param threshold a proportion between 0 and 1 for which a hierarchy must be
 #'   observed in order to be credible.
-#' @param freq_sum a numeric value that should always be 1 (the default).
+#' @param pi_hat_sum a numeric value that should always be 1 (the default).
 #'
 #' @return A list of 1) a string of the rank(s) in the HDR set, 2) the
 #' corresponding empirical probability for the ranks in the HDR set,
 #' 3) a vector of the rank(s) in the HDR set.
 #'
 #' @keywords internal
-hdr <- function(ranks, threshold, freq_sum = 1) {
+hdr <- function(ranks, threshold, pi_hat_sum = 1) {
   if(threshold == 0) {
     hdr_ranks <- c()
-    ranks$Freq <- 0
+    ranks$pi_hat <- 0
   } else {
-    ranks <- ranks[order(ranks$Freq), ] # sorts in increasing order
-    while(freq_sum > threshold && nrow(ranks) > 0) {
+    ranks <- ranks[order(ranks$pi_hat), ] # sorts in increasing order
+    while(pi_hat_sum > threshold && nrow(ranks) > 0) {
 
-      # calculate freq_sum without smallest probability
-      freq_sum <- freq_sum - ranks[1, 2]
+      # calculate pi_hat_sum without smallest probability
+      pi_hat_sum <- pi_hat_sum - ranks[1, 2]
 
-      # if freq_sum >= threshold, we can drop the first row
-      if(freq_sum >= threshold) {
+      # if pi_hat_sum >= threshold, we can drop the first row
+      if(pi_hat_sum >= threshold) {
         ranks <- ranks[-1, ]
       }
     }
@@ -249,7 +251,7 @@ hdr <- function(ranks, threshold, freq_sum = 1) {
     concat_ranks <- paste(hdr_ranks, collapse = ',')
   }
 
-  hdr_vec <- list(concat_ranks, sum(ranks$Freq), hdr_ranks)
+  hdr_vec <- list(concat_ranks, sum(ranks$pi_hat), hdr_ranks)
 
   return(hdr_vec)
 }

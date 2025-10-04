@@ -8,7 +8,7 @@ get_ranks_by_treatment(ranking_df, threshold, print_plot = FALSE)
 }
 \arguments{
 \item{ranking_df}{a data frame of each treatment's ranks and associated
-frequencies.}
+empirical probabilities.}
 
 \item{threshold}{a proportion between 0 and 1 for which a hierarchy must be
 observed in order to be credible.}

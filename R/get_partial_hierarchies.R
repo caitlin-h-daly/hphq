@@ -14,11 +14,11 @@
 #'   observed in order to be credible.
 #' @param larger_better a logical value indicating whether larger relative
 #'   effects are better (TRUE) or not (FALSE).
-#' @param order_by a character vector consisting of "Freq" and "Size" only,
+#' @param order_by a character vector consisting of "pi_hat" and "Size" only,
 #'   indicating the desired order of the arrangements within types (i.e., ranked
 #'   permutations, permutations, ranked combinations, and combinations). Default
 #'   is to order by the number of treatments ("Size") in the arrangements,
-#'   followed by the empirical probabilities ("Freq").
+#'   followed by the empirical probabilities ("pi_hat").
 #'
 #' @return A data frame containing the credible partial hierarchies.
 #' @importFrom utils combn
@@ -31,14 +31,14 @@ get_partial_hierarchies <- function(effects_matrix,
                                     mid = 0,
                                     threshold,
                                     larger_better,
-                                    order_by = c("Size", "Freq")) {
+                                    order_by = c("Size", "pi_hat")) {
 
   if(threshold > 1 || threshold < 0) {
     stop("Please ensure threshold value is between 0 and 1")
   }
 
-  if(!all(order_by %in% c("Size", "Freq"))) {
-    stop("Please ensure `order_by` consists of either 'Size', 'Freq', or both")
+  if(!all(order_by %in% c("Size", "pi_hat"))) {
+    stop("Please ensure `order_by` consists of either 'Size', 'pi_hat', or both")
   }
 
   treatments <- colnames(effects_matrix)
@@ -64,8 +64,8 @@ get_partial_hierarchies <- function(effects_matrix,
   colnames(other_combos) <- c("V1", "V2")
   perms <- rbind(combos, other_combos)
 
-  # finds frequencies for permutations of size 2
-  Freq <- apply(perms, 1, function(row) {
+  # finds empirical probabilities for permutations of size 2
+  pi_hat <- apply(perms, 1, function(row) {
     trt1 <- row['V1']
     trt2 <- row['V2']
     if(larger_better) {
@@ -74,20 +74,20 @@ get_partial_hierarchies <- function(effects_matrix,
       sum((effects_matrix[,trt1] - effects_matrix[,trt2]) < mid_t)/ n_iter
     }
   })
-  perms$Freq <- Freq
+  perms$pi_hat <- pi_hat
 
   # formatting
-  filtered_perms <- subset(perms, perms$Freq > threshold)
+  filtered_perms <- subset(perms, perms$pi_hat > threshold)
   total_rows <- nrow(filtered_perms)
   if (total_rows == 0) {
-    finished_perms <- data.frame(filtered_perms$V1, filtered_perms$Freq)
+    finished_perms <- data.frame(filtered_perms$V1, filtered_perms$pi_hat)
   } else {
     credible <- paste0(filtered_perms$V1, ",", filtered_perms$V2)
     formatted_perms <- paste0(filtered_perms$V1, " > ", filtered_perms$V2)
-    finished_perms <- data.frame(formatted_perms, 2, filtered_perms$Freq)
+    finished_perms <- data.frame(formatted_perms, 2, filtered_perms$pi_hat)
   }
   heading <- paste0("Treatments at MID = ", mid)
-  colnames(finished_perms) <- c(heading, "Size", "Freq")
+  colnames(finished_perms) <- c(heading, "Size", "pi_hat")
   output_list[[output_list_index]] <- finished_perms
   output_list_index <- output_list_index + 1
   perm_size <- 3
@@ -113,8 +113,8 @@ get_partial_hierarchies <- function(effects_matrix,
       break
     }
 
-    # calculates frequency of each permutation
-    Freq <- apply(perms, 1, function(row) {
+    # calculates empirical probability of each permutation
+    pi_hat <- apply(perms, 1, function(row) {
       trts <- row[]
       compare_matrix <- matrix(, nrow = n_iter, ncol = (length(trts) - 1))
       for (i in seq (1:(length(trts) - 1))) {
@@ -137,15 +137,15 @@ get_partial_hierarchies <- function(effects_matrix,
     })
 
     # formatting data
-    filtered_perms <- data.frame(perms, Freq)
-    filtered_perms <- subset(filtered_perms, filtered_perms$Freq > threshold)
+    filtered_perms <- data.frame(perms, pi_hat)
+    filtered_perms <- subset(filtered_perms, filtered_perms$pi_hat > threshold)
     if(nrow(filtered_perms > 0)) {
       just_perms <- filtered_perms[, 1:ncol(filtered_perms) - 1]
       hierarchies <- apply(just_perms, 1, function(x) {
         paste(x, collapse = " > ")
       })
-      all_perms <- data.frame(hierarchies, perm_size, filtered_perms$Freq)
-      colnames(all_perms) <- c(heading, "Size", "Freq")
+      all_perms <- data.frame(hierarchies, perm_size, filtered_perms$pi_hat)
+      colnames(all_perms) <- c(heading, "Size", "pi_hat")
       output_list[[output_list_index]] <- all_perms
     }
     output_list_index <- output_list_index + 1

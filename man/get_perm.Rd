@@ -9,17 +9,18 @@ get_perm(all_ranked_perm)
 \arguments{
 \item{all_ranked_perm}{a data frame consisting of the ranks (`Range`) of all
 observed permutations (`Var1`) and the corresponding proportion of samples
-for which they were observed (`Freq`).}
+for which they were observed (`pi_hat`).}
 }
 \value{
 A data frame containing
   * `Var1`: a string of the permutation of treatments.
   * `Size`: the number of treatments in the permutation.
-  * `Freq`: the proportion of samples for which the permutation was observed.
+  * `pi_hat`: the proportion of samples for which the permutation was
+  observed  (i.e., empirical probabilities).
 }
 \description{
 `get_perm()` groups all ranked permutations by the permutation string
   (ignoring ranks), and sums the proportion of samples for which they were
-  observed.
+  observed (i.e., empirical probabilities).
 }
 \keyword{internal}
