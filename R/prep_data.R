@@ -18,7 +18,7 @@
 #' treatment names and each row displays each treatment’s sampled relative
 #' effect for that iteration.
 #' @return \code{ranking_df} - A data frame of each treatment's ranks and
-#' associated frequencies.
+#' associated empirical probabilities (pi_hat).
 #' @importFrom stats reshape
 #' @importFrom stringr str_remove_all
 #' @importFrom stringr str_split_1
@@ -80,12 +80,12 @@ prep_data <- function(effects_matrix, reference, larger_better) {
   for (i in seq(1:n_trt)) {
     temp_table <- table(tbl[,i]) / n_iter
     temp_df <- data.frame(names(temp_table), i, as.numeric(temp_table))
-    colnames(temp_df) <- c("Treatment","Rank","Freq")
+    colnames(temp_df) <- c("Treatment","Rank","pi_hat")
     if (nrow(temp_df) != n_trt) {
       x <- temp_df$Treatment
       missing <- setdiff(treatments, x)
       vec <- data.frame(missing, i, 0)
-      colnames(vec) <- c("Treatment", "Rank", "Freq")
+      colnames(vec) <- c("Treatment", "Rank", "pi_hat")
       temp_df <- rbind(temp_df, vec)
     }
     table_list[[i]] <- temp_df
