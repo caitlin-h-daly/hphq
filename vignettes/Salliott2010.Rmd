@@ -82,7 +82,7 @@ function. This uses the first algorithm described by Daly et al. (2025).
 
 ```{r}
 algo1 <- get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, 
-                          threshold = 0.8)
+                          threshold = 0.95)
 algo1
 ```
 
@@ -95,7 +95,7 @@ by Daly et al. (2025).
 ```{r}
 algo2 <- get_partial_hierarchies(effects_matrix = inputs$effects_matrix, 
                                  mid = 0, 
-                                 threshold = 0.8, 
+                                 threshold = 0.95, 
                                  larger_better = TRUE)
 algo2
 ```
@@ -111,7 +111,7 @@ sets by setting the `print_plot` argument to TRUE.
 
 ```{r}
 algo3 <- get_ranks_by_treatment(ranking_df = inputs$ranking_df, 
-                                threshold = 0.8, 
+                                threshold = 0.95, 
                                 print_plot = FALSE)
 algo3
 ```
@@ -132,14 +132,14 @@ redundant_check <- find_redundancies(algo_1 = algo1,
                                      algo_2 = algo2,
                                      algo_3 = algo3,
                                      n_trt = ncol(inputs$effects_matrix),
-                                     threshold = 0.8)
+                                     threshold = 0.95)
 redundant_check
 
 find_redundancies(algo_1 = algo1, 
                   algo_2 = algo2, 
                   algo_3 = algo3,
                   n_trt = ncol(inputs$effects_matrix),
-                  threshold = 0.8, 
+                  threshold = 0.95, 
                   trim_redundant = TRUE)
 ```
 
@@ -156,7 +156,7 @@ settings of `find_redundancies()`.
 all_cred_hier <- get_all_questions(inputs = inputs, 
                                    n_trt = ncol(inputs$effects_matrix), 
                                    larger_better = TRUE,
-                                   thresholds = c(0.8, 0.8, 0.8), 
+                                   thresholds = c(0.95, 0.95, 0.95), 
                                    mid = 0, 
                                    print_plot = FALSE, 
                                    trim_redundant = FALSE)
@@ -166,6 +166,6 @@ all_cred_hier
 
 # References
 
-Daly CH, Tan C, Béliveau A. (2025). Uncovering all highly credible binary treatment hierarchy questions in network meta-analysis. Under review.
+Daly CH, Tan C, Béliveau A. (2026). Uncovering all highly credible binary treatment hierarchy questions in network meta-analysis. Under review.
 
 
