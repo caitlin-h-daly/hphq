@@ -58,8 +58,12 @@ get_all_questions <- function(inputs, n_trt, larger_better, thresholds, mid = 0,
                                      threshold = threshold,
                                      trim_redundant = trim_redundant)
 
+  all_outputs[[7]] <- single$`Alternative CDR of same size as HDR`
+
   names(all_outputs) <- c("Ranked Permutations", "Permutations",
                           "Ranked Combinations", "Combinations",
-                          "Partial Hierarchies", "HDR")
+                          "Partial Hierarchies", "HDR",
+                          "Alternative CDR of same size as HDR")
+
   return(all_outputs)
 }

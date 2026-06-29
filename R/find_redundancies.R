@@ -86,7 +86,7 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
   comb <- algo_1[[4]]
   comb[, 1] <- stringr::str_remove_all(comb[, 1], "[{}]")
   phier <- algo_2
-  hdr <- algo_3
+  hdr <- algo_3[[1]]
   hdr <- hdr[order(hdr$`HDR Rank(s)`, hdr$Treatment),]
 
   # Now find redundant hierarchies

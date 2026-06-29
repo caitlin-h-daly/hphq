@@ -55,18 +55,42 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
   # pi_hat for hdr
   hdr_list <- vector("list", length = n_trt)
   rank_list <- vector("list", length = n_trt)
+  cdr_list <- vector("list", length = n_trt)
   for(i in 1:n_trt) {
     trt_name <- names(sorted_sucra[i])
     ranks <- (subset(df, df$Treatment == trt_name))[-1]
-    hdr_vec <- hdr(ranks, threshold, 1)
+    hdr_cdr_list <- hdr(ranks, threshold, 1)
+    hdr_vec <- hdr_cdr_list$hdr
     rank_list[[i]] <- hdr_vec[[3]]
     hdr_vec <- data.frame(hdr_vec[[1]], hdr_vec[[2]])
     hdr_list[[i]] <- cbind(trt_name, hdr_vec)
     colnames(hdr_list[[i]]) <- c("Treatment", "HDR Rank(s)", "Sum of pi_hat")
+
+    # other credible sets of the same size
+    if(length(hdr_cdr_list$alt_cdr) > 0) {
+      all_cdr <- hdr_cdr_list$alt_cdr
+      cdr_list[[i]] <- vector("list", length = length(hdr_cdr_list$alt_cdr))
+
+      for(j in 1:length(all_cdr)){
+        cdr_temp <- all_cdr[[j]]
+        cdr_temp <- data.frame(cdr_temp[[1]], cdr_temp[[2]])
+        cdr_list[[i]][[j]] <- cbind(trt_name, cdr_temp)
+        colnames(cdr_list[[i]][[j]]) <- c("Treatment", "CDR Rank(s)", "Sum of pi_hat")
+      }
+      cdr_list[[i]] <- do.call(rbind, cdr_list[[i]])
+    }
   }
 
   hdr_df <- do.call(rbind, hdr_list)
   row.names(hdr_df) <- NULL
+
+  cdr_df <- do.call(rbind, cdr_list)
+  row.names(cdr_df) <- NULL
+
+  if(is.null(cdr_df)) {
+    cdr_df <- hdr_df[FALSE, ]
+    colnames(cdr_df) <- c("Treatment", "CDR Rank(s)", "Sum of pi_hat")
+  }
 
   if(print_plot) {
     rows <- ceiling(sqrt(n_trt))
@@ -98,6 +122,5 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
     par(mfrow = c(1, 1))
   }
 
-  return(hdr_df)
-
+  return(list(HDR = hdr_df, "Alternative CDR of same size as HDR" = cdr_df))
 }
