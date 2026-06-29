@@ -81,13 +81,14 @@ get_partial_hierarchies <- function(effects_matrix,
   total_rows <- nrow(filtered_perms)
   if (total_rows == 0) {
     finished_perms <- data.frame(filtered_perms$V1, filtered_perms$pi_hat)
+    colnames(finished_perms) <- c("Size", "pi_hat")
   } else {
     credible <- paste0(filtered_perms$V1, ",", filtered_perms$V2)
     formatted_perms <- paste0(filtered_perms$V1, " > ", filtered_perms$V2)
     finished_perms <- data.frame(formatted_perms, 2, filtered_perms$pi_hat)
+    heading <- paste0("Treatments at MID = ", mid)
+    colnames(finished_perms) <- c(heading, "Size", "pi_hat")
   }
-  heading <- paste0("Treatments at MID = ", mid)
-  colnames(finished_perms) <- c(heading, "Size", "pi_hat")
   output_list[[output_list_index]] <- finished_perms
   output_list_index <- output_list_index + 1
   perm_size <- 3
