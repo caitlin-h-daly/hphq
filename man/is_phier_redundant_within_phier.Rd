@@ -12,7 +12,7 @@ is_phier_redundant_within_phier(phier_target, larger_phier_list)
 characters) in order of a (credible) partial hierarchy to assess the
 redundancy status of.}
 
-\item{phier_larger_list}{list of data frames of larger (credible) partial
+\item{larger_phier_list}{list of data frames of larger (credible) partial
 hierarchies by size, to assess the redundancy status of `phier_target`
 against.}
 }

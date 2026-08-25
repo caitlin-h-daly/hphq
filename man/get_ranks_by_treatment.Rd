@@ -27,6 +27,10 @@ possible cumulative empirical probability that is at least equal to the
 threshold.
 }
 \examples{
-inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
-get_ranks_by_treatment(ranking_df = inputs$ranking_df, threshold = 0.9, print_plot = FALSE)
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
+                    reference = "Placebo",
+                    larger_better = FALSE)
+get_ranks_by_treatment(ranking_df = inputs$ranking_df,
+                       threshold = 0.9,
+                       print_plot = FALSE)
 }

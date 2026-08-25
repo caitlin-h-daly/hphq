@@ -122,7 +122,7 @@ get_combo <- function(all_ranked_combo) {
 #' @param phier_target a single character vector of treatment names (without ">"
 #'   characters) in order of a (credible) partial hierarchy to assess the
 #'   redundancy status of.
-#' @param phier_larger_list list of data frames of larger (credible) partial
+#' @param larger_phier_list list of data frames of larger (credible) partial
 #'   hierarchies by size, to assess the redundancy status of `phier_target`
 #'   against.
 #'
@@ -246,7 +246,8 @@ hdr <- function(ranks, threshold, pi_hat_sum = 1) {
     concat_ranks <- hdr_ranks
   } else if(length(hdr_ranks) == 0) {
     concat_ranks <- "N/A"
-  } else if(all(diff(as.numeric(as.character(hdr_ranks))) == 1)) { # hdr is an interval
+  } else if(all(diff(as.numeric(as.character(hdr_ranks))) == 1)) {
+    # hdr is an interval
     # formats the ranks into an interval
     concat_ranks <- paste(hdr_ranks[1], hdr_ranks[[length(hdr_ranks)]], sep = "-")
   } else { # hdr is not an interval
@@ -258,48 +259,51 @@ hdr <- function(ranks, threshold, pi_hat_sum = 1) {
 
   # alternative credible density regions (CDR) of the same size
   #if(length(hdr_ranks) > 1) {
-    hdr_pi_hat <- sum(ranks$pi_hat)
-    min_hdr_rank_pi_hat <- min(ranks$pi_hat) # smallest pi_hat contributing to hdr
-    req_alt_rank_pi_hat <- threshold - (hdr_pi_hat - min_hdr_rank_pi_hat) # pi_hat required to substitute least likely rank in hdr
+  hdr_pi_hat <- sum(ranks$pi_hat)
+  min_hdr_rank_pi_hat <- min(ranks$pi_hat) # smallest pi_hat contributing to hdr
+  req_alt_rank_pi_hat <- threshold - (hdr_pi_hat - min_hdr_rank_pi_hat) # pi_hat required to substitute least likely rank in hdr
 
-    alt_cdr_rank <- excl_ranks[which(excl_ranks$pi_hat >= req_alt_rank_pi_hat), ]
+  alt_cdr_rank <- excl_ranks[which(excl_ranks$pi_hat >= req_alt_rank_pi_hat), ]
 
-    if(nrow(alt_cdr_rank) > 0) {
-      list_ind <- 1
+  if(nrow(alt_cdr_rank) > 0) {
+    list_ind <- 1
 
-      ranks <- ranks[order(ranks$pi_hat), ] # re-orders it in terms of pi_hat
+    ranks <- ranks[order(ranks$pi_hat), ] # re-orders it in terms of pi_hat
 
-      ranks_to_sub_ind <- which(ranks$pi_hat == min_hdr_rank_pi_hat) # in case multiple ranks have same pi_hat
+    ranks_to_sub_ind <- which(ranks$pi_hat == min_hdr_rank_pi_hat) # in case multiple ranks have same pi_hat
 
-      for(i in ranks_to_sub_ind) {
-        base_ranks <- ranks[-i, ]
+    for(i in ranks_to_sub_ind) {
+      base_ranks <- ranks[-i, ]
 
-        for(j in 1:nrow(alt_cdr_rank)){
-          new_ranks <- rbind(alt_cdr_rank[j, ], base_ranks)
-          new_ranks <- new_ranks[order(new_ranks$Rank), ] # re-orders it in terms of rank
+      for(j in 1:nrow(alt_cdr_rank)){
+        new_ranks <- rbind(alt_cdr_rank[j, ], base_ranks)
+        new_ranks <- new_ranks[order(new_ranks$Rank), ] # re-orders it in terms of rank
 
-          new_cdr_ranks <- new_ranks$Rank
+        new_cdr_ranks <- new_ranks$Rank
 
-          # format
-          if(length(new_cdr_ranks) == 1) { # if there is just one element
-            new_concat_ranks <- new_cdr_ranks
-          } else if(length(new_cdr_ranks) == 0) {
-            new_concat_ranks <- "N/A"
-          } else if(all(diff(as.numeric(as.character(new_cdr_ranks))) == 1)) { # cdr is an interval
-            # formats the ranks into an interval
-            new_concat_ranks <- paste(new_cdr_ranks[1], new_cdr_ranks[[length(new_cdr_ranks)]], sep = "-")
-          } else { # cdr is not an interval
-            # collapses the ranks into one string
-            new_concat_ranks <- paste(new_cdr_ranks, collapse = ',')
-          }
-
-          alt_cdr[[list_ind]] <- list(new_concat_ranks, sum(new_ranks$pi_hat))
-
-          list_ind <- list_ind + 1
-
+        # format
+        if(length(new_cdr_ranks) == 1) { # if there is just one element
+          new_concat_ranks <- new_cdr_ranks
+        } else if(length(new_cdr_ranks) == 0) {
+          new_concat_ranks <- "N/A"
+        } else if(all(diff(as.numeric(as.character(new_cdr_ranks))) == 1)) {
+          # cdr is an interval
+          # formats the ranks into an interval
+          new_concat_ranks <- paste(new_cdr_ranks[1],
+                                    new_cdr_ranks[[length(new_cdr_ranks)]],
+                                    sep = "-")
+        } else { # cdr is not an interval
+          # collapses the ranks into one string
+          new_concat_ranks <- paste(new_cdr_ranks, collapse = ',')
         }
+
+        alt_cdr[[list_ind]] <- list(new_concat_ranks, sum(new_ranks$pi_hat))
+
+        list_ind <- list_ind + 1
+
       }
     }
+  }
 
   #}
 

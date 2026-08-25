@@ -24,25 +24,26 @@
 #'
 #' @details
 #' Redundancy types can be identified with numbers through 1 through 18 as follows:
-#' 1) Within ranked permutations (e.g., $(A, B)_1^2$ is redundant because of $(A, B, C)_1^3$).
-#' 2) Within permutations (e.g., (A, B) is redundant because of (A, B, C)).
-#' 3) Within partial hierarchies (e.g., A > B is redundant because of A > B > C).
-#' 4) Between permutations and partial hierarchies (e.g., A > B is redundant because of (A, B)).
-#' 5) Between ranked permutations and permutations (e.g., $(A, B)$ is redundant because of $(A, B)_1^2$).
-#' 6) Between ranked combinations and combinations (e.g., ${A, B}$ is redundant because of ${A, B}_1^2$).
-#' 7) Between permutations and combinations (e.g., ${A, B}$ is redundant because of $(A, B)$).
-#' 8) Between ranked permutations and ranked combinations (e.g., ${A, B}_1^2$ is redundant because of $(A, B)_1^2$).
-#' 9) Between a ranked permutation and multiple single HDR ranks.
-#' 10) Between a ranked combination and multiple HDRs.
-#' 11) Within top/bottom ranked combinations.
-#' 12) Between top/bottom single HDR ranks and a combination ranking from 1:(n_trt-1) or 2:n_trt.
-#' 13) Between permutations ranking from 1:(n_trt-1) or 2:n_trt and a top/bottom single HDR rank.
-#' 14) Between top/bottom single HDR ranks and a middle combination ranking 2:(n_trt-1).
-#' 15) Between (top/bottom single HDR rank + tail-ranked permutation) and a middle ranked combination.
-#' 16) Between tail-ranked permutations and a middle ranked combination.
-#' 17) Between (ranked permutation + smaller ranked combination) and ranked combination.
-#' 18) Between (single HDR rank + smaller ranked combination) and ranked combination.
-#'
+#' \enumerate{
+#'  \item Within ranked permutations (e.g., \eqn{(A, B)_1^2} is redundant because of \eqn{(A, B, C)_1^3}).
+#'  \item Within permutations (e.g., \eqn{(A, B)} is redundant because of \eqn{(A, B, C)}).
+#'  \item Within partial hierarchies (e.g., \eqn{A > B} is redundant because of \eqn{A > B > C}).
+#'  \item Between permutations and partial hierarchies (e.g., \eqn{A > B} is redundant because of \eqn{(A, B)}).
+#'  \item Between ranked permutations and permutations (e.g., \eqn{(A, B)} is redundant because of \eqn{(A, B)_1^2}).
+#'  \item Between ranked combinations and combinations (e.g., \eqn{\{A, B\}} is redundant because of \eqn{\{A, B\}_1^2}).
+#'  \item Between permutations and combinations (e.g., \eqn{\{A, B\}} is redundant because of \eqn{(A, B)}).
+#'  \item Between ranked permutations and ranked combinations (e.g., \eqn{\{A, B\}_1^2} is redundant because of \eqn{(A, B)_1^2}).
+#'  \item Between a ranked permutation and multiple single HDR ranks.
+#'  \item Between a ranked combination and multiple HDRs.
+#'  \item Within top/bottom ranked combinations.
+#'  \item Between top/bottom single HDR ranks and a combination ranking from 1:(n_trt-1) or 2:n_trt.
+#'  \item Between permutations ranking from 1:(n_trt-1) or 2:n_trt and a top/bottom single HDR rank.
+#'  \item Between top/bottom single HDR ranks and a middle combination ranking 2:(n_trt-1).
+#'  \item Between (top/bottom single HDR rank + tail-ranked permutation) and a middle ranked combination.
+#'  \item Between tail-ranked permutations and a middle ranked combination.
+#'  \item Between (ranked permutation + smaller ranked combination) and ranked combination.
+#'  \item Between (single HDR rank + smaller ranked combination) and ranked combination.
+#' }
 #' We recommend these redundancies are identified in increasing order (1 through
 #' 18) to ensure a complete assessment and output. Otherwise, a warning will be
 #' outputted.
@@ -50,15 +51,28 @@
 #' @return A list of the credible ranked permutations, permutations, ranked
 #' combinations, combinations, partial hierarchies, and HDRs along with their
 #' redundancy status.
+#'
+#' @importFrom stats na.omit
+#'
 #' @export
 #'
 #' @examples
-#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
-#' algo1 <- get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
-#' algo2 <- get_partial_hierarchies(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
-#' algo3 <- get_ranks_by_treatment(ranking_df = inputs$ranking_df, threshold = 0.9, print_plot = FALSE)
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
+#'                     reference = "Placebo",
+#'                     larger_better = FALSE)
+#' algo1 <- get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix,
+#'                           threshold = 0.9)
+#' algo2 <- get_partial_hierarchies(effects_matrix = inputs$effects_matrix,
+#'                                  mid = 0,
+#'                                  threshold = 0.9,
+#'                                  larger_better = FALSE)
+#' algo3 <- get_ranks_by_treatment(ranking_df = inputs$ranking_df,
+#'                                 threshold = 0.9,
+#'                                 print_plot = FALSE)
 #' find_redundancies(algo1, algo2, algo3, n_trt = 5, threshold = 0.90)
-find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1:18, trim_redundant = FALSE) {
+find_redundancies <- function(algo_1, algo_2, algo_3,
+                              n_trt, threshold, type = 1:18,
+                              trim_redundant = FALSE) {
 
   # Verify algo_2 objects correspond to MID = 0
   if(gsub("Treatments at MID = ", "", colnames(algo_2)[1]) != 0){
@@ -194,8 +208,8 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
                 # extract jth partial hierarchy in current_phier_size
                 phier_target <- stringr::str_split_1(as.character(current_phier_size[j, 1]), " > ")
                 # check to see if jth partial hierarchy is in larger partial hierarchies
-                redundant_check <- hphq:::is_phier_redundant_within_phier(phier_target,
-                                                                          phier_larger_list)
+                redundant_check <- is_phier_redundant_within_phier(phier_target,
+                                                                   phier_larger_list)
                 if(!is.null(redundant_check)){
                   current_phier_size[j, "Redundant"] <- redundant_check
                 }
@@ -210,7 +224,8 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
 
     } else if(ind == 4) {
 
-      # Between permutations and partial hierarchies (e.g., A > B is redundant because of (A, B)).
+      # Between permutations and partial hierarchies (e.g., A > B is redundant
+      # because of (A, B)).
 
       if(nrow(phier) > 0) {
 
@@ -220,7 +235,8 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
 
         if(nrow(perm) > 0) {
 
-          # check if (remaining) credible partial hierarchies are redundant because of credible permutations
+          # check if (remaining) credible partial hierarchies are redundant
+          # because of credible permutations
           for (i in 1:nrow(phier)) {
             if(phier[i, "Redundant"] == "FALSE") {
               phier_target <- str_split_1(as.character(phier[i, 1]), " > ")
@@ -251,7 +267,8 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
 
         if(nrow(ranked_perm) > 0) {
 
-          # check if (remaining) credible permutations are redundant because of credible ranked permutations
+          # check if (remaining) credible permutations are redundant because
+          # of credible ranked permutations
           for(i in 1:nrow(perm)) {
             perm_target <- str_split_1(perm[i, 1], ",")
             if(perm[i, "Redundant"] == "FALSE") {
@@ -269,7 +286,8 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
 
     } else if(ind == 6) {
 
-      # Between ranked combinations and combinations (e.g., ${A, B}$ is redundant because of ${A, B}_1^2$).
+      # Between ranked combinations and combinations (e.g., ${A, B}$
+      # is redundant because of \eqn{\{A, B\}_1^2}).
 
       if(nrow(comb) > 0) {
 
@@ -279,7 +297,8 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
 
         if(nrow(ranked_comb) > 0) {
 
-          # check if (remaining) credible combinations are redundant because of credible ranked combinations
+          # check if (remaining) credible combinations are redundant because
+          # of credible ranked combinations
           for(i in 1:nrow(comb)) {
             comb_target <- str_split_1(comb[i, 1], ",")
             if(comb[i, "Redundant"] == "FALSE") {
@@ -297,7 +316,8 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
 
     } else if(ind == 7) {
 
-      # Between permutations and combinations (e.g., ${A, B}$ is redundant because of $(A, B)$).
+      # Between permutations and combinations (e.g., ${A, B}$ is redundant
+      # because of $(A, B)$).
 
       if(nrow(comb) > 0) {
 
@@ -307,7 +327,8 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
 
         if(nrow(perm) > 0) {
 
-          # check if (remaining) credible combinations are redundant because of credible permutations
+          # check if (remaining) credible combinations are redundant because
+          # of credible permutations
           for(i in 1:nrow(comb)) {
             comb_target <- str_split_1(comb[i, 1], ",")
             if(comb[i, "Redundant"] == "FALSE") {
@@ -325,7 +346,8 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
 
     } else if(ind == 8) {
 
-      # Between ranked permutations and ranked combinations (e.g., ${A, B}_1^2$ is redundant because of $(A, B)_1^2$).
+      # Between ranked permutations and ranked combinations
+      # (e.g., \eqn{\{A, B\}_1^2} is redundant because of \eqn{(A, B)_1^2}).
 
       if(nrow(ranked_comb) > 0) {
 
@@ -335,14 +357,16 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
 
         if(nrow(ranked_perm) > 0) {
 
-          # check if (remaining) credible ranked combinations are redundant because of credible ranked permutations
+          # check if (remaining) credible ranked combinations are redundant
+          # because of credible ranked permutations
           for(i in 1:nrow(ranked_comb)) {
             range_target <- as.character(ranked_comb[i, 1])
             ranked_comb_target <- str_split_1(ranked_comb[i, 2], ",")
             if(ranked_comb[i, "Redundant"] == "FALSE") {
               for(j in 1:nrow(ranked_perm)) {
                 if(range_target == as.character(ranked_perm[j, 1]) &&
-                   setequal(ranked_comb_target, str_split_1(ranked_perm[j, 2], ","))) {
+                   setequal(ranked_comb_target,
+                            str_split_1(ranked_perm[j, 2], ","))) {
                   ranked_comb[i, "Redundant"] <- "TRUE"
                   break
                 }
@@ -376,10 +400,14 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
         for(i in ranked_perm_target) {
           perm_ranks <- stringr::str_split_1(ranked_perm[i, "Range"], "-")
           perm_ranks <- as.character(perm_ranks[1]:perm_ranks[2])
-          perm_set <- stringr::str_split_1(ranked_perm[i, "Ranked Permutations"], ",")
+          perm_set <- stringr::str_split_1(ranked_perm[i, "Ranked Permutations"],
+                                           ",")
           if(all(perm_ranks %in% hdr[HDR_single_ind, "HDR Rank(s)"],
-                 na.omit(hdr[match(perm_ranks, hdr[, "HDR Rank(s)"]), "Treatment"]) == perm_set)) {
-            hdr[na.omit(match(perm_ranks, hdr[, "HDR Rank(s)"])), "Redundant"] <- "TRUE"
+                 stats::na.omit(hdr[match(perm_ranks,
+                                          hdr[, "HDR Rank(s)"]),
+                                    "Treatment"]) == perm_set)) {
+            hdr[stats::na.omit(match(perm_ranks,
+                                     hdr[, "HDR Rank(s)"])), "Redundant"] <- "TRUE"
           }
         }
       }
@@ -442,13 +470,17 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
       if(nrow(ranked_comb) > 0) {
 
         if(!exists("Redundant", ranked_comb)) {
-          warning("For completeness, ranked combinations should ideally be assessed for within redundancies after comparison with other hierarchy question types.")
+          warning("For completeness, ranked combinations should ideally be
+                  assessed for within redundancies after comparison with
+                  other hierarchy question types.")
           ranked_comb$Redundant <- "FALSE"
         }
 
         # Note indices of redundant combinations ranking 1:j or (j+1):n
-        ranked_comb_target <- which((stringr::str_split(ranked_comb[, "Range"], "-", simplify = TRUE)[, 1] == "1" |
-                                       stringr::str_split(ranked_comb[, "Range"], "-", simplify = TRUE)[, 2] == as.character(n_trt)) &
+        ranked_comb_target <- which((stringr::str_split(ranked_comb[, "Range"],
+                                                        "-", simplify = TRUE)[, 1] == "1" |
+                                       stringr::str_split(ranked_comb[, "Range"],
+                                                          "-", simplify = TRUE)[, 2] == as.character(n_trt)) &
                                       ranked_comb[, "Redundant"] == "TRUE")
 
         # Check if any of the redundant ranked combinations complete the
@@ -486,7 +518,8 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
 
     } else if(ind == 12) {
 
-      # Between top/bottom single HDR ranks and a combination ranking from 1:(n_trt-1) or 2:n_trt.
+      # Between top/bottom single HDR ranks and a
+      # combination ranking from 1:(n_trt-1) or 2:n_trt.
 
       # Find HDR consisting of single rank 1
       HDR_single_1_ind <- which(hdr[, "HDR Rank(s)"] == "1")
@@ -529,7 +562,8 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
 
     } else if(ind == 13) {
 
-      # Between permutations ranking from 1:(n_trt-1) or 2:n_trt and a top/bottom single HDR rank.
+      # Between permutations ranking from 1:(n_trt-1) or
+      # 2:n_trt and a top/bottom single HDR rank.
 
       if(!exists("Redundant", hdr)) {
         hdr$Redundant <- "FALSE"
@@ -667,15 +701,19 @@ find_redundancies <- function(algo_1, algo_2, algo_3, n_trt, threshold, type = 1
                   break
                 } else {
 
-                  hdr_single_string <- paste0(hdr[HDR_single_1_ind, "Treatment"], "_{", 1, "}")
+                  hdr_single_string <- paste0(hdr[HDR_single_1_ind,
+                                                  "Treatment"],
+                                              "_{", 1, "}")
                   ranked_perm_string <- paste0("(", ranked_perm[j, "Ranked Permutations"], ")_",
                                                stringr::str_split_1(ranked_perm[j, "Range"], "-")[1],
                                                "^",
                                                stringr::str_split_1(ranked_perm[j, "Range"], "-")[2])
 
 
-                  ranked_comb[i, "Redundant"] <- paste0("Check P(", hdr_single_string,
-                                                        " AND ", ranked_perm_string, ")")
+                  ranked_comb[i, "Redundant"] <- paste0("Check P(",
+                                                        hdr_single_string,
+                                                        " AND ",
+                                                        ranked_perm_string, ")")
                   break
                 }
 

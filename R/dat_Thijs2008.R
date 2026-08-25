@@ -11,15 +11,15 @@
 #'
 #' @format A data frame with 15,000 rows and 6 columns:
 #' \describe{
-#'   \item{`Chain`}{The index of the chain.}
-#'   \item{`Placebo`}{The sampled relative effects of placebo vs. placebo
+#'   \item{Chain}{The index of the chain.}
+#'   \item{Placebo}{The sampled relative effects of placebo vs. placebo
 #'   (should be 0).}
-#'   \item{`ASA`}{The sampled relative effects of aspirin (ASA) vs. placebo.}
-#'   \item{`ASADP`}{The sampled relative effects of aspirin + dipyridamol
+#'   \item{ASA}{The sampled relative effects of aspirin (ASA) vs. placebo.}
+#'   \item{ASADP}{The sampled relative effects of aspirin + dipyridamol
 #'   (ASA+DP) vs. placebo.}
-#'   \item{`Thieno`}{The sampled relative effects of thienopyridines (Thieno)
+#'   \item{Thieno}{The sampled relative effects of thienopyridines (Thieno)
 #'   vs. placebo.}
-#'   \item{`ThienoASA`}{The sampled relative effects of thienopyridines +
+#'   \item{ThienoASA}{The sampled relative effects of thienopyridines +
 #'   aspirin (Thieno+ASA) vs. placebo.}
 #' }
 #'
