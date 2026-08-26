@@ -3,7 +3,7 @@
 #' @description
 #' `prep_data()` produces a list of inputs to be used altogether in
 #' `get_hierarchies()`, or individually in `get_arrangements()`,
-#' `get_cred_phier()`, and `singular_treatment()`.
+#' `get_partial_hierarchies()`, and `get_ranks_by_treatment()`.
 #'
 #' @param effects_matrix a data frame where the column headers are treatment
 #'   names and each row displays each treatment’s sampled relative effect for

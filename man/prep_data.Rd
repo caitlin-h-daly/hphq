@@ -30,7 +30,7 @@ associated empirical probabilities (pi_hat).
 \description{
 `prep_data()` produces a list of inputs to be used altogether in
 `get_hierarchies()`, or individually in `get_arrangements()`,
-`get_cred_phier()`, and `singular_treatment()`.
+`get_partial_hierarchies()`, and `get_ranks_by_treatment()`.
 }
 \examples{
 inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
