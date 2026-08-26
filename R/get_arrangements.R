@@ -27,8 +27,11 @@
 #' @export
 #'
 #' @examples
-#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
-#' get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
+#'                     reference = "Placebo",
+#'                     larger_better = FALSE)
+#' get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix,
+#'                                     threshold = 0.9)
 get_arrangements <- function(hierarchy_matrix,
                              threshold,
                              order_by = c("Size", "pi_hat")) {
@@ -60,7 +63,8 @@ get_arrangements <- function(hierarchy_matrix,
       # end is index of last rank to consider
       end <- start + size - 1
       # tabulate all permutations observed between rank `start` and rank `end`
-      all_ranked_perm_list[[index]] <- get_ranked_perm(hierarchy_matrix, start:end)
+      all_ranked_perm_list[[index]] <- get_ranked_perm(hierarchy_matrix,
+                                                       start:end)
       index <- index + 1
     }
     message(paste0("Permutations of size ", size ," completed"))
@@ -72,7 +76,11 @@ get_arrangements <- function(hierarchy_matrix,
   cred_ranked_perm <- subset(all_ranked_perm, all_ranked_perm$pi_hat > threshold)
   names(cred_ranked_perm)[names(cred_ranked_perm) == 'Var1'] <- 'Ranked Permutations'
   # order credible ranked permutations
-  to_order <- eval(parse(text = paste0("list(", paste0("cred_ranked_perm$", order_by, collapse = ", "), ")")))
+  to_order <- eval(parse(text = paste0("list(",
+                                       paste0("cred_ranked_perm$",
+                                              order_by,
+                                              collapse = ", "),
+                                       ")")))
   cred_ranked_perm <- cred_ranked_perm[rev(do.call(order, to_order)), ]
   # remove row names
   rownames(cred_ranked_perm) <- NULL
@@ -85,7 +93,11 @@ get_arrangements <- function(hierarchy_matrix,
   cred_perm <- subset(all_perm, all_perm$pi_hat > threshold)
   names(cred_perm)[names(cred_perm) == 'Var1'] <- 'Permutations'
   # order credible permutations
-  to_order <- eval(parse(text = paste0("list(", paste0("cred_perm$", order_by, collapse = ", "), ")")))
+  to_order <- eval(parse(text = paste0("list(",
+                                       paste0("cred_perm$",
+                                              order_by,
+                                              collapse = ", "),
+                                       ")")))
   cred_perm <- cred_perm[rev(do.call(order, to_order)), ]
   # remove row names
   rownames(cred_perm) <- NULL
@@ -93,13 +105,18 @@ get_arrangements <- function(hierarchy_matrix,
   message("Permutations completed")
 
   # all ranked permutations up to size n_trt - 1
-  all_ranked_perm_combo <- do.call(rbind, all_ranked_perm_list[1:(n_perm_grps - 1)])
+  all_ranked_perm_combo <- do.call(rbind,
+                                   all_ranked_perm_list[1:(n_perm_grps - 1)])
   # all ranked combinations
   all_ranked_combo <- get_ranked_comb(all_ranked_perm_combo, treatments)
   # all credible ranked combinations
   cred_ranked_combo <- subset(all_ranked_combo, all_ranked_combo$pi_hat > threshold)
   # order credible ranked combinations
-  to_order <- eval(parse(text = paste0("list(", paste0("cred_ranked_combo$", order_by, collapse = ", "), ")")))
+  to_order <- eval(parse(text = paste0("list(",
+                                       paste0("cred_ranked_combo$",
+                                              order_by,
+                                              collapse = ", "),
+                                       ")")))
   cred_ranked_combo <- cred_ranked_combo[rev(do.call(order, to_order)), ]
   # remove row names
   rownames(cred_ranked_combo) <- NULL
@@ -112,7 +129,10 @@ get_arrangements <- function(hierarchy_matrix,
   # all credible combinations
   cred_combo <- subset(all_combo, all_combo$pi_hat > threshold)
   # order credible ranked combinations
-  to_order <- eval(parse(text = paste0("list(", paste0("cred_combo$", order_by, collapse = ", "), ")")))
+  to_order <- eval(parse(text = paste0("list(", paste0("cred_combo$",
+                                                       order_by,
+                                                       collapse = ", "),
+                                       ")")))
   cred_combo <- cred_combo[rev(do.call(order, to_order)), ]
   # remove row names
   rownames(cred_combo) <- NULL
@@ -121,16 +141,24 @@ get_arrangements <- function(hierarchy_matrix,
 
   # add appropriate brackets for combinatorial type
   if(nrow(consec_output[[1]]) > 0) {
-    consec_output[[1]]$`Ranked Permutations` <- paste0("(", consec_output[[1]]$`Ranked Permutations`, ")")
+    consec_output[[1]]$`Ranked Permutations` <- paste0("(",
+                                                       consec_output[[1]]$`Ranked Permutations`,
+                                                       ")")
   }
   if(nrow(consec_output[[2]]) > 0) {
-    consec_output[[2]]$Permutations <- paste0("(", consec_output[[2]]$Permutations, ")")
+    consec_output[[2]]$Permutations <- paste0("(",
+                                              consec_output[[2]]$Permutations,
+                                              ")")
   }
   if(nrow(consec_output[[3]]) > 0) {
-    consec_output[[3]]$`Ranked Combinations` <- paste0("{", consec_output[[3]]$`Ranked Combinations`, "}")
+    consec_output[[3]]$`Ranked Combinations` <- paste0("{",
+                                                       consec_output[[3]]$`Ranked Combinations`,
+                                                       "}")
   }
   if(nrow(consec_output[[4]]) > 0) {
-    consec_output[[4]]$Combinations <- paste0("{", consec_output[[4]]$Combinations, "}")
+    consec_output[[4]]$Combinations <- paste0("{",
+                                              consec_output[[4]]$Combinations,
+                                              "}")
   }
   names(consec_output) <- c("Ranked Permutations", "Permutations",
                             "Ranked Combinations", "Combinations")

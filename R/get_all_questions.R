@@ -30,9 +30,18 @@
 #' @export
 #'
 #' @examples
-#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
-#' get_all_questions(inputs = inputs, larger_better = FALSE, thresholds = c(0.9, 0.9, 0.9), mid = 0, print_plot = FALSE, trim_redundant = FALSE)
-get_all_questions <- function(inputs, n_trt, larger_better, thresholds, mid = 0, print_plot = FALSE, trim_redundant = FALSE) {
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
+#'                     reference = "Placebo",
+#'                     larger_better = FALSE)
+#' get_all_questions(inputs = inputs,
+#'                   larger_better = FALSE,
+#'                   thresholds = c(0.9, 0.9, 0.9),
+#'                   mid = 0,
+#'                   print_plot = FALSE,
+#'                   trim_redundant = FALSE)
+get_all_questions <- function(inputs, n_trt, larger_better, thresholds,
+                              mid = 0, print_plot = FALSE,
+                              trim_redundant = FALSE) {
 
   if(max(thresholds) > 1 || min(thresholds) < 0) {
     stop("Please ensure threshold values are between 0 and 1")
@@ -47,16 +56,19 @@ get_all_questions <- function(inputs, n_trt, larger_better, thresholds, mid = 0,
   treatments <- colnames(inputs[[2]])
   n_trt <- length(treatments)
 
-  arrangements <- get_arrangements(inputs$hierarchy_matrix, thresholds[[1]])
-  phier <- get_partial_hierarchies(inputs$effects_matrix, mid, thresholds[[2]], larger_better)
-  single <- get_ranks_by_treatment(inputs$ranking_df, thresholds[[3]], print_plot)
+  arrangements <- get_arrangements(inputs$hierarchy_matrix,
+                                   thresholds[[1]])
+  phier <- get_partial_hierarchies(inputs$effects_matrix, mid,
+                                   thresholds[[2]], larger_better)
+  single <- get_ranks_by_treatment(inputs$ranking_df, thresholds[[3]],
+                                   print_plot)
 
   all_outputs <- find_redundancies(algo_1 = arrangements,
-                                     algo_2 = phier,
-                                     algo_3 = single,
-                                     n_trt = n_trt,
-                                     threshold = threshold,
-                                     trim_redundant = trim_redundant)
+                                   algo_2 = phier,
+                                   algo_3 = single,
+                                   n_trt = n_trt,
+                                   threshold = threshold,
+                                   trim_redundant = trim_redundant)
 
   all_outputs[[7]] <- single$`Alternative CDR of same size as HDR`
 

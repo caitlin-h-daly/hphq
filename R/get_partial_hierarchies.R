@@ -25,8 +25,14 @@
 #' @export
 #'
 #' @examples
-#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
-#' get_partial_hierarchies(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
+#'                     reference = "Placebo",
+#'                     larger_better = FALSE)
+#' get_partial_hierarchies(effects_matrix = inputs$effects_matrix,
+#'                         mid = 0,
+#'                         threshold = 0.9,
+#'                         larger_better = FALSE)
+
 get_partial_hierarchies <- function(effects_matrix,
                                     mid = 0,
                                     threshold,
@@ -38,7 +44,9 @@ get_partial_hierarchies <- function(effects_matrix,
   }
 
   if(!all(order_by %in% c("Size", "pi_hat"))) {
-    stop("Please ensure `order_by` consists of either 'Size', 'pi_hat', or both")
+    stop("Please ensure `order_by` consists of either 'Size',
+         'pi_hat',
+         or both")
   }
 
   treatments <- colnames(effects_matrix)
@@ -155,7 +163,11 @@ get_partial_hierarchies <- function(effects_matrix,
   }
 
   all_output <- do.call(rbind, output_list)
-  to_order <- eval(parse(text = paste0("list(", paste0("all_output$", order_by, collapse = ", "), ")")))
+  to_order <- eval(parse(text = paste0("list(",
+                                       paste0("all_output$",
+                                              order_by,
+                                              collapse = ", "),
+                                       ")")))
   all_output <- all_output[rev(do.call(order, to_order)), ]
   rownames(all_output) <- NULL
   return(all_output)

@@ -15,12 +15,17 @@ Description: This package implements an efficient computational approach (Tan et
 License: CC BY 4.0
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.2
+LazyDataCompression: xz
 Imports: 
-    stringr
+    stringr,
+    graphics,
+    stats
 Depends: 
     R (>= 3.5)
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/roxygen2/version: 8.1.0
+Config/testthat/edition: 3

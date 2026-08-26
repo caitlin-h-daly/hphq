@@ -34,6 +34,9 @@ each permutation size. The user may suppress these messages using
 `suppressMessages(get_arrangements())`.
 }
 \examples{
-inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
-get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
+                    reference = "Placebo",
+                    larger_better = FALSE)
+get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix,
+                                    threshold = 0.9)
 }

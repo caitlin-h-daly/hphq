@@ -7,13 +7,13 @@
 \format{
 A data frame with 300,000 rows and 6 columns:
 \describe{
-  \item{`Chain`}{The index of the chain.}
-  \item{`Placebo`}{The sampled relative effects of placebo vs. placebo
+  \item{Chain}{The index of the chain.}
+  \item{Placebo}{The sampled relative effects of placebo vs. placebo
   (should be 0).}
-  \item{`Abatacept`}{The sampled relative effects of abatacept vs. placebo.}
-  \item{`Anti.TNF`}{The sampled relative effects of anti-TNF vs. placebo.}
-  \item{`Rituximab`}{The sampled relative effects of rituximab vs. placebo.}
-  \item{`Tocilizumab`}{The sampled relative effects of tocilizumab vs.
+  \item{Abatacept}{The sampled relative effects of abatacept vs. placebo.}
+  \item{Anti.TNF}{The sampled relative effects of anti-TNF vs. placebo.}
+  \item{Rituximab}{The sampled relative effects of rituximab vs. placebo.}
+  \item{Tocilizumab}{The sampled relative effects of tocilizumab vs.
   placebo.}
 }
 }
@@ -32,6 +32,6 @@ estimated in a random effects Bayesian network meta-analysis with a binomial
 likelihood and logit link. Three chains were run, the first 50,000 samples
 were discarded as burn-in, and the subsequent 100,000 samples (a total of
 300,000 samples) were saved in this data frame. The outcome is American
-College of Rheumatology 50% improvement (ACR50) response rate at 6 months.
+College of Rheumatology 50\% improvement (ACR50) response rate at 6 months.
 }
 \keyword{datasets}

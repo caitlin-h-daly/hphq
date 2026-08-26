@@ -50,33 +50,42 @@ redundant credible hierarchies.
 }
 \details{
 Redundancy types can be identified with numbers through 1 through 18 as follows:
-1) Within ranked permutations (e.g., $(A, B)_1^2$ is redundant because of $(A, B, C)_1^3$).
-2) Within permutations (e.g., (A, B) is redundant because of (A, B, C)).
-3) Within partial hierarchies (e.g., A > B is redundant because of A > B > C).
-4) Between permutations and partial hierarchies (e.g., A > B is redundant because of (A, B)).
-5) Between ranked permutations and permutations (e.g., $(A, B)$ is redundant because of $(A, B)_1^2$).
-6) Between ranked combinations and combinations (e.g., ${A, B}$ is redundant because of ${A, B}_1^2$).
-7) Between permutations and combinations (e.g., ${A, B}$ is redundant because of $(A, B)$).
-8) Between ranked permutations and ranked combinations (e.g., ${A, B}_1^2$ is redundant because of $(A, B)_1^2$).
-9) Between a ranked permutation and multiple single HDR ranks.
-10) Between a ranked combination and multiple HDRs.
-11) Within top/bottom ranked combinations.
-12) Between top/bottom single HDR ranks and a combination ranking from 1:(n_trt-1) or 2:n_trt.
-13) Between permutations ranking from 1:(n_trt-1) or 2:n_trt and a top/bottom single HDR rank.
-14) Between top/bottom single HDR ranks and a middle combination ranking 2:(n_trt-1).
-15) Between (top/bottom single HDR rank + tail-ranked permutation) and a middle ranked combination.
-16) Between tail-ranked permutations and a middle ranked combination.
-17) Between (ranked permutation + smaller ranked combination) and ranked combination.
-18) Between (single HDR rank + smaller ranked combination) and ranked combination.
-
+\enumerate{
+ \item Within ranked permutations (e.g., \eqn{(A, B)_1^2} is redundant because of \eqn{(A, B, C)_1^3}).
+ \item Within permutations (e.g., \eqn{(A, B)} is redundant because of \eqn{(A, B, C)}).
+ \item Within partial hierarchies (e.g., \eqn{A > B} is redundant because of \eqn{A > B > C}).
+ \item Between permutations and partial hierarchies (e.g., \eqn{A > B} is redundant because of \eqn{(A, B)}).
+ \item Between ranked permutations and permutations (e.g., \eqn{(A, B)} is redundant because of \eqn{(A, B)_1^2}).
+ \item Between ranked combinations and combinations (e.g., \eqn{\{A, B\}} is redundant because of \eqn{\{A, B\}_1^2}).
+ \item Between permutations and combinations (e.g., \eqn{\{A, B\}} is redundant because of \eqn{(A, B)}).
+ \item Between ranked permutations and ranked combinations (e.g., \eqn{\{A, B\}_1^2} is redundant because of \eqn{(A, B)_1^2}).
+ \item Between a ranked permutation and multiple single HDR ranks.
+ \item Between a ranked combination and multiple HDRs.
+ \item Within top/bottom ranked combinations.
+ \item Between top/bottom single HDR ranks and a combination ranking from 1:(n_trt-1) or 2:n_trt.
+ \item Between permutations ranking from 1:(n_trt-1) or 2:n_trt and a top/bottom single HDR rank.
+ \item Between top/bottom single HDR ranks and a middle combination ranking 2:(n_trt-1).
+ \item Between (top/bottom single HDR rank + tail-ranked permutation) and a middle ranked combination.
+ \item Between tail-ranked permutations and a middle ranked combination.
+ \item Between (ranked permutation + smaller ranked combination) and ranked combination.
+ \item Between (single HDR rank + smaller ranked combination) and ranked combination.
+}
 We recommend these redundancies are identified in increasing order (1 through
 18) to ensure a complete assessment and output. Otherwise, a warning will be
 outputted.
 }
 \examples{
-inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
-algo1 <- get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix, threshold = 0.9)
-algo2 <- get_partial_hierarchies(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
-algo3 <- get_ranks_by_treatment(ranking_df = inputs$ranking_df, threshold = 0.9, print_plot = FALSE)
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
+                    reference = "Placebo",
+                    larger_better = FALSE)
+algo1 <- get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix,
+                          threshold = 0.9)
+algo2 <- get_partial_hierarchies(effects_matrix = inputs$effects_matrix,
+                                 mid = 0,
+                                 threshold = 0.9,
+                                 larger_better = FALSE)
+algo3 <- get_ranks_by_treatment(ranking_df = inputs$ranking_df,
+                                threshold = 0.9,
+                                print_plot = FALSE)
 find_redundancies(algo1, algo2, algo3, n_trt = 5, threshold = 0.90)
 }

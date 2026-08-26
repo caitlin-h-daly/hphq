@@ -22,8 +22,13 @@
 #' @export
 #'
 #' @examples
-#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
-#' get_ranks_by_treatment(ranking_df = inputs$ranking_df, threshold = 0.9, print_plot = FALSE)
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
+#'                     reference = "Placebo",
+#'                     larger_better = FALSE)
+#' get_ranks_by_treatment(ranking_df = inputs$ranking_df,
+#'                        threshold = 0.9,
+#'                        print_plot = FALSE)
+
 get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
 
   if(threshold > 1 || threshold < 0) {
@@ -75,7 +80,9 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
         cdr_temp <- all_cdr[[j]]
         cdr_temp <- data.frame(cdr_temp[[1]], cdr_temp[[2]])
         cdr_list[[i]][[j]] <- cbind(trt_name, cdr_temp)
-        colnames(cdr_list[[i]][[j]]) <- c("Treatment", "CDR Rank(s)", "Sum of pi_hat")
+        colnames(cdr_list[[i]][[j]]) <- c("Treatment",
+                                          "CDR Rank(s)",
+                                          "Sum of pi_hat")
       }
       cdr_list[[i]] <- do.call(rbind, cdr_list[[i]])
     }

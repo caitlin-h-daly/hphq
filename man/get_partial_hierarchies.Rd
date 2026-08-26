@@ -41,6 +41,11 @@ treatment differences greater than or equal to `mid` and with empirical
 probabilities greater than or equal to the threshold.
 }
 \examples{
-inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
-get_partial_hierarchies(effects_matrix = inputs$effects_matrix, mid = 0, threshold = 0.9, larger_better = FALSE)
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
+                    reference = "Placebo",
+                    larger_better = FALSE)
+get_partial_hierarchies(effects_matrix = inputs$effects_matrix,
+                        mid = 0,
+                        threshold = 0.9,
+                        larger_better = FALSE)
 }

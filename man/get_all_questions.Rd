@@ -51,6 +51,13 @@ threshold. These hierarchies are then run through `find_redundancies()` to
 determine which of them are redundant.
 }
 \examples{
-inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
-get_all_questions(inputs = inputs, larger_better = FALSE, thresholds = c(0.9, 0.9, 0.9), mid = 0, print_plot = FALSE, trim_redundant = FALSE)
+inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
+                    reference = "Placebo",
+                    larger_better = FALSE)
+get_all_questions(inputs = inputs,
+                  larger_better = FALSE,
+                  thresholds = c(0.9, 0.9, 0.9),
+                  mid = 0,
+                  print_plot = FALSE,
+                  trim_redundant = FALSE)
 }

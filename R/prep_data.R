@@ -2,7 +2,7 @@
 #'
 #' @description
 #' `prep_data()` produces a list of inputs to be used altogether in
-#' `get_hierarchies()`, or individually in `get_arranagements()`,
+#' `get_hierarchies()`, or individually in `get_arrangements()`,
 #' `get_cred_phier()`, and `singular_treatment()`.
 #'
 #' @param effects_matrix a data frame where the column headers are treatment
@@ -27,7 +27,9 @@
 #' @export
 #'
 #' @examples
-#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1], reference = "Placebo", larger_better = FALSE)
+#' inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
+#'                     reference = "Placebo",
+#'                     larger_better = FALSE)
 #' head(inputs$hierarchy_matrix)
 #' head(inputs$effects_matrix)
 #' head(inputs$ranking_df)
@@ -36,14 +38,19 @@ prep_data <- function(effects_matrix, reference, larger_better) {
   if (reference %in% treatments) {
     x <- effects_matrix
   } else {
-    warning("Relative effects for reference treatment not detected. A vector of 0's for the reference treatment has been added, assuming the input is an MCMC sample from a Bayesian framework. Ensure sampled relative effects are on the additive scale such that the null effect is 0.")
+    warning("Relative effects for reference treatment not detected.
+            A vector of 0's for the reference treatment has been added,
+            assuming the input is an MCMC sample from a Bayesian framework.
+            Ensure sampled relative effects are on the additive scale such
+            that the null effect is 0.")
     x <- data.frame(0, effects_matrix)
     colnames(x)[1] <- reference
     treatments <- colnames(x)
   }
   for (trt in treatments) {
     if (str_detect(trt, ",")) {
-      stop("Comma detected in treatment name. Please remove all commas from treatment names.")
+      stop("Comma detected in treatment name. Please remove all commas from
+           treatment names.")
     }
   }
 
@@ -67,7 +74,8 @@ prep_data <- function(effects_matrix, reference, larger_better) {
   }
 
   # prep for arrangements
-  strs <- sapply(split(x3_sorted$trt, x3_sorted$iteration), function(x) paste(x, collapse = ","))
+  strs <- sapply(split(x3_sorted$trt, x3_sorted$iteration),
+                 function(x) paste(x, collapse = ","))
   tbl<- t(sapply(strs, str_split_1, ","))
 
   inputs <- vector("list", length=3)
