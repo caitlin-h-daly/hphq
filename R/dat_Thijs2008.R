@@ -6,8 +6,8 @@
 #' thienopyridines + aspirin) vs. placebo estimated in a fixed effect Bayesian
 #' network meta-analysis with a binomial likelihood and logit link. Three chains
 #' were run, the first 50,000 samples were discarded as burn-in, and the
-#' subsequent 5,000 samples (a total of 15,000 samples) were saved in this
-#' data frame. The outcome is serious vascular events.
+#' subsequent 5,000 samples were thinned by 10, resulting in a total of 1,500
+#' samples saved in this data frame. The outcome is serious vascular events.
 #'
 #' @format A data frame with 15,000 rows and 6 columns:
 #' \describe{

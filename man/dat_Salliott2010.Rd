@@ -5,7 +5,7 @@
 \alias{dat_Salliott2010}
 \title{Biological antirheumatic agents in rheumatoid arthritis}
 \format{
-A data frame with 300,000 rows and 6 columns:
+A data frame with 1,500 rows and 6 columns:
 \describe{
   \item{Chain}{The index of the chain.}
   \item{Placebo}{The sampled relative effects of placebo vs. placebo
@@ -30,8 +30,9 @@ Samples from the joint distribution of the relative effects for each
 active treatment (abatacept, anti-TNF, rituximab, tocilizumab) vs. placebo
 estimated in a random effects Bayesian network meta-analysis with a binomial
 likelihood and logit link. Three chains were run, the first 50,000 samples
-were discarded as burn-in, and the subsequent 100,000 samples (a total of
-300,000 samples) were saved in this data frame. The outcome is American
-College of Rheumatology 50\% improvement (ACR50) response rate at 6 months.
+were discarded as burn-in, and the subsequent 100,000 samples were thinned by
+200, resulting in a total of 1,500 samples saved in this data frame. The
+outcome is American College of Rheumatology 50\% improvement (ACR50) response
+rate at 6 months.
 }
 \keyword{datasets}
