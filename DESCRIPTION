@@ -2,17 +2,17 @@ Package: hphq
 Title: Automated Cataloging of Highly Probable Hierarchy Questions (HPHQ)
 Version: 0.1.0
 Authors@R: 
-  c(person("Chloe", "Tan", , "caitlin.daly@uwaterloo.ca", role = c("aut", "cre")),
-  person("Caitlin", "Daly", , "caitlin.daly@uwaterloo.ca", role = c("aut")),
-  person("Audrey", "Béliveau", , "audrey.beliveau@uwaterloo.ca", role = c("aut")))
-Maintainer: Audrey Béliveau <audrey.beliveau@uwaterloo.ca>
-Description: This package implements an efficient computational approach (Tan et 
-  al. 2024) that systematically compiles a comprehensive catalog of all highly 
+  c(person("Caitlin", "Daly", email = "caitlin.daly@uwaterloo.ca", role = c("aut", "cre")),
+  person("Chloe", "Tan", role = "aut"),
+  person("Audrey", "Béliveau", email = "audrey.beliveau@uwaterloo.ca", role = "aut"))
+Maintainer: Caitlin Daly <caitlin.daly@uwaterloo.ca>
+Description: This package implements an efficient computational approach (Daly et 
+  al. 2026) that systematically compiles a comprehensive catalog of all highly 
   probable treatment questions (e.g., those with an empirical 
-  probability exceeding 90%) that may be asked in the context of network 
+  probability exceeding 95%) that may be asked in the context of network 
   meta-analysis (NMA) or other situations where there is a joint distribution 
   of the relative effects between multiple (>2) treatments.
-License: CC BY 4.0
+License: MIT
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
@@ -29,3 +29,4 @@ Suggests:
 VignetteBuilder: knitr
 Config/roxygen2/version: 8.1.0
 Config/testthat/edition: 3
+RoxygenNote: 7.3.2
