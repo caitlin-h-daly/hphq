@@ -30,7 +30,7 @@
 #'                     larger_better = FALSE)
 #' get_partial_hierarchies(effects_matrix = inputs$effects_matrix,
 #'                         mid = 0,
-#'                         threshold = 0.9,
+#'                         threshold = 0.95,
 #'                         larger_better = FALSE)
 
 get_partial_hierarchies <- function(effects_matrix,

@@ -31,7 +31,7 @@
 #'                     reference = "Placebo",
 #'                     larger_better = FALSE)
 #' get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix,
-#'                                     threshold = 0.9)
+#'                                     threshold = 0.95)
 get_arrangements <- function(hierarchy_matrix,
                              threshold,
                              order_by = c("Size", "pi_hat")) {

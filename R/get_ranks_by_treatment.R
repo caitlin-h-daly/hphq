@@ -30,7 +30,7 @@
 #'                     reference = "Placebo",
 #'                     larger_better = FALSE)
 #' get_ranks_by_treatment(ranking_df = inputs$ranking_df,
-#'                        threshold = 0.9,
+#'                        threshold = 0.95,
 #'                        print_plot = FALSE)
 
 get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {

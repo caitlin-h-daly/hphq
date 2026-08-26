@@ -35,7 +35,7 @@
 #'                     larger_better = FALSE)
 #' get_all_questions(inputs = inputs,
 #'                   larger_better = FALSE,
-#'                   thresholds = c(0.9, 0.9, 0.9),
+#'                   thresholds = c(0.95, 0.95, 0.95),
 #'                   mid = 0,
 #'                   print_plot = FALSE,
 #'                   trim_redundant = FALSE)

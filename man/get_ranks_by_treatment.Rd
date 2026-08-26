@@ -27,7 +27,7 @@ alternative credible density regions (CDR) of the same size  with empirical
 probabilities greater than or equal to the threshold for each treatment. The
 HDR sets provide the subset of ranks with the smallest possible cumulative
 empirical probability that is at least equal to the threshold. Alternative
-CDR of the same size as the HDR, but with but with somewhat lower empirical
+CDRs of the same size as the HDR, but with but with somewhat lower empirical
 probability are also outputted for consideration.
 }
 \examples{
@@ -35,6 +35,6 @@ inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
                     reference = "Placebo",
                     larger_better = FALSE)
 get_ranks_by_treatment(ranking_df = inputs$ranking_df,
-                       threshold = 0.9,
+                       threshold = 0.95,
                        print_plot = FALSE)
 }

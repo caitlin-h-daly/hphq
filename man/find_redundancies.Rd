@@ -79,13 +79,13 @@ inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
                     reference = "Placebo",
                     larger_better = FALSE)
 algo1 <- get_arrangements(hierarchy_matrix = inputs$hierarchy_matrix,
-                          threshold = 0.9)
+                          threshold = 0.95)
 algo2 <- get_partial_hierarchies(effects_matrix = inputs$effects_matrix,
                                  mid = 0,
-                                 threshold = 0.9,
+                                 threshold = 0.95,
                                  larger_better = FALSE)
 algo3 <- get_ranks_by_treatment(ranking_df = inputs$ranking_df,
-                                threshold = 0.9,
+                                threshold = 0.95,
                                 print_plot = FALSE)
-find_redundancies(algo1, algo2, algo3, n_trt = 5, threshold = 0.90)
+find_redundancies(algo1, algo2, algo3, n_trt = 5, threshold = 0.95)
 }

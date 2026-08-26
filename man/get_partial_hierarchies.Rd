@@ -46,6 +46,6 @@ inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],
                     larger_better = FALSE)
 get_partial_hierarchies(effects_matrix = inputs$effects_matrix,
                         mid = 0,
-                        threshold = 0.9,
+                        threshold = 0.95,
                         larger_better = FALSE)
 }
