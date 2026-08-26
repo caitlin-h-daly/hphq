@@ -2,7 +2,8 @@
 % Please edit documentation in R/get_ranks_by_treatment.R
 \name{get_ranks_by_treatment}
 \alias{get_ranks_by_treatment}
-\title{Get credible HDR sets for each treatment}
+\title{Get credible HDR sets and alternative CDRs of the same size for each
+treatment}
 \usage{
 get_ranks_by_treatment(ranking_df, threshold, print_plot = FALSE)
 }
@@ -17,14 +18,17 @@ observed in order to be credible.}
 printed (TRUE) or not (FALSE, the default).}
 }
 \value{
-A data frame containing the credible HDR set for each treatment.
+A list of data frames containing the credible HDR set and alternative
+CDRs of the same size for each treatment.
 }
 \description{
-`get_ranks_by_treatment()` finds all highest density region (HDR) sets with
-empirical probabilities greater than or equal to the threshold for each
-treatment. The HDR sets provide the subset of ranks with the smallest
-possible cumulative empirical probability that is at least equal to the
-threshold.
+`get_ranks_by_treatment()` finds all highest density region (HDR) sets and
+alternative credible density regions (CDR) of the same size  with empirical
+probabilities greater than or equal to the threshold for each treatment. The
+HDR sets provide the subset of ranks with the smallest possible cumulative
+empirical probability that is at least equal to the threshold. Alternative
+CDR of the same size as the HDR, but with but with somewhat lower empirical
+probability are also outputted for consideration.
 }
 \examples{
 inputs <- prep_data(effects_matrix = dat_Thijs2008[, -1],

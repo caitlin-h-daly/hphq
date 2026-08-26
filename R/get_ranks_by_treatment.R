@@ -1,11 +1,14 @@
-#' Get credible HDR sets for each treatment
+#' Get credible HDR sets and alternative CDRs of the same size for each
+#' treatment
 #'
 #' @description
-#' `get_ranks_by_treatment()` finds all highest density region (HDR) sets with
-#' empirical probabilities greater than or equal to the threshold for each
-#' treatment. The HDR sets provide the subset of ranks with the smallest
-#' possible cumulative empirical probability that is at least equal to the
-#' threshold.
+#' `get_ranks_by_treatment()` finds all highest density region (HDR) sets and
+#' alternative credible density regions (CDR) of the same size  with empirical
+#' probabilities greater than or equal to the threshold for each treatment. The
+#' HDR sets provide the subset of ranks with the smallest possible cumulative
+#' empirical probability that is at least equal to the threshold. Alternative
+#' CDRs of the same size as the HDR, but with but with somewhat lower empirical
+#' probability are also outputted for consideration.
 #'
 #' @param ranking_df a data frame of each treatment's ranks and associated
 #'   empirical probabilities.
@@ -14,7 +17,8 @@
 #' @param print_plot a logical value indicating whether the rankograms should be
 #' printed (TRUE) or not (FALSE, the default).
 #'
-#' @return A data frame containing the credible HDR set for each treatment.
+#' @return A list of data frames containing the credible HDR set and alternative
+#' CDRs of the same size for each treatment.
 #'
 #' @importFrom graphics barplot
 #' @importFrom graphics legend
