@@ -223,7 +223,6 @@ hdr <- function(ranks, threshold, pi_hat_sum = 1) {
     hdr_ranks <- c()
     ranks$pi_hat <- 0
   } else {
-    alt_cdr <- list()
     excl_ranks <- ranks[0, ]
     ranks <- ranks[order(ranks$pi_hat), ] # sorts in increasing order
     while(pi_hat_sum > threshold && nrow(ranks) > 0) {
@@ -242,71 +241,84 @@ hdr <- function(ranks, threshold, pi_hat_sum = 1) {
   }
 
   # formatting
-  if(length(hdr_ranks) == 1) { # if there is just one element
-    concat_ranks <- hdr_ranks
-  } else if(length(hdr_ranks) == 0) {
-    concat_ranks <- "N/A"
-  } else if(all(diff(as.numeric(as.character(hdr_ranks))) == 1)) {
-    # hdr is an interval
-    # formats the ranks into an interval
-    concat_ranks <- paste(hdr_ranks[1], hdr_ranks[[length(hdr_ranks)]], sep = "-")
-  } else { # hdr is not an interval
-    # collapses the ranks into one string
-    concat_ranks <- paste(hdr_ranks, collapse = ',')
-  }
+  concat_ranks <- format_hdr_string(ranks)
 
   hdr_vec <- list(concat_ranks, sum(ranks$pi_hat), hdr_ranks)
 
-  # alternative credible density regions (CDR) of the same size
-  #if(length(hdr_ranks) > 1) {
-  hdr_pi_hat <- sum(ranks$pi_hat)
-  min_hdr_rank_pi_hat <- min(ranks$pi_hat) # smallest pi_hat contributing to hdr
-  req_alt_rank_pi_hat <- threshold - (hdr_pi_hat - min_hdr_rank_pi_hat) # pi_hat required to substitute least likely rank in hdr
+  # alternative credible density regions (CDR) of the same size based on brute force
+  hdr_df <- ranks[order(ranks$pi_hat), ] # re-orders it in terms of increasing pi_hat - to ensure ranks with larger pi_hat appear first
+  non_hdr_df <- excl_ranks[order(excl_ranks$pi_hat, decreasing = TRUE), ] # re-orders it in terms of decreasing pi_hat
 
-  alt_cdr_rank <- excl_ranks[which(excl_ranks$pi_hat >= req_alt_rank_pi_hat), ]
+  max_num_rks_to_sub <- min(nrow(hdr_df), nrow(non_hdr_df)) # maximum number of ranks that can be substituted
 
-  if(nrow(alt_cdr_rank) > 0) {
-    list_ind <- 1
+  base_hdr_rks_list <- vector("list", length = max_num_rks_to_sub)
+  non_hdr_rks_to_sub_list <- vector("list", length = max_num_rks_to_sub)
+  cdr_list <- vector("list", length = max_num_rks_to_sub)
+  for(num_rks_to_sub in 1:max_num_rks_to_sub) {
+    hdr_row_ind <- combn(1:nrow(hdr_df), num_rks_to_sub)  # row index of hdr rank(s) to remove
+    non_hdr_row_ind <- combn(1:nrow(non_hdr_df), num_rks_to_sub)  # row index of non-hdr rank(s) to sub in
 
-    ranks <- ranks[order(ranks$pi_hat), ] # re-orders it in terms of pi_hat
+    base_hdr_rks_list[[num_rks_to_sub]] <- apply(hdr_row_ind, 2, function(x) {hdr_df[-x, ]})  # subset of hdr ranks
+    non_hdr_rks_to_sub_list[[num_rks_to_sub]] <- apply(non_hdr_row_ind, 2, function(x) {non_hdr_df[x, ]})  # non-hdr rank(s) to sub in
 
-    ranks_to_sub_ind <- which(ranks$pi_hat == min_hdr_rank_pi_hat) # in case multiple ranks have same pi_hat
+    # pairwise rbind the subset of hdr ranks and non-hdr ranks to sub in
+    cdr_list[[num_rks_to_sub]] <- lapply(base_hdr_rks_list[[num_rks_to_sub]], function(x) {lapply(non_hdr_rks_to_sub_list[[num_rks_to_sub]], function(y) {rbind(x, y)})})
 
-    for(i in ranks_to_sub_ind) {
-      base_ranks <- ranks[-i, ]
+    # calculate the pi_hat to determine the credibility of each new density region of the same size as the HDR
+    names(cdr_list[[num_rks_to_sub]]) <- lapply(cdr_list[[num_rks_to_sub]], function(x) {sum(x$pi_hat)})
 
-      for(j in 1:nrow(alt_cdr_rank)){
-        new_ranks <- rbind(alt_cdr_rank[j, ], base_ranks)
-        new_ranks <- new_ranks[order(new_ranks$Rank), ] # re-orders it in terms of rank
-
-        new_cdr_ranks <- new_ranks$Rank
-
-        # format
-        if(length(new_cdr_ranks) == 1) { # if there is just one element
-          new_concat_ranks <- new_cdr_ranks
-        } else if(length(new_cdr_ranks) == 0) {
-          new_concat_ranks <- "N/A"
-        } else if(all(diff(as.numeric(as.character(new_cdr_ranks))) == 1)) {
-          # cdr is an interval
-          # formats the ranks into an interval
-          new_concat_ranks <- paste(new_cdr_ranks[1],
-                                    new_cdr_ranks[[length(new_cdr_ranks)]],
-                                    sep = "-")
-        } else { # cdr is not an interval
-          # collapses the ranks into one string
-          new_concat_ranks <- paste(new_cdr_ranks, collapse = ',')
-        }
-
-        alt_cdr[[list_ind]] <- list(new_concat_ranks, sum(new_ranks$pi_hat))
-
-        list_ind <- list_ind + 1
-
-      }
-    }
   }
 
-  #}
+  # flatten the list twice
+  cdr_list <- unlist(unlist(cdr_list, recursive = FALSE), recursive = FALSE)
 
-  return(list(hdr = hdr_vec, alt_cdr = alt_cdr))
+  # determine the empirical probability of each combination of ranks
+  names(cdr_list) <- lapply(cdr_list, function(x) {sum(x$pi_hat)})
+
+  # extract all CDRs of the same size as the HDR
+  cdr_list <- cdr_list[which(as.numeric(names(cdr_list)) >= threshold)]
+
+  # format CDR list
+  cdr_list <- lapply(cdr_list, function(x) {list(format_hdr_string(x), sum(x$pi_hat))})
+  names(cdr_list) <- NULL
+
+  return(list(hdr = hdr_vec, cdr = cdr_list))
+
+}
+
+#' Format highest density region (HDR) string
+#'
+#' @description
+#' `format_hdr_string()` formats the string of HDR ranks
+#'
+#' @param hdr_df a data frame for a particular treatment, consisting of one
+#'   column (`Rank`) of all possible ranks and another column (`pi_hat`) listing
+#'   the proportion of samples for which the treatment was ranked `Rank`.
+#'
+#' @return A string of the rank(s) in the HDR set.
+#'
+#' @keywords internal
+format_hdr_string <- function(hdr_df) {
+
+  hdr_df <- hdr_df[order(hdr_df$Rank), ]
+
+  hdr_ranks <- hdr_df$Rank
+
+  if(length(hdr_ranks) == 1) { # if there is just one rank in HDR
+    hdr_concat_ranks <- hdr_ranks
+  } else if(length(hdr_ranks) == 0) {
+    new_concat_ranks <- "N/A"
+  } else if(all(diff(as.numeric(as.character(hdr_ranks))) == 1)) {
+    # hdr is an interval
+    # formats the ranks into an interval
+    hdr_concat_ranks <- paste(hdr_ranks[1],
+                              hdr_ranks[[length(hdr_ranks)]],
+                              sep = "-")
+  } else { # hdr is not an interval
+    # collapses the ranks into one string
+    hdr_concat_ranks <- paste(hdr_ranks, collapse = ',')
+  }
+
+  hdr_concat_ranks
 
 }

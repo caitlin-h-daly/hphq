@@ -76,9 +76,9 @@ get_ranks_by_treatment <- function(ranking_df, threshold, print_plot = FALSE) {
     colnames(hdr_list[[i]]) <- c("Treatment", "HDR Rank(s)", "Sum of pi_hat")
 
     # other credible sets of the same size
-    if(length(hdr_cdr_list$alt_cdr) > 0) {
-      all_cdr <- hdr_cdr_list$alt_cdr
-      cdr_list[[i]] <- vector("list", length = length(hdr_cdr_list$alt_cdr))
+    if(length(hdr_cdr_list$cdr) > 0) {
+      all_cdr <- hdr_cdr_list$cdr
+      cdr_list[[i]] <- vector("list", length = length(hdr_cdr_list$cdr))
 
       for(j in 1:length(all_cdr)){
         cdr_temp <- all_cdr[[j]]
