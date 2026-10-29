@@ -264,9 +264,6 @@ hdr <- function(ranks, threshold, pi_hat_sum = 1) {
     # pairwise rbind the subset of hdr ranks and non-hdr ranks to sub in
     cdr_list[[num_rks_to_sub]] <- lapply(base_hdr_rks_list[[num_rks_to_sub]], function(x) {lapply(non_hdr_rks_to_sub_list[[num_rks_to_sub]], function(y) {rbind(x, y)})})
 
-    # calculate the pi_hat to determine the credibility of each new density region of the same size as the HDR
-    names(cdr_list[[num_rks_to_sub]]) <- lapply(cdr_list[[num_rks_to_sub]], function(x) {sum(x$pi_hat)})
-
   }
 
   # flatten the list twice
